@@ -404,11 +404,9 @@
 <!-- NEWSLETTER -->
 <section class="newsletter">
   <h3>10% off your next purchase by subscribing to the newsletter</h3>
-  <form>
-    <input type="email" placeholder="E-mail">
-    <button type="submit">SIGN UP NOW</button>
-    <p>By subscribing, you confirm that you have read the <a href="#">Privacy Policy</a>.</p>
-  </form>
+      <form onsubmit="event.preventDefault(); window.location.href='sign-in.html';">
+        <input type="email" placeholder="E-mail">
+        <button type="button" class="signup-btn" onclick="window.location.href='sign-in.html'">SIGN UP NOW</button>
 </section>
 
 <!-- FOOTER -->
