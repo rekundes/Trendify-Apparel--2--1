@@ -179,18 +179,45 @@
     z-index: 10;
 }
 
-/* Hover Image Effect */
+/* Image sizing (no hover swap for women) */
+.product-card .primary-img,
+.product-card .secondary-img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+}
+
+/* Keep secondary images hidden; do NOT swap on hover */
 .product-card .secondary-img {
     display: none;
 }
 
-.product-card:hover .primary-img {
-    display: none;
+/* Hover Preview Overlay (shows full image on product hover) */
+.hover-preview {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 80vw;
+  max-height: 80vh;
+  background: rgba(0,0,0,0.85);
+  padding: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  border-radius: 6px;
+  pointer-events: none; /* Don't block hover interactions */
 }
 
-.product-card:hover .secondary-img {
-    display: block;
+.hover-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
 }
+
+.hover-preview.show { display: flex; }
 
     .product-info {
       padding: 15px;
@@ -333,7 +360,6 @@
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
       <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
-      <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
       <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
     </div>
 
@@ -405,6 +431,10 @@
   </div>
 </footer>
 
+<div id="hoverPreview" class="hover-preview" aria-hidden="true">
+  <img id="hoverPreviewImg" src="" alt="Product preview" />
+</div>
+
 <!-- OUTSIDE CLICK SCRIPT -->
 <script>
   document.addEventListener("click", function(e) {
@@ -422,64 +452,75 @@
   const categoryTitle = document.getElementById("categoryTitle");
   const productGrid = document.getElementById("productGrid");
 
+  // Fallback: generate a simple SVG placeholder when an image file is missing
+  function setPlaceholder(imgEl, label) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="100%" height="100%" fill="#f3f3f3"/><text x="50%" y="50%" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#333" dominant-baseline="middle" text-anchor="middle">${label}</text></svg>`;
+    imgEl.onerror = null;
+    imgEl.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+  }
+
 const categories = {
   tops: [
-    { img: "img/top1.jpg", name: "Cotton blouse", price: "₱1,295" },
-    { img: "img/top2.jpg", name: "Sleeveless top", price: "₱995" },
-    { img: "img/top3.jpg", name: "Ribbed knit top", price: "₱1,195" },
-    { img: "img/top4.jpg", name: "Lace trim top", price: "₱1,395" },
-    { img: "img/top5.jpg", name: "Off-shoulder blouse", price: "₱1,495" },
-    { img: "img/top6.jpg", name: "Graphic tank", price: "₱895" }
+    { img: "img/img/women-top1.jpg", secondaryImg: "img/img/img/women-top2.jpg", name: "Rockmore croptop", price: "₱1,295", isNew: true },
+    { img: "img/img/women-top2.jpg", secondaryImg: "img/women-top3.jpg", name: "Floral Blouse", price: "₱995" },
+    { img: "img/img/women-top3.jpg", secondaryImg: "img/women-top4.jpg", name: "Black Top", price: "₱1,195" },
+    { img: "img/img/women-top4.jpg", secondaryImg: "img/women-top5.jpg", name: "NIrvana", price: "₱1,395" },
+    { img: "img/img/women-top5.jpg", secondaryImg: "img/women-top6.jpg", name: "butterfly", price: "₱1,495" },
+    { img: "img/img/women-top6.jpg", secondaryImg: "img/women-top1.jpg", name: "angels", price: "₱895" }
   ],
   dresses: [
-    { img: "img/dress1.jpg", name: "Floral midi dress", price: "₱2,495" },
-    { img: "img/dress2.jpg", name: "Satin slip dress", price: "₱2,995" },
-    { img: "img/dress3.jpg", name: "Pleated dress", price: "₱2,295" },
-    { img: "img/dress4.jpg", name: "Wrap mini dress", price: "₱1,995" },
-    { img: "img/dress5.jpg", name: "Maxi sundress", price: "₱3,195" },
-    { img: "img/dress6.jpg", name: "Bodycon dress", price: "₱2,495" }
+    { img: "img/img/img/women-dress1.jpg", name: "sweetheart long sleeve", price: "₱2,495" },
+    { img: "img/img/img/women-dress2.jpg", name: "brown long sleeve", price: "₱2,995" },
+    { img: "img/img/img/women-dress3.jpg", name: "black dress", price: "₱2,295" },
+    { img: "img/img/img/women-dress4.jpg", name: "red long sleeve dress", price: "₱1,995" },
+    { img: "img/img/img/women-dress5.jpg", name: "blue short sleeve dress", price: "₱3,195" },
+    { img: "img/img/img/women-dress6.jpg", name: "green dress", price: "₱2,495" }
   ],
   skirts: [
-    { img: "img/skirt1.jpg", name: "A-line skirt", price: "₱1,495" },
-    { img: "img/skirt2.jpg", name: "Denim skirt", price: "₱1,295" },
-    { img: "img/skirt3.jpg", name: "Pleated skirt", price: "₱1,695" },
-    { img: "img/skirt4.jpg", name: "Mini leather skirt", price: "₱1,895" },
-    { img: "img/skirt5.jpg", name: "Pencil skirt", price: "₱1,595" },
-    { img: "img/skirt6.jpg", name: "Satin midi skirt", price: "₱2,195" }
+    { img: "img/img/img/women-skirts1.jpg", name: "black skirt", price: "₱1,495" },
+    { img: "img/img/img/women-skirts2.jpg", name: "red skirt", price: "₱1,295" },
+    { img: "img/img/img/women-skirts3.jpg", name: "blue skirt", price: "₱1,695" },
+    { img: "img/img/img/women-skirts4.jpg", name: "brown skirt", price: "₱1,895" },
+    { img: "img/img/img/women-skirts5.jpg", name: "cargo skirt", price: "₱1,595" },
+    { img: "img/img/img/women-skirts6.jpg", name: "pink skirt", price: "₱2,195" }
   ],
   heels: [
-    { img: "img/heels1.jpg", name: "Strappy heels", price: "₱1,995" },
-    { img: "img/heels2.jpg", name: "Block heels", price: "₱1,895" },
-    { img: "img/heels3.jpg", name: "Pointed heels", price: "₱2,195" },
-    { img: "img/heels4.jpg", name: "Platform heels", price: "₱2,495" },
-    { img: "img/heels5.jpg", name: "Slingback heels", price: "₱2,095" },
-    { img: "img/heels6.jpg", name: "Mule heels", price: "₱1,795" }
+    { img: "img/img/img/women-heels1.jpg", name: "red heels", price: "₱1,995" },
+    { img: "img/img/img/women-heels2.jpg", name: "black heels", price: "₱1,895" },
+    { img: "img/img/img/women-heels3.jpg", name: "white heels", price: "₱2,195" },
+    { img: "img/img/img/women-heels4.jpg", name: "pink heels", price: "₱2,495" },
+    { img: "img/img/img/women-heels5.jpg", name: "blue heels", price: "₱2,095" },
+    { img: "img/img/img/women-heels6.jpg", name: "green heels", price: "₱1,795" }
   ],
   bags: [
-    { img: "img/bag1.jpg", name: "Leather handbag", price: "₱3,495" },
-    { img: "img/bag2.jpg", name: "Mini shoulder bag", price: "₱2,295" },
-    { img: "img/bag3.jpg", name: "Crossbody bag", price: "₱2,495" },
-    { img: "img/bag4.jpg", name: "Clutch bag", price: "₱1,895" },
-    { img: "img/bag5.jpg", name: "Backpack purse", price: "₱2,995" },
-    { img: "img/bag6.jpg", name: "Straw tote", price: "₱1,595" }
+    { img: "img/img/img/women-bags1.jpg", name: "black handbag", price: "₱3,495" },
+    { img: "img/img/img/women-bags2.jpg", name: "white bag", price: "₱2,295" },
+    { img: "img/img/img/women-bags3.jpg", name: "pink bag", price: "₱2,495" },
+    { img: "img/img/img/women-bags4.jpg", name: "green bag", price: "₱1,895" },
+    { img: "img/img/img/women-bags5.jpg", name: "red bag", price: "₱2,995" },
+    { img: "img/img/img/women-bags6.jpg", name: "pink shoulder bag", price: "₱1,595" }
   ],
   jewelry: [
-    { img: "img/jewel1.jpg", name: "Gold hoop earrings", price: "₱795" },
-    { img: "img/jewel2.jpg", name: "Layered necklace", price: "₱995" },
-    { img: "img/jewel3.jpg", name: "Bracelet set", price: "₱895" },
-    { img: "img/jewel4.jpg", name: "Pendant necklace", price: "₱1,195" },
-    { img: "img/jewel5.jpg", name: "Stackable rings", price: "₱695" },
-    { img: "img/jewel6.jpg", name: "Stud earrings", price: "₱495" }
+    { img: "img/img/img/women-jewelry1.jpg", name: "flower bracelet", price: "₱795" },
+    { img: "img/img/img/women-jewelry2.jpg", name: "heart bracelet", price: "₱995" },
+    { img: "img/img/img/women-jewelry3.jpg", name: "rose bracelet", price: "₱895" },
+    { img: "img/img/img/women-jewelry4.jpg", name: "gold ring", price: "₱1,195" },
+    { img: "img/img/img/women-jewelry5.jpg", name: "pink earrings", price: "₱695" },
+    { img: "img/img/img/women-jewelry6.jpg", name: "black earrings", price: "₱495" }
   ]
 };
 
   categoryTitle.textContent = category.toUpperCase();
 
+const hoverPreview = document.getElementById('hoverPreview');
+const hoverPreviewImg = document.getElementById('hoverPreviewImg');
+
+// Build HTML once, then attach listeners to avoid DOM reflow issues
+let html = '';
 categories[category].forEach(item => {
-    // Randomly assign a badge for demonstration, or add 'badge' to your category objects
     const badgeHtml = item.isNew ? `<div class="badge">New</div>` : '';
-    
-    productGrid.innerHTML += `
+
+    html += `
       <div class="product-card">
         ${badgeHtml}
         <img src="${item.img}" class="primary-img">
@@ -490,6 +531,29 @@ categories[category].forEach(item => {
         </div>
       </div>
     `;
+});
+
+productGrid.innerHTML = html;
+
+const cards = productGrid.querySelectorAll('.product-card');
+cards.forEach((card, idx) => {
+    const item = categories[category][idx];
+
+    card.addEventListener('mouseenter', () => {
+        if (hoverPreview && hoverPreviewImg) {
+            hoverPreviewImg.src = item.img;
+            hoverPreview.classList.add('show');
+            hoverPreview.setAttribute('aria-hidden', 'false');
+        }
+    });
+
+    card.addEventListener('mouseleave', () => {
+        if (hoverPreview && hoverPreviewImg) {
+            hoverPreview.classList.remove('show');
+            hoverPreviewImg.src = '';
+            hoverPreview.setAttribute('aria-hidden', 'true');
+        }
+    });
 });
 </script>
 

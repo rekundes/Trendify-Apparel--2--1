@@ -194,6 +194,34 @@
     display: block;
 }
 
+/* Hover Preview Overlay (shows full image on product hover) */
+.hover-preview {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 80vw;
+  max-height: 80vh;
+  background: rgba(0,0,0,0.85);
+  padding: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  border-radius: 6px;
+  pointer-events: none; /* Don't block hover interactions */
+}
+
+.hover-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.hover-preview.show { display: flex; }
+
+
     .product-info { padding: 15px; }
 
     .product-name {
@@ -333,7 +361,6 @@
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
       <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
-      <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
       <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
     </div>
 
@@ -405,6 +432,10 @@
   </div>
 </footer>
 
+<div id="hoverPreview" class="hover-preview" aria-hidden="true">
+  <img id="hoverPreviewImg" src="" alt="Product preview" />
+</div>
+
 <!-- SCRIPT -->
 <script>
   document.addEventListener("click", function(e) {
@@ -475,11 +506,15 @@ const categories = {
 
   categoryTitle.textContent = category.replace("-", " ").toUpperCase();
 
+const hoverPreview = document.getElementById('hoverPreview');
+const hoverPreviewImg = document.getElementById('hoverPreviewImg');
+
+// Build HTML string for all products first (avoids re-parsing DOM each iteration)
+let html = '';
 categories[category].forEach(item => {
-    // Randomly assign a badge for demonstration, or add 'badge' to your category objects
     const badgeHtml = item.isNew ? `<div class="badge">New</div>` : '';
-    
-    productGrid.innerHTML += `
+
+    html += `
       <div class="product-card">
         ${badgeHtml}
         <img src="${item.img}" class="primary-img">
@@ -490,6 +525,31 @@ categories[category].forEach(item => {
         </div>
       </div>
     `;
+});
+
+// Render once
+productGrid.innerHTML = html;
+
+// Attach hover listeners to all cards (stable nodes)
+const cards = productGrid.querySelectorAll('.product-card');
+cards.forEach((card, idx) => {
+    const item = categories[category][idx];
+
+    card.addEventListener('mouseenter', () => {
+        if (hoverPreview && hoverPreviewImg) {
+            hoverPreviewImg.src = item.img;
+            hoverPreview.classList.add('show');
+            hoverPreview.setAttribute('aria-hidden', 'false');
+        }
+    });
+
+    card.addEventListener('mouseleave', () => {
+        if (hoverPreview && hoverPreviewImg) {
+            hoverPreview.classList.remove('show');
+            hoverPreviewImg.src = '';
+            hoverPreview.setAttribute('aria-hidden', 'true');
+        }
+    });
 });
 </script>
 

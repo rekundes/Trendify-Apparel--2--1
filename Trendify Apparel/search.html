@@ -262,7 +262,6 @@
     <!-- RIGHT NAV -->
     <div class="nav-right">
       <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
-      <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
       <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
     </div>
 
@@ -271,69 +270,71 @@
 
 <!-- SEARCH INPUT -->
 <form class="search-form">
-  <input type="text" placeholder="Search Trendify..." />
+  <input id="searchInput" type="text" placeholder="Search Trendify..." />
 </form>
 
 <!-- SEARCH RESULTS -->
 <h2 class="results-title">MAY INTEREST YOU</h2>
 
-<section class="product-grid">
+<section class="product-grid" id="productGrid">
 
   <!-- SHIRT -->
   <div class="product-card">
-    <img src="img/shirt1.jpg">
+    <img src="img/img/img/men-shirt6.jpg">
     <div class="product-info">
-      <div class="product-name">Linen-blend short sleeve shirt</div>
+      <div class="product-name">911 porsche shirt</div>
       <div class="product-price">Php 2,995</div>
     </div>
   </div>
 
   <!-- JACKET -->
   <div class="product-card">
-    <img src="img/jacket1.jpg">
+    <img src="img/img/img/men-jacket1.jpg">
     <div class="product-info">
-      <div class="product-name">Water-repellent puffer jacket</div>
+      <div class="product-name">ferrari jacket</div>
       <div class="product-price">Php 7,595</div>
     </div>
   </div>
 
   <!-- SHORTS -->
   <div class="product-card">
-    <img src="img/shorts1.jpg">
+    <img src="img/img/img/women-skirts6.jpg">
     <div class="product-info">
-      <div class="product-name">Slim-fit chino bermuda shorts</div>
+      <div class="product-name">pink skirt </div>
       <div class="product-price"><s>Php 2,495</s> Php 1,695</div>
     </div>
   </div>
 
   <!-- JEANS -->
   <div class="product-card">
-    <img src="img/jeans1.jpg">
+    <img src="img/img/img/men-jeans2.jpg">
     <div class="product-info">
-      <div class="product-name">Ben cropped tapered-fit jeans</div>
+      <div class="product-name">techwear pants</div>
       <div class="product-price">Php 3,295</div>
     </div>
   </div>
 
   <!-- TROUSERS -->
   <div class="product-card">
-    <img src="img/trousers1.jpg">
+    <img src="img/img/img/men-jeans4.jpg">
     <div class="product-info">
-      <div class="product-name">Super slim-fit stretch trousers</div>
+      <div class="product-name">cargo pants</div>
       <div class="product-price">Php 4,295</div>
     </div>
   </div>
 
   <!-- ACCESSORY -->
   <div class="product-card">
-    <img src="img/bag1.jpg">
+    <img src="img/img/img/women-bags5.jpg">
     <div class="product-info">
-      <div class="product-name">Leather crossbody bag</div>
+      <div class="product-name">red bag</div>
       <div class="product-price">Php 9,595</div>
     </div>
   </div>
 
 </section>
+
+  <p id="noResults" style="display:none; text-align:center; padding:20px; font-weight:bold;">No results found.</p>
 
 <!-- OUTSIDE CLICK SCRIPT -->
 <script>
@@ -348,6 +349,151 @@
       }
     });
   });
+
+  // Combined products list (MEN + WOMEN)
+  const allProducts = [
+    /* MEN - Shirts */
+    { img: "img/img/img/men-shirt1.jpg", name: "Enigma 8-Ball", price: "Php 299" },
+    { img: "img/img/img/men-shirt2.jpg", name: "Enigma Eyes That Peak", price: "Php 299" },
+    { img: "img/img/img/men-shirt3.jpg", name: "Universe", price: "Php 299" },
+    { img: "img/img/img/men-shirt4.jpg", name: "Chicago 23", price: "Php 399" },
+    { img: "img/img/img/men-shirt5.jpg", name: "Death riot", price: "Php 499" },
+    { img: "img/img/img/men-shirt6.jpg", name: "Porche 911", price: "Php 299" },
+
+    /* MEN - Jackets */
+    { img: "img/img/img/men-jacket1.jpg", name: "Ferrari Jacket", price: "Php 899" },
+    { img: "img/img/img/men-jacket2.jpg", name: "Srel Jacket", price: "Php 999" },
+    { img: "img/img/img/men-jacket3.jpg", name: "Sincere Jacket", price: "Php 799" },
+    { img: "img/img/img/men-jacket4.jpg", name: "Cartier Jacket", price: "Php 699" },
+    { img: "img/img/img/men-jacket5.jpg", name: "Tokyo Japan Jacket", price: "Php 899" },
+    { img: "img/img/img/men-jacket6.jpg", name: "New York Jacket", price: "Php 749" },
+
+    /* MEN - Jeans */
+    { img: "img/img/img/men-jeans1.jpg", name: "Skull Jeans", price: "Php 799" },
+    { img: "img/img/img/men-jeans2.jpg", name: "Techwear Pants", price: "Php 899" },
+    { img: "img/img/img/men-jeans3.jpg", name: "BAGGY Jeans", price: "Php 499" },
+    { img: "img/img/img/men-jeans4.jpg", name: "CARGO Pants", price: "Php 599" },
+    { img: "img/img/img/men-jeans5.jpg", name: "BLUE JEANS", price: "Php 399" },
+    { img: "img/img/img/men-jeans6.jpg", name: "WHITE CARGO", price: "Php 499" },
+
+    /* MEN - Shoes */
+    { img: "img/img/img/men-shoes1.jpg", name: "Nike Air Jordan 1 Retro High OG", price: "Php 3,495" },
+    { img: "img/img/img/men-shoes2.jpg", name: "Jordan 4 Retro Off-White", price: "Php 2,995" },
+    { img: "img/img/img/men-shoes3.jpg", name: "Chuck Taylor All-Star", price: "Php 2,495" },
+    { img: "img/img/img/men-shoes4.jpg", name: "Onitsuka Tiger", price: "Php 4,595" },
+    { img: "img/img/img/men-shoes5.jpg", name: "Black Puma Speedcat", price: "Php 1,995" },
+    { img: "img/img/img/men-shoes6.jpg", name: "ADIDAS SUPERSTAR", price: "Php 3,895" },
+
+    /* MEN - Bags */
+    { img: "img/img/img/men-bag1.jpg", name: "CrossBODY Bag", price: "Php 2,995" },
+    { img: "img/img/img/men-bag2.jpg", name: "Louis Vuitton Bag", price: "Php 3,495" },
+    { img: "img/img/img/men-bag3.jpg", name: "Supreme Bag", price: "Php 2,495" },
+    { img: "img/img/img/men-bag4.jpg", name: "Prada x Adidas Bag", price: "Php 3,995" },
+    { img: "img/img/img/men-bag5.jpg", name: "Nike Backpack", price: "Php 1,495" },
+    { img: "img/img/img/men-bag6.jpg", name: "Bape Backpack", price: "Php 4,295" },
+
+    /* MEN - Accessories */
+    { img: "img/img/img/men-accessories1.jpg", name: "Chain Necklace", price: "Php 795" },
+    { img: "img/img/img/men-accessories2.jpg", name: "Bracelet", price: "Php 695" },
+    { img: "img/img/img/men-accessories3.jpg", name: "Watch", price: "Php 895" },
+    { img: "img/img/img/men-accessories4.jpg", name: "Earring", price: "Php 595" },
+    { img: "img/img/img/men-accessories5.jpg", name: "Ring", price: "Php 1,195" },
+    { img: "img/img/img/men-accessories6.jpg", name: "Sun Glasses", price: "Php 495" },
+
+    /* WOMEN - Tops */
+    { img: "img/img/women-top1.jpg", name: "Rockmore Croptop", price: "Php 1,295" },
+    { img: "img/img/women-top2.jpg", name: "Floral Blouse", price: "Php 995" },
+    { img: "img/img/women-top3.jpg", name: "Black Top", price: "Php 1,195" },
+    { img: "img/img/women-top4.jpg", name: "Nirvana", price: "Php 1,395" },
+    { img: "img/img/women-top5.jpg", name: "Butterfly Top", price: "Php 1,495" },
+    { img: "img/img/women-top6.jpg", name: "Angels Top", price: "Php 895" },
+
+    /* WOMEN - Dresses */
+    { img: "img/img/img/women-dress1.jpg", name: "Sweetheart Long Sleeve", price: "Php 2,495" },
+    { img: "img/img/img/women-dress2.jpg", name: "Brown Long Sleeve", price: "Php 2,995" },
+    { img: "img/img/img/women-dress3.jpg", name: "Black Dress", price: "Php 2,295" },
+    { img: "img/img/img/women-dress4.jpg", name: "Red Long Sleeve Dress", price: "Php 1,995" },
+    { img: "img/img/img/women-dress5.jpg", name: "Blue Short Sleeve Dress", price: "Php 3,195" },
+    { img: "img/img/img/women-dress6.jpg", name: "Green Dress", price: "Php 2,495" },
+
+    /* WOMEN - Skirts */
+    { img: "img/img/img/women-skirts1.jpg", name: "Black Skirt", price: "Php 1,495" },
+    { img: "img/img/img/women-skirts2.jpg", name: "Red Skirt", price: "Php 1,295" },
+    { img: "img/img/img/women-skirts3.jpg", name: "Blue Skirt", price: "Php 1,695" },
+    { img: "img/img/img/women-skirts4.jpg", name: "Brown Skirt", price: "Php 1,895" },
+    { img: "img/img/img/women-skirts5.jpg", name: "Cargo Skirt", price: "Php 1,595" },
+    { img: "img/img/img/women-skirts6.jpg", name: "Pink Skirt", price: "Php 2,195" },
+
+    /* WOMEN - Heels */
+    { img: "img/img/img/women-heels1.jpg", name: "Red Heels", price: "Php 1,995" },
+    { img: "img/img/img/women-heels2.jpg", name: "Black Heels", price: "Php 1,895" },
+    { img: "img/img/img/women-heels3.jpg", name: "White Heels", price: "Php 2,195" },
+    { img: "img/img/img/women-heels4.jpg", name: "Pink Heels", price: "Php 2,495" },
+    { img: "img/img/img/women-heels5.jpg", name: "Blue Heels", price: "Php 2,095" },
+    { img: "img/img/img/women-heels6.jpg", name: "Green Heels", price: "Php 1,795" },
+
+    /* WOMEN - Bags */
+    { img: "img/img/img/women-bags1.jpg", name: "Black Handbag", price: "Php 3,495" },
+    { img: "img/img/img/women-bags2.jpg", name: "White Bag", price: "Php 2,295" },
+    { img: "img/img/img/women-bags3.jpg", name: "Pink Bag", price: "Php 2,495" },
+    { img: "img/img/img/women-bags4.jpg", name: "Green Bag", price: "Php 1,895" },
+    { img: "img/img/img/women-bags5.jpg", name: "Red Bag", price: "Php 2,995" },
+    { img: "img/img/img/women-bags6.jpg", name: "Pink Shoulder Bag", price: "Php 1,595" },
+
+    /* WOMEN - Jewelry */
+    { img: "img/img/img/women-jewelry1.jpg", name: "Flower Bracelet", price: "Php 795" },
+    { img: "img/img/img/women-jewelry2.jpg", name: "Heart Bracelet", price: "Php 995" },
+    { img: "img/img/img/women-jewelry3.jpg", name: "Rose Bracelet", price: "Php 895" },
+    { img: "img/img/img/women-jewelry4.jpg", name: "Gold Ring", price: "Php 1,195" },
+    { img: "img/img/img/women-jewelry5.jpg", name: "Pink Earrings", price: "Php 695" },
+    { img: "img/img/img/women-jewelry6.jpg", name: "Black Earrings", price: "Php 495" }
+  ];
+
+  const productGridEl = document.getElementById('productGrid');
+  const searchInput = document.getElementById('searchInput');
+  const noResultsEl = document.getElementById('noResults');
+
+  function renderProducts(list) {
+    if (!productGridEl) return;
+    productGridEl.innerHTML = list.map(p => `
+      <div class="product-card">
+        <img src="${p.img}" onerror="this.onerror=null;this.src='img/img/placeholder.jpg'">
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          <div class="product-price">${p.price}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // initial render of all products
+  renderProducts(allProducts);
+
+  function filterProducts() {
+    const q = (searchInput.value || '').trim().toLowerCase();
+    const cards = productGridEl ? productGridEl.querySelectorAll('.product-card') : [];
+    let visible = 0;
+
+    cards.forEach(card => {
+      const nameEl = card.querySelector('.product-name');
+      const name = nameEl ? nameEl.textContent.trim().toLowerCase() : '';
+
+      if (!q || name.includes(q)) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (noResultsEl) noResultsEl.style.display = visible ? 'none' : 'block';
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', filterProducts);
+    // Apply initial filter in case the input has a value from navigation
+    filterProducts();
+  }
 </script>
 
 </body>
