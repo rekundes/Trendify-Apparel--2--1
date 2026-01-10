@@ -712,9 +712,12 @@ document.querySelectorAll(".size-chip").forEach(chip=>{
 
   /* ADD TO CART */
   const addBtn = document.querySelector('.hover-add-btn');
-  addBtn.addEventListener('click', () => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
+  addBtn.addEventListener('click', (e) => {
+    const hasProfile = localStorage.getItem('hasProfile') === 'true';
+    if (!hasProfile) {
+      // Prevent other handlers and redirect to sign-in so user can create an account/profile
+      e.preventDefault();
+      e.stopImmediatePropagation();
       const returnUrl = window.location.href;
       window.location.href = `sign-in.html?next=${encodeURIComponent(returnUrl)}`;
       return;

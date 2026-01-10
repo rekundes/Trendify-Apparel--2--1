@@ -335,8 +335,9 @@
 // Sign-in form behavior: set logged-in flag and redirect if 'next' is provided
 document.querySelector('.signin-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    // Mark as logged in
+    // Mark as logged in and create a simple profile flag
     localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('hasProfile', 'true');
 
     // Respect next parameter for redirect
     const params = new URLSearchParams(window.location.search);
