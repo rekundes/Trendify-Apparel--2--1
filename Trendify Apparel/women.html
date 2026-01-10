@@ -739,9 +739,21 @@ cards.forEach(card => {
   const addBtn = document.querySelector('.hover-add-btn');
 
   addBtn.addEventListener('click', () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!isLoggedIn) {
+      const returnUrl = window.location.href;
+      window.location.href = `sign-in.html?next=${encodeURIComponent(returnUrl)}`;
+      return;
+    }
+
     alert(`Added to cart:\nSize: ${selectedSize}\nQuantity: ${quantity}`);
   });
+
+
+  
 </script>
 
 </body>
 </html>
+
+

@@ -337,8 +337,17 @@
   const addBtn = document.querySelector('.hover-add-btn');
 
   addBtn.addEventListener('click', () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!isLoggedIn) {
+      // Save return URL and send user to sign-in page
+      const returnUrl = window.location.href;
+      window.location.href = `sign-in.html?next=${encodeURIComponent(returnUrl)}`;
+      return;
+    }
+
+    // User is signed in — proceed to add to cart (placeholder behavior)
     alert(`Added to cart:\nSize: ${selectedSize}\nQuantity: ${quantity}`);
-    // Later, real cart logic can be added here.
+    // TODO: Add real cart logic here.
   });
 </script>
 
