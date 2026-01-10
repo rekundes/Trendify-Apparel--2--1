@@ -583,19 +583,21 @@
 <!-- SCRIPT -->
 <script>
   document.addEventListener("click", function(e) {
-    const dropdowns = document.querySelectorAll(".dropdown");
-    dropdowns.forEach(drop => {
-      const toggle = drop.querySelector(".toggle");
-      if (!drop.contains(e.target)) toggle.checked = false;
-    });
+  document.querySelectorAll(".dropdown").forEach(drop => {
+    const toggle = drop.querySelector(".toggle");
+    if (!drop.contains(e.target)) toggle.checked = false;
   });
+});
 
-  /* CATEGORY SYSTEM */
-  const params = new URLSearchParams(window.location.search);
-  const category = params.get("category") || "tops";
-
-  const categoryTitle = document.getElementById("categoryTitle");
-  const productGrid = document.getElementById("productGrid");
+/* CATEGORY SYSTEM */
+const params = new URLSearchParams(location.search);
+const category = params.get("category") || "tops";
+const productGrid = document.getElementById("productGrid");
+const categoryTitle = document.getElementById("categoryTitle");
+const hoverPreview = document.getElementById("hoverPreview");
+const hoverPreviewImg = document.getElementById("hoverPreviewImg");
+const hoverPriceBadge = document.getElementById("hoverPriceBadge");
+const hoverCloseBtn = document.querySelector('.hover-close-btn');
 
   const categories = {
     tops: [
@@ -650,94 +652,66 @@
 
   categoryTitle.textContent = category.toUpperCase();
 
-  const hoverPreview = document.getElementById('hoverPreview');
-  const hoverPreviewImg = document.getElementById('hoverPreviewImg');
-  const hoverPriceBadge = document.getElementById('hoverPriceBadge');
-  const hoverCloseBtn = document.querySelector('.hover-close-btn');
-
- // Build HTML once, adding data-index
+  /* BUILD PRODUCTS */
 let html = '';
 categories[category].forEach((item, index) => {
-  const badgeHtml = item.isNew ? `<div class="badge">New</div>` : '';
-
   html += `
-    <div class="product-card" data-index="${index}">
-      ${badgeHtml}
-      <img src="${item.img}" class="primary-img">
-      <img src="${item.secondaryImg || item.img}" class="secondary-img">
-      <div class="product-info">
-        <div class="product-name">${item.name}</div>
-        <div class="product-price">${item.price}</div>
-      </div>
+  <div class="product-card" data-index="${index}">
+    ${item.isNew ? `<div class="badge">New</div>` : ``}
+    <img src="${item.img}" class="primary-img">
+    <img src="${item.secondaryImg || item.img}" class="secondary-img">
+    <div class="product-info">
+      <div class="product-name">${item.name}</div>
+      <div class="product-price">${item.price}</div>
     </div>
-  `;
+  </div>`;
 });
-
 productGrid.innerHTML = html;
 
-// Click to open hover using data-index
-const cards = productGrid.querySelectorAll('.product-card');
-cards.forEach(card => {
-  const index = parseInt(card.getAttribute('data-index'), 10);
-  const item = categories[category][index];
+/* CLICK = SHOW EXACT IMAGE CLICKED */
+document.querySelectorAll(".product-card").forEach(card => {
+  card.addEventListener("click", e => {
+    const item = categories[category][card.dataset.index];
+    const clickedImg = e.target.tagName === "IMG" ? e.target.src : item.img;
 
-  card.addEventListener('click', () => {
-    if (hoverPreview && hoverPreviewImg && hoverPriceBadge) {
-      const mainImg = item.secondaryImg || item.img;
-      hoverPreviewImg.src = mainImg;
-      hoverPriceBadge.textContent = item.price;
-      hoverPreview.classList.add('show');
-      hoverPreview.setAttribute('aria-hidden', 'false');
-    }
+    hoverPreviewImg.src = clickedImg;
+    hoverPriceBadge.textContent = item.price;
+    hoverPreview.classList.add("show");
+    hoverPreview.setAttribute("aria-hidden", "false");
+
+    quantity = 1;
+    renderQty();
   });
 });
-  
-  // Close hover on X
-  hoverCloseBtn.addEventListener('click', () => {
-    hoverPreview.classList.remove('show');
-    hoverPreviewImg.src = '';
-    hoverPreview.setAttribute('aria-hidden', 'true');
-  });
 
-  /* SIZE SELECT */
-  const sizeChips = document.querySelectorAll('.size-chip');
-  let selectedSize = 'L';
+/* CLOSE MODAL */
+hoverCloseBtn.addEventListener("click", () => {
+  hoverPreview.classList.remove("show");
+  hoverPreviewImg.src = "";
+});
 
-  sizeChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      sizeChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      selectedSize = chip.textContent.trim();
-    });
-  });
+/* SIZE */
+let selectedSize = "L";
+document.querySelectorAll(".size-chip").forEach(chip=>{
+  chip.onclick=()=>{
+    document.querySelectorAll(".size-chip").forEach(c=>c.classList.remove("active"));
+    chip.classList.add("active");
+    selectedSize = chip.textContent.trim();
+  };
+});
 
-  /* QUANTITY CONTROLS */
+  /* QTY */
+  let quantity = 1;
   const qtyValue = document.querySelector('.qty-value');
   const qtyMinus = document.querySelector('.qty-btn.minus');
   const qtyPlus = document.querySelector('.qty-btn.plus');
-  let quantity = 1;
-
-  function renderQty() {
-    qtyValue.textContent = quantity;
-  }
-
-  qtyMinus.addEventListener('click', () => {
-    if (quantity > 1) {
-      quantity--;
-      renderQty();
-    }
-  });
-
-  qtyPlus.addEventListener('click', () => {
-    quantity++;
-    renderQty();
-  });
-
+  function renderQty() { qtyValue.textContent = quantity; }
+  qtyMinus.addEventListener('click', () => { if (quantity > 1) { quantity--; renderQty(); } });
+  qtyPlus.addEventListener('click', () => { quantity++; renderQty(); });
   renderQty();
 
-  /* ADD TO CART BUTTON */
+  /* ADD TO CART */
   const addBtn = document.querySelector('.hover-add-btn');
-
   addBtn.addEventListener('click', () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     if (!isLoggedIn) {
@@ -748,9 +722,6 @@ cards.forEach(card => {
 
     alert(`Added to cart:\nSize: ${selectedSize}\nQuantity: ${quantity}`);
   });
-
-
-  
 </script>
 
 </body>
