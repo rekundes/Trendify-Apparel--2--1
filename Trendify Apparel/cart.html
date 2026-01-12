@@ -6,741 +6,709 @@
   <title>Shopping Bag – Trendify</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
-    body { background: #fff; }
-
-    /* ---------------- HEADER ---------------- */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 9999;
-      background: #fff;
-      padding: 14px 40px;
-      border-bottom: 1px solid #e7e7e7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .nav-container {
-      width: 100%;
-      max-width: 1400px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-    }
-
-    .main-nav {
-      display: flex;
-      align-items: center;
-      gap: 35px;
-    }
-
-    .main-nav label,
-    .main-nav a {
-      font-size: 18px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      text-decoration: none;
-      color: #000;
-      cursor: pointer;
-    }
-
-    .logo {
-      width: 70px;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .nav-right {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 22px;
-    }
-
-    .nav-right i {
-      font-size: 22px;
-      color: #000;
-      cursor: pointer;
-    }
-
-    /* ---------------- DROPDOWN ---------------- */
-    .dropdown { position: relative; }
-    .toggle { display: none; }
-
-    .toggle:checked + label + .dropdown-area {
-      display: flex;
-    }
-
-    .dropdown-area {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 260px;
-      background: #fff;
-      border-right: 1px solid #ddd;
-      padding: 25px 20px;
-      padding-right: 35px;
-      display: none;
-      flex-direction: column;
-      gap: 22px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-
-    .section label {
-      font-size: 15px;
-      font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-
-    .sub-menu {
-      display: none;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-      padding-left: 12px;
-      border-left: 2px solid #000;
-    }
-
-    .section:hover .sub-menu {
-      display: flex;
-    }
-
-    .sub-menu a {
-      font-size: 14px;
-      font-weight: bold;
-      text-transform: uppercase;
-      color: #000;
-      text-decoration: none;
-    }
-
-    .sub-menu a:hover { opacity: 0.7; }
-
-    /* ---------------- EMPTY CART ---------------- */
-    .cart-empty {
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .cart-empty h2 {
-      font-size: 26px;
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-    }
-
-    .cart-empty p {
-      font-size: 16px;
-      margin-bottom: 25px;
-    }
-
-    .cart-empty a {
-      display: inline-block;
-      padding: 14px 28px;
-      background: #000;
-      color: #fff;
-      font-size: 15px;
-      text-decoration: none;
-      border-radius: 4px;
-    }
-
-    /* ---------------- PRODUCT GRID ---------------- */
-    .section-title {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 30px;
-      letter-spacing: 1px;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      padding: 0 40px 60px;
-    }
-
-    .product-card {
-      border: 1px solid #eee;
-      border-radius: 6px;
-      overflow: hidden;
-      transition: 0.3s ease;
-    }
-
-    .product-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .product-card img {
-      width: 100%;
-      height: 340px;
-      object-fit: cover;
-    }
-
-    .product-info {
-      padding: 15px;
-    }
-
-    .product-name {
-      font-size: 15px;
-      font-weight: bold;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-
-    .product-price {
-      font-size: 15px;
-      color: #333;
-    }
-
-    .product-price s {
-      color: #888;
-      margin-right: 6px;
-    }
-
-    /* ---------------- NEWSLETTER ---------------- */
-    .newsletter {
-      padding: 60px 20px;
-      text-align: center;
-      border-top: 1px solid #eee;
-    }
-
-    .newsletter h3 {
-      font-size: 20px;
-      margin-bottom: 15px;
-    }
-
-    .newsletter form {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .newsletter input {
-      width: 100%;
-      padding: 12px;
-      font-size: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      margin-bottom: 10px;
-    }
-
-    .newsletter button {
-      width: 100%;
-      padding: 12px;
-      background: #000;
-      color: #fff;
-      font-size: 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .newsletter p {
-      font-size: 13px;
-      margin-top: 10px;
-    }
-
-    /* ---------------- FOOTER ---------------- */
-    footer {
-      padding: 40px 20px;
-      background: #f9f9f9;
-      border-top: 1px solid #ddd;
-      font-size: 14px;
-      color: #333;
-    }
-
-    .footer-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 25px;
-    }
-
-    .footer-grid h4 {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .footer-grid p a {
-      text-decoration: none;
-      color: #333;
-    }
-
-    .footer-bottom {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 13px;
-      color: #666;
-    }
-
-    .footer-bottom a {
-      text-decoration: none;
-      color: #666;
-    }
-
-    /* ---------------- HOVER PREVIEW MODAL ---------------- */
-    .hover-preview { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.06); z-index: 10000; padding: 24px; }
-    .hover-preview.show { display: flex; }
-
-    /* Content wrapper to constrain modal width and prevent overlap */
-    .hover-preview .hover-content { display: flex; gap: 20px; width: min(100%, 1100px); max-height: calc(100vh - 120px); overflow: hidden; border-radius: 12px; background: #fff; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
-
-    .hover-preview .hover-image-wrapper { flex: 1 1 60%; min-width: 0; background: #f4f4f4; display: flex; align-items: center; justify-content: center; padding: 30px; border-radius: 8px; position: relative; }
-    .hover-preview .hover-image-wrapper img { max-width: 100%; max-height: calc(100vh - 260px); height: auto; object-fit: contain; display: block; }
-
-    .hover-details { flex: 0 0 38%; padding: 28px 30px; display: flex; flex-direction: column; gap: 18px; min-width: 260px; }
-
-    /* price badge remains anchored inside image wrapper */
-    .hover-price-badge { position: absolute; left: 22px; bottom: 22px; background: #000; color: #fff; padding: 8px 14px; border-radius: 999px; font-weight: 700; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-
-    .hover-price-badge { position: absolute; left: 22px; bottom: 22px; background: #000; color: #fff; padding: 8px 14px; border-radius: 999px; font-weight: 700; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-
-    .hover-details { width: 40%; padding: 28px 30px; display: flex; flex-direction: column; gap: 18px; }
-
-    .hover-size-row, .hover-qty-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .hover-size-label, .hover-qty-label { font-weight: 700; color: #111; }
-
-    .hover-size-options { display: flex; gap: 10px; }
-    .size-chip { border: 1px solid #111; background: #fff; padding: 10px 14px; border-radius: 18px; cursor: pointer; font-weight: 700; color: #111; box-shadow: none; }
-    .size-chip.active { background: #111; color: #fff; border-color: #111; }
-
-    /* Qty control matches screenshot: dark rounded pill aligned on the right */
-    .hover-qty-controls { display: inline-flex; align-items: center; gap: 12px; background: #111; padding: 8px 12px; border-radius: 14px; }
-    .qty-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; border: none; background: transparent; color: #fff; font-size: 18px; cursor: pointer; }
-    .qty-value { min-width: 28px; text-align: center; font-weight: 700; color: #fff; }
-
-    .hover-add-btn { margin-top: 12px; width: 100%; padding: 16px; background: #000; color: #fff; border-radius: 999px; border: none; font-weight: 800; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.08); text-align: center; }
-
-    .hover-close-btn { position: absolute; right: 16px; top: 12px; background: #fff; border: none; border-radius: 999px; padding: 8px 10px; cursor: pointer; font-size: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
-
-    /* Responsive: stack on small screens */
-    @media (max-width: 780px) {
-      .hover-preview { padding: 12px; }
-      .hover-preview .hover-image-wrapper { width: 100%; padding: 18px; }
-      .hover-details { width: 100%; padding: 18px; }
-      .hover-image-wrapper, .hover-details { border-radius: 10px; }
-    }
-  </style>
+  <link rel="stylesheet" href="cart.css">
 </head>
 
 <body>
-
-<!-- HEADER -->
-<header class="navbar">
-  <div class="nav-container">
-
-    <!-- LEFT NAV -->
-    <nav class="main-nav">
-
-      <!-- MEN -->
-      <div class="dropdown">
-  <input type="checkbox" id="men-toggle" class="toggle">
-  <label for="men-toggle">MEN</label>
-
-  <div class="dropdown-area">
-    <div class="section">
-      <label>CLOTHING</label>
-      <div class="sub-menu">
-        <a href="men.html?category=shirts">SHIRTS</a>
-        <a href="men.html?category=jackets">JACKETS</a>
-        <a href="men.html?category=jeans">JEANS</a>
-      </div>
-    </div>
-
-    <div class="section">
-      <label>ACCESSORIES</label>
-      <div class="sub-menu">
-        <a href="men.html?category=shoes">SHOES</a>
-        <a href="men.html?category=bags">BAGS</a>
-        <a href="men.html?category=jewelry">JEWELRY</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-      <!-- WOMEN -->
-      <div class="dropdown">
-        <input type="checkbox" id="women-toggle" class="toggle">
-        <label for="women-toggle">WOMEN</label>
-
-        <div class="dropdown-area">
-          <div class="section">
-  <label>CLOTHING</label>
-  <div class="sub-menu">
-    <a href="women.html?category=tops">TOPS</a>
-    <a href="women.html?category=dresses">DRESSES</a>
-    <a href="women.html?category=skirts">SKIRTS</a>
-  </div>
-</div>
-
-<div class="section">
-  <label>SHOES & ACCESSORIES</label>
-  <div class="sub-menu">
-    <a href="women.html?category=heels">HEELS</a>
-    <a href="women.html?category=bags">BAGS</a>
-    <a href="women.html?category=jewelry">JEWELRY</a>
-  </div>
-</div>
-
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="nav-container">
+      <nav class="main-nav">
+        <!-- MEN -->
+        <div class="dropdown">
+          <input type="checkbox" id="men-toggle" class="toggle">
+          <label for="men-toggle">MEN</label>
+          <div class="dropdown-area">
+            <div class="section">
+              <label>CLOTHING</label>
+              <div class="sub-menu">
+                <a href="men.html?category=shirts">SHIRTS</a>
+                <a href="men.html?category=jackets">JACKETS</a>
+                <a href="men.html?category=jeans">JEANS</a>
+              </div>
+            </div>
+            <div class="section">
+              <label>ACCESSORIES</label>
+              <div class="sub-menu">
+                <a href="men.html?category=shoes">SHOES</a>
+                <a href="men.html?category=bags">BAGS</a>
+                <a href="men.html?category=jewelry">JEWELRY</a>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-
-
-    </nav>
-
-    <!-- CENTER LOGO -->
-    <a href="main.html">
-      <img src="img/logo.png" class="logo" alt="">
-    </a>
-
-    <!-- RIGHT NAV -->
-    <div class="nav-right">
-      <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
-      <a href="cart.html">
-    <i class="fa-solid fa-cart-shopping"></i>
-    <span id="cart-counter" class="cart-count">0</span>
-</a>
-
-  </div>
-</header>
-
-<!-- EMPTY CART -->
-<section class="cart-empty">
-  <h2>YOUR SHOPPING BAG IS EMPTY</h2>
-  <p>Get inspiration for your new wardrobe from the latest looks</p>
-  <a href="main.html">SEE WHAT'S NEW</a>
-</section>
-
-<!-- MAY INTEREST YOU -->
-<h2 class="section-title">MAY INTEREST YOU</h2>
-
-<section class="product-grid" id="productGrid"></section>
-
-<!-- NEWSLETTER -->
-<section class="newsletter">
-  <h3>10% off your next purchase by subscribing to the newsletter</h3>
-  <form>
-    <input type="email" placeholder="E-mail">
-    <button type="submit">SIGN UP NOW</button>
-    <p>By subscribing, you confirm that you have read the <a href="#">Privacy Policy</a>.</p>
-  </form>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-
-    <div>
-      <h4>CUSTOMER SERVICE</h4>
-      <p><a href="#">Help</a></p>
-      <p><a href="#">My Purchases</a></p>
-      <p><a href="#">Returns</a></p>
-    </div>
-
-    <div>
-      <h4>COMPANY</h4>
-      <p><a href="#">About Us</a></p>
-      <p><a href="#">Work for Trendify</a></p>
-      <p><a href="#">Press</a></p>
-    </div>
-
-    <div>
-      <h4>DISCOVER</h4>
-      <p><a href="#">Responsibility</a></p>
-      <p><a href="#">Stores</a></p>
-      <p><a href="#">Site Map</a></p>
-    </div>
-
-    <div>
-      <h4>FOLLOW US</h4>
-      <p>Instagram · Facebook · YouTube</p>
-      <p>TikTok · Spotify · Pinterest</p>
-      <p>X · LinkedIn</p>
-    </div>
-
-    <div>
-      <h4>LOCATION</h4>
-      <p>PHILIPPINES ▼</p>
-    </div>
-
-  </div>
-
-  <div class="footer-bottom">
-    <p>
-      <a href="#">Privacy Policy and Cookies</a> ·
-      <a href="#">Terms and Conditions</a> ·
-      <a href="#">Ethics Channel</a>
-    </p>
-    <p style="margin-top: 10px;">© 2025 Trendify. All rights reserved.</p>
-  </div>
-</footer>
-
-<!-- OUTSIDE CLICK SCRIPT -->
-<script>
-  document.addEventListener("click", function(e) {
-    const dropdowns = document.querySelectorAll(".dropdown");
-    dropdowns.forEach(drop => {
-      const toggle = drop.querySelector(".toggle");
-      if (!drop.contains(e.target)) {
-        toggle.checked = false;
-      }
-    });
-  });
-
-  // Combined products (same as search.html)
-  const allProducts = [
-    /* MEN - Shirts */
-    { img: "img/img/img/men-shirt1.jpg", name: "Enigma 8-Ball", price: "Php 299" },
-    { img: "img/img/img/men-shirt2.jpg", name: "Enigma Eyes That Peak", price: "Php 299" },
-    { img: "img/img/img/men-shirt3.jpg", name: "Universe", price: "Php 299" },
-    { img: "img/img/img/men-shirt4.jpg", name: "Chicago 23", price: "Php 399" },
-    { img: "img/img/img/men-shirt5.jpg", name: "Death riot", price: "Php 499" },
-    { img: "img/img/img/men-shirt6.jpg", name: "Porche 911", price: "Php 299" },
-
-    /* MEN - Jackets */
-    { img: "img/img/img/men-jacket1.jpg", name: "Ferrari Jacket", price: "Php 899" },
-    { img: "img/img/img/men-jacket2.jpg", name: "Srel Jacket", price: "Php 999" },
-    { img: "img/img/img/men-jacket3.jpg", name: "Sincere Jacket", price: "Php 799" },
-    { img: "img/img/img/men-jacket4.jpg", name: "Cartier Jacket", price: "Php 699" },
-    { img: "img/img/img/men-jacket5.jpg", name: "Tokyo Japan Jacket", price: "Php 899" },
-    { img: "img/img/img/men-jacket6.jpg", name: "New York Jacket", price: "Php 749" },
-
-    /* MEN - Jeans */
-    { img: "img/img/img/men-jeans1.jpg", name: "Skull Jeans", price: "Php 799" },
-    { img: "img/img/img/men-jeans2.jpg", name: "Techwear Pants", price: "Php 899" },
-    { img: "img/img/img/men-jeans3.jpg", name: "BAGGY Jeans", price: "Php 499" },
-    { img: "img/img/img/men-jeans4.jpg", name: "CARGO Pants", price: "Php 599" },
-    { img: "img/img/img/men-jeans5.jpg", name: "BLUE JEANS", price: "Php 399" },
-    { img: "img/img/img/men-jeans6.jpg", name: "WHITE CARGO", price: "Php 499" },
-
-    /* MEN - Shoes */
-    { img: "img/img/img/men-shoes1.jpg", name: "Nike Air Jordan 1 Retro High OG", price: "Php 3,495" },
-    { img: "img/img/img/men-shoes2.jpg", name: "Jordan 4 Retro Off-White", price: "Php 2,995" },
-    { img: "img/img/img/men-shoes3.jpg", name: "Chuck Taylor All-Star", price: "Php 2,495" },
-    { img: "img/img/img/men-shoes4.jpg", name: "Onitsuka Tiger", price: "Php 4,595" },
-    { img: "img/img/img/men-shoes5.jpg", name: "Black Puma Speedcat", price: "Php 1,995" },
-    { img: "img/img/img/men-shoes6.jpg", name: "ADIDAS SUPERSTAR", price: "Php 3,895" },
-
-    /* MEN - Bags */
-    { img: "img/img/img/men-bag1.jpg", name: "CrossBODY Bag", price: "Php 2,995" },
-    { img: "img/img/img/men-bag2.jpg", name: "Louis Vuitton Bag", price: "Php 3,495" },
-    { img: "img/img/img/men-bag3.jpg", name: "Supreme Bag", price: "Php 2,495" },
-    { img: "img/img/img/men-bag4.jpg", name: "Prada x Adidas Bag", price: "Php 3,995" },
-    { img: "img/img/img/men-bag5.jpg", name: "Nike Backpack", price: "Php 1,495" },
-    { img: "img/img/img/men-bag6.jpg", name: "Bape Backpack", price: "Php 4,295" },
-
-    /* MEN - Accessories */
-    { img: "img/img/img/men-accessories1.jpg", name: "Chain Necklace", price: "Php 795" },
-    { img: "img/img/img/men-accessories2.jpg", name: "Bracelet", price: "Php 695" },
-    { img: "img/img/img/men-accessories3.jpg", name: "Watch", price: "Php 895" },
-    { img: "img/img/img/men-accessories4.jpg", name: "Earring", price: "Php 595" },
-    { img: "img/img/img/men-accessories5.jpg", name: "Ring", price: "Php 1,195" },
-    { img: "img/img/img/men-accessories6.jpg", name: "Sun Glasses", price: "Php 495" },
-
-    /* WOMEN - Tops */
-    { img: "img/img/women-top1.jpg", name: "Rockmore Croptop", price: "Php 1,295" },
-    { img: "img/img/women-top2.jpg", name: "Floral Blouse", price: "Php 995" },
-    { img: "img/img/women-top3.jpg", name: "Black Top", price: "Php 1,195" },
-    { img: "img/img/women-top4.jpg", name: "Nirvana", price: "Php 1,395" },
-    { img: "img/img/women-top5.jpg", name: "Butterfly Top", price: "Php 1,495" },
-    { img: "img/img/women-top6.jpg", name: "Angels Top", price: "Php 895" },
-
-    /* WOMEN - Dresses */
-    { img: "img/img/img/women-dress1.jpg", name: "Sweetheart Long Sleeve", price: "Php 2,495" },
-    { img: "img/img/img/women-dress2.jpg", name: "Brown Long Sleeve", price: "Php 2,995" },
-    { img: "img/img/img/women-dress3.jpg", name: "Black Dress", price: "Php 2,295" },
-    { img: "img/img/img/women-dress4.jpg", name: "Red Long Sleeve Dress", price: "Php 1,995" },
-    { img: "img/img/img/women-dress5.jpg", name: "Blue Short Sleeve Dress", price: "Php 3,195" },
-    { img: "img/img/img/women-dress6.jpg", name: "Green Dress", price: "Php 2,495" },
-
-    /* WOMEN - Skirts */
-    { img: "img/img/img/women-skirts1.jpg", name: "Black Skirt", price: "Php 1,495" },
-    { img: "img/img/img/women-skirts2.jpg", name: "Red Skirt", price: "Php 1,295" },
-    { img: "img/img/img/women-skirts3.jpg", name: "Blue Skirt", price: "Php 1,695" },
-    { img: "img/img/img/women-skirts4.jpg", name: "Brown Skirt", price: "Php 1,895" },
-    { img: "img/img/img/women-skirts5.jpg", name: "Cargo Skirt", price: "Php 1,595" },
-    { img: "img/img/img/women-skirts6.jpg", name: "Pink Skirt", price: "Php 2,195" },
-
-    /* WOMEN - Heels */
-    { img: "img/img/img/women-heels1.jpg", name: "Red Heels", price: "Php 1,995" },
-    { img: "img/img/img/women-heels2.jpg", name: "Black Heels", price: "Php 1,895" },
-    { img: "img/img/img/women-heels3.jpg", name: "White Heels", price: "Php 2,195" },
-    { img: "img/img/img/women-heels4.jpg", name: "Pink Heels", price: "Php 2,495" },
-    { img: "img/img/img/women-heels5.jpg", name: "Blue Heels", price: "Php 2,095" },
-    { img: "img/img/img/women-heels6.jpg", name: "Green Heels", price: "Php 1,795" },
-
-    /* WOMEN - Bags */
-    { img: "img/img/img/women-bags1.jpg", name: "Black Handbag", price: "Php 3,495" },
-    { img: "img/img/img/women-bags2.jpg", name: "White Bag", price: "Php 2,295" },
-    { img: "img/img/img/women-bags3.jpg", name: "Pink Bag", price: "Php 2,495" },
-    { img: "img/img/img/women-bags4.jpg", name: "Green Bag", price: "Php 1,895" },
-    { img: "img/img/img/women-bags5.jpg", name: "Red Bag", price: "Php 2,995" },
-    { img: "img/img/img/women-bags6.jpg", name: "Pink Shoulder Bag", price: "Php 1,595" },
-
-    /* WOMEN - Jewelry */
-    { img: "img/img/img/women-jewelry1.jpg", name: "Flower Bracelet", price: "Php 795" },
-    { img: "img/img/img/women-jewelry2.jpg", name: "Heart Bracelet", price: "Php 995" },
-    { img: "img/img/img/women-jewelry3.jpg", name: "Rose Bracelet", price: "Php 895" },
-    { img: "img/img/img/women-jewelry4.jpg", name: "Gold Ring", price: "Php 1,195" },
-    { img: "img/img/img/women-jewelry5.jpg", name: "Pink Earrings", price: "Php 695" },
-    { img: "img/img/img/women-jewelry6.jpg", name: "Black Earrings", price: "Php 495" }
-  ];
-
-  const productGridEl = document.getElementById('productGrid');
-
-  function renderProducts(list) {
-    if (!productGridEl) return;
-    productGridEl.innerHTML = list.map(p => `
-      <div class="product-card">
-        <img src="${p.img}" onerror="this.onerror=null;this.src='img/img/placeholder.jpg'">
-        <div class="product-info">
-          <div class="product-name">${p.name}</div>
-          <div class="product-price">${p.price}</div>
+        <!-- WOMEN -->
+        <div class="dropdown">
+          <input type="checkbox" id="women-toggle" class="toggle">
+          <label for="women-toggle">WOMEN</label>
+          <div class="dropdown-area">
+            <div class="section">
+              <label>CLOTHING</label>
+              <div class="sub-menu">
+                <a href="women.html?category=tops">TOPS</a>
+                <a href="women.html?category=dresses">DRESSES</a>
+                <a href="women.html?category=skirts">SKIRTS</a>
+              </div>
+            </div>
+            <div class="section">
+              <label>SHOES & ACCESSORIES</label>
+              <div class="sub-menu">
+                <a href="women.html?category=heels">HEELS</a>
+                <a href="women.html?category=bags">BAGS</a>
+                <a href="women.html?category=jewelry">JEWELRY</a>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    `).join('');
+      </nav>
 
-    // Attach click to open preview modal (same behavior as search)
-    productGridEl.querySelectorAll('.product-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const name = card.querySelector('.product-name')?.textContent.trim();
-        const price = card.querySelector('.product-price')?.textContent.trim();
-        const img = card.querySelector('img')?.src;
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+        body { background: #fff; }
 
-        const hoverPreview = document.getElementById('hoverPreview');
-        const hoverPreviewImg = document.getElementById('hoverPreviewImg');
-        const hoverPriceBadge = document.getElementById('hoverPriceBadge');
-        if (hoverPreviewImg) hoverPreviewImg.src = img;
-        if (hoverPriceBadge) hoverPriceBadge.textContent = price;
-
-        document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('active'));
-        const defaultChip = document.querySelector('.size-chip');
-        if (defaultChip) defaultChip.classList.add('active');
-        document.querySelector('.qty-value').textContent = '1';
-
-        if (hoverPreview) {
-          hoverPreview.classList.add('show');
-          hoverPreview.setAttribute('aria-hidden', 'false');
+        /* HEADER */
+        .navbar {
+          position: sticky;
+          top: 0;
+          z-index: 9999;
+          background: #fff;
+          padding: 14px 40px;
+          border-bottom: 1px solid #e7e7e7;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .nav-container {
+          width: 100%;
+          max-width: 1400px;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+        }
+        .main-nav { display: flex; align-items: center; gap: 35px; }
+        .main-nav label, .main-nav a {
+          font-size: 18px;
+          font-weight: bold;
+          letter-spacing: 1px;
+          text-decoration: none;
+          color: #000;
+          cursor: pointer;
+        }
+        .logo { width: 70px; display: block; margin: 0 auto; }
+        .nav-right {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          gap: 22px;
+        }
+        .nav-right i { font-size: 22px; color: #000; cursor: pointer; }
+        .cart-count {
+          position: absolute;
+          top: -6px;
+          right: -10px;
+          background: #000;
+          color: #fff;
+          border-radius: 999px;
+          font-size: 11px;
+          padding: 2px 6px;
+          display: none;
         }
 
-        updateAddButtonState();
-        hoverPreview.dataset.name = name || '';
-        hoverPreview.dataset.price = price || '';
-        hoverPreview.dataset.img = img || '';
+        /* DROPDOWN */
+        .dropdown { position: relative; }
+        .toggle { display: none; }
+        .toggle:checked + label + .dropdown-area { display: flex; }
+        .dropdown-area {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 260px;
+          background: #fff;
+          border-right: 1px solid #ddd;
+          padding: 25px 20px 25px 20px;
+          padding-right: 35px;
+          display: none;
+          flex-direction: column;
+          gap: 22px;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .section label {
+          font-size: 15px;
+          font-weight: bold;
+          text-transform: uppercase;
+          cursor: pointer;
+        }
+        .sub-menu {
+          display: none;
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 8px;
+          padding-left: 12px;
+          border-left: 2px solid #000;
+        }
+        .section:hover .sub-menu { display: flex; }
+        .sub-menu a {
+          font-size: 14px;
+          font-weight: bold;
+          text-transform: uppercase;
+          color: #000;
+          text-decoration: none;
+        }
+        .sub-menu a:hover { opacity: 0.7; }
+
+        /* EMPTY CART MESSAGE */
+        .cart-empty {
+          text-align: center;
+          padding: 60px 20px 30px;
+        }
+        .cart-empty h2 {
+          font-size: 26px;
+          margin-bottom: 10px;
+          letter-spacing: 1px;
+        }
+        .cart-empty p { font-size: 16px; margin-bottom: 25px; }
+        .cart-empty a {
+          display: inline-block;
+          padding: 14px 28px;
+          background: #000;
+          color: #fff;
+          font-size: 15px;
+          text-decoration: none;
+          border-radius: 4px;
+        }
+
+        /* CART ITEMS PANEL */
+        .cart-items {
+          max-width: 900px;
+          margin: 20px auto 10px;
+          padding: 20px 24px 80px;
+          border-radius: 14px;
+          box-shadow: 0 14px 40px rgba(0,0,0,0.06);
+          background: #fff;
+        }
+        .cart-title {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+        .cart-group-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          margin: 10px 0 6px;
+        }
+        .cart-group-pill {
+          display: inline-block;
+          padding: 4px 10px;
+          border-radius: 999px;
+          border: 1px solid #000;
+          font-size: 11px;
+          text-transform: uppercase;
+        }
+        .cart-item-row {
+          display: grid;
+          grid-template-columns: auto 80px 1fr auto;
+          gap: 14px;
+          padding: 10px 0 14px;
+          border-bottom: 1px solid #eee;
+          align-items: center;
+        }
+        .cart-item-select {
+          display: flex;
+          justify-content: center;
+        }
+        .cart-item-thumb {
+          width: 72px;
+          height: 72px;
+          border-radius: 8px;
+          overflow: hidden;
+          background: #f4f4f4;
+        }
+        .cart-item-thumb img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .cart-item-main {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .cart-item-name {
+          font-size: 14px;
+          font-weight: 600;
+        }
+        .cart-item-meta {
+          font-size: 12px;
+          color: #666;
+        }
+        .cart-item-qty {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 8px;
+        }
+        .cart-qty-controls {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background: #111;
+          padding: 6px 10px;
+          border-radius: 12px;
+        }
+        .cart-qty-btn {
+          width: 26px;
+          height: 26px;
+          border-radius: 8px;
+          border: none;
+          background: transparent;
+          color: #fff;
+          font-size: 16px;
+          cursor: pointer;
+        }
+        .cart-qty-value {
+          min-width: 24px;
+          text-align: center;
+          color: #fff;
+          font-weight: 600;
+        }
+        .cart-remove-btn {
+          margin-top: 6px;
+          padding: 6px 10px;
+          font-size: 12px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          background: #fff;
+          cursor: pointer;
+        }
+
+        /* Checkout bar */
+        .checkout-bar {
+          position: sticky;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #fff;
+          border-top: 1px solid #eee;
+          padding: 12px 16px;
+          display: none;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          z-index: 50;
+        }
+        .checkout-info {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 14px;
+        }
+        .checkout-total {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-weight: 700;
+        }
+        .checkout-btn {
+          padding: 10px 20px;
+          border-radius: 999px;
+          border: none;
+          background: #000;
+          color: #fff;
+          font-weight: 700;
+          cursor: pointer;
+        }
+        .checkout-btn:disabled {
+          opacity: .4;
+          cursor: default;
+        }
+
+        /* NEWSLETTER */
+        .newsletter {
+          padding: 60px 20px;
+          text-align: center;
+          border-top: 1px solid #eee;
+        }
+        .newsletter h3 { font-size: 20px; margin-bottom: 15px; }
+        .newsletter form {
+          max-width: 400px;
+          margin: 0 auto;
+        }
+        .newsletter input {
+          width: 100%;
+          padding: 12px;
+          font-size: 15px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          margin-bottom: 10px;
+        }
+        .newsletter button {
+          width: 100%;
+          padding: 12px;
+          background: #000;
+          color: #fff;
+          font-size: 15px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .newsletter p { font-size: 13px; margin-top: 10px; }
+
+        /* FOOTER */
+        footer {
+          padding: 40px 20px;
+          background: #f9f9f9;
+          border-top: 1px solid #ddd;
+          font-size: 14px;
+          color: #333;
+        }
+        .footer-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 25px;
+        }
+        .footer-grid h4 { font-weight: bold; margin-bottom: 10px; }
+        .footer-bottom {
+          text-align: center;
+          margin-top: 30px;
+          font-size: 13px;
+          color: #666;
+        }
+        .footer-bottom a {
+          text-decoration: none;
+          color: #666;
+        }
+      </style>
+
+      <a href="main.html">
+        <img src="img/logo.png" class="logo" alt="">
+      </a>
+
+      <div class="nav-right">
+        <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
+        <a href="cart.html" style="position:relative;">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span id="cart-counter" class="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CART CONTENT -->
+  <main class="cart-page">
+    <!-- VISIBLE WHEN CART HAS ITEMS -->
+    <section id="cartItemsSection" class="cart-items" style="display:none;">
+      <h1 class="cart-title">Shopping bag</h1>
+      <div id="cartItemsList"></div>
+    </section>
+
+    <!-- Checkout bar -->
+    <div id="checkoutBar" class="checkout-bar">
+      <div class="checkout-info">
+        <label>
+          <input type="checkbox" id="selectAllCart">
+          Select all
+        </label>
+        <span id="checkoutCount">0 item</span>
+      </div>
+      <div class="checkout-total">
+        Total: <span id="checkoutTotal">₱0</span>
+        <button id="checkoutBtn" class="checkout-btn" disabled>Check out</button>
+      </div>
+    </div>
+
+    <!-- VISIBLE WHEN CART IS EMPTY -->
+    <section class="cart-empty">
+      <h2>YOUR SHOPPING BAG IS EMPTY</h2>
+      <p>Get inspiration for your new wardrobe from the latest looks</p>
+      <a href="main.html">SEE WHAT'S NEW</a>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+      <h3>10% off your next purchase by subscribing to the newsletter</h3>
+      <form>
+        <input type="email" placeholder="E-mail">
+        <button type="submit">SIGN UP NOW</button>
+        <p>By subscribing, you confirm that you have read the <a href="#">Privacy Policy</a>.</p>
+      </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-grid">
+        <div>
+          <h4>CUSTOMER SERVICE</h4>
+          <p><a href="#">Help</a></p>
+          <p><a href="#">My Purchases</a></p>
+          <p><a href="#">Returns</a></p>
+        </div>
+        <div>
+          <h4>COMPANY</h4>
+          <p><a href="#">About Us</a></p>
+          <p><a href="#">Work for Trendify</a></p>
+          <p><a href="#">Press</a></p>
+        </div>
+        <div>
+          <h4>DISCOVER</h4>
+          <p><a href="#">Responsibility</a></p>
+          <p><a href="#">Stores</a></p>
+          <p><a href="#">Site Map</a></p>
+        </div>
+        <div>
+          <h4>FOLLOW US</h4>
+          <p>Instagram · Facebook · YouTube</p>
+          <p>TikTok · Spotify · Pinterest</p>
+          <p>X · LinkedIn</p>
+        </div>
+        <div>
+          <h4>LOCATION</h4>
+          <p>PHILIPPINES ▼</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          <a href="#">Privacy Policy and Cookies</a> ·
+          <a href="#">Terms and Conditions</a> ·
+          <a href="#">Ethics Channel</a>
+        </p>
+        <p style="margin-top: 10px;">© 2025 Trendify. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // close dropdowns when clicking outside
+    document.addEventListener("click", function(e) {
+      const dropdowns = document.querySelectorAll(".dropdown");
+      dropdowns.forEach(drop => {
+        const toggle = drop.querySelector(".toggle");
+        if (!drop.contains(e.target)) toggle.checked = false;
       });
     });
-  }
 
-  // Render all products on the cart page
-  renderProducts(allProducts);
+    // parse "₱1,295" -> 1295
+    function parsePriceToNumber(p) {
+      if (!p) return 0;
+      return parseFloat(p.replace(/[₱,]/g, '')) || 0;
+    }
 
-  // --- Append hover preview modal and logic ---
-  (function(){
-    const hoverPreview = document.createElement('div');
-    hoverPreview.id = 'hoverPreview';
-    hoverPreview.className = 'hover-preview';
-    hoverPreview.setAttribute('aria-hidden', 'true');
-    hoverPreview.innerHTML = `
-      <button type="button" class="hover-close-btn">✕</button>
-      <div class="hover-content">
-        <div class="hover-image-wrapper">
-          <img id="hoverPreviewImg" src="" alt="Product preview" />
-          <div class="hover-price-badge" id="hoverPriceBadge">₱0</div>
-        </div>
-        <div class="hover-details">
-          <div class="hover-size-row">
-            <div class="hover-size-label">Size</div>
-            <div class="hover-size-options">
-              <button class="size-chip">S</button>
-              <button class="size-chip">M</button>
-              <button class="size-chip active">L</button>
-              <button class="size-chip">XL</button>
-            </div>
-          </div>
-          <div class="hover-qty-row">
-            <div class="hover-qty-label">Quantity</div>
-            <div class="hover-qty-controls">
-              <button class="qty-btn minus">−</button>
-              <span class="qty-value">1</span>
-              <button class="qty-btn plus">+</button>
-            </div>
-          </div>
-          <button type="button" class="hover-add-btn">Add to cart</button>
-        </div>
-      </div>`; 
-
-    document.body.appendChild(hoverPreview);
-
-    document.body.addEventListener('click', function(e){
-      if (e.target.matches('.hover-close-btn')) {
-        hoverPreview.classList.remove('show');
-        document.getElementById('hoverPreviewImg').src = '';
-        hoverPreview.setAttribute('aria-hidden','true');
-      }
-    });
-
-    document.body.addEventListener('click', function(e){
-      if (e.target.classList.contains('size-chip')) {
-        document.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
-        e.target.classList.add('active');
-      }
-    });
-
-    document.body.addEventListener('click', function(e){
-      if (e.target.classList.contains('qty-btn')) {
-        const valEl = document.querySelector('.qty-value');
-        let val = parseInt(valEl.textContent) || 1;
-        if (e.target.classList.contains('minus') && val>1) val--;
-        if (e.target.classList.contains('plus')) val++;
-        valEl.textContent = val;
-      }
-    });
+    let selectedIndexes = new Set();
 
     function updateCartCounter() {
       const counter = document.getElementById('cart-counter');
       const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
-      const total = cart.reduce((s,i)=>s+(i.qty||1),0);
-      if (counter) { counter.innerText = total; counter.style.display = total>0 ? 'block' : 'none'; }
+      const total = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+      if (!counter) return;
+      counter.innerText = total;
+      counter.style.display = total > 0 ? 'block' : 'none';
     }
 
-    document.body.addEventListener('click', function(e){
-      if (e.target.classList.contains('hover-add-btn')) {
-        const hasProfile = localStorage.getItem('hasProfile') === 'true';
-        if (!hasProfile) { window.location.href = `sign-in.html?next=${encodeURIComponent(window.location.href)}`; return; }
+    function updateCheckoutSummary(cart) {
+      const bar     = document.getElementById('checkoutBar');
+      const totalEl = document.getElementById('checkoutTotal');
+      const countEl = document.getElementById('checkoutCount');
+      const btn     = document.getElementById('checkoutBtn');
 
-        const preview = document.getElementById('hoverPreview');
-        const name = preview.dataset.name || '';
-        const price = preview.dataset.price || '';
-        const img = preview.dataset.img || document.getElementById('hoverPreviewImg').src || '';
-        const qty = parseInt(document.querySelector('.qty-value').textContent) || 1;
+      if (!bar || !totalEl || !countEl || !btn) return;
 
-        const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
-        const existing = cart.find(i=>i.name===name && i.price===price);
-        if (existing) existing.qty = (existing.qty||1)+qty; else cart.push({ name, price, img, qty });
-        localStorage.setItem('trendify_cart', JSON.stringify(cart));
-        updateCartCounter();
-        alert(`Added to cart:\n${name}\n${price}\nQty: ${qty}`);
-        preview.classList.remove('show');
+      if (!cart || cart.length === 0) {
+        bar.style.display = 'none';
+        selectedIndexes.clear();
+        return;
       }
+
+      bar.style.display = 'flex';
+
+      let total = 0;
+      let count = 0;
+
+      cart.forEach((item, index) => {
+        if (selectedIndexes.has(index)) {
+          const priceNum = parsePriceToNumber(item.price);
+          const qty = item.qty || 1;
+          total += priceNum * qty;
+          count += qty;
+        }
+      });
+
+      totalEl.textContent = '₱' + total.toLocaleString('en-PH');
+      countEl.textContent = count + (count === 1 ? ' item' : ' items');
+      btn.disabled = count === 0;
+    }
+
+    // category label helper
+    function getCategoryLabel(item) {
+      const n = (item.name || '').toLowerCase();
+
+      if (n.includes('croptop') || n.includes('blouse') || n.includes('top')) return 'Women tops';
+      if (n.includes('dress')) return 'Women dresses';
+      if (n.includes('skirt')) return 'Women skirts';
+      if (n.includes('heels')) return 'Women heels';
+      if (n.includes('handbag') || n.includes('shoulder bag') || n.includes('bag')) return 'Women bags';
+      if (n.includes('bracelet') || n.includes('earrings') || n.includes('ring')) return 'Women jewelry';
+
+      if (n.includes('enigma') || n.includes('universe') || n.includes('chicago') || n.includes('shirt')) return 'Men shirts';
+      if (n.includes('jacket')) return 'Men jackets';
+      if (n.includes('jeans') || n.includes('cargo')) return 'Men jeans';
+      if (n.includes('jordan') || n.includes('shoes') || n.includes('sneaker')) return 'Men shoes';
+      if (n.includes('backpack') || n.includes('crossbody') || n.includes('bag')) return 'Men bags';
+      if (n.includes('necklace') || n.includes('watch') || n.includes('sun glasses')) return 'Men accessories';
+
+      return 'Trendify';
+    }
+
+    function renderCartItemsPanel() {
+      const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
+      const section = document.getElementById('cartItemsSection');
+      const listEl  = document.getElementById('cartItemsList');
+      const emptyEl = document.querySelector('.cart-empty');
+      const selectAllEl = document.getElementById('selectAllCart');
+
+      if (!section || !listEl) return;
+
+      if (cart.length === 0) {
+        section.style.display = 'none';
+        if (emptyEl) emptyEl.style.display = 'block';
+        updateCartCounter();
+        updateCheckoutSummary(cart);
+        return;
+      }
+
+      if (emptyEl) emptyEl.style.display = 'none';
+      section.style.display = 'block';
+
+      listEl.innerHTML = '';
+
+      // AUTO‑SELECT ALL ITEMS ON LOAD
+      selectedIndexes = new Set(cart.map((_, idx) => idx));
+
+      cart.forEach((item, index) => {
+        const groupLabel = getCategoryLabel(item);
+        const row = document.createElement('div');
+        row.innerHTML = `
+          <div class="cart-group-header">
+            <span class="cart-group-pill">${groupLabel}</span>
+          </div>
+          <div class="cart-item-row">
+            <div class="cart-item-select">
+              <input type="checkbox" class="cart-select-checkbox" data-index="${index}">
+            </div>
+            <div class="cart-item-thumb">
+              <img src="${item.img}" alt="${item.name}">
+            </div>
+            <div class="cart-item-main">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-meta">
+                ${item.price}${item.size ? ' · ' + item.size : ''}
+              </div>
+            </div>
+            <div class="cart-item-qty">
+              <div class="cart-qty-controls">
+                <button class="cart-qty-btn minus">−</button>
+                <span class="cart-qty-value">${item.qty || 1}</span>
+                <button class="cart-qty-btn plus">+</button>
+              </div>
+              <button class="cart-remove-btn" data-index="${index}">Remove</button>
+            </div>
+          </div>
+        `;
+
+        const checkbox = row.querySelector('.cart-select-checkbox');
+        const minusBtn  = row.querySelector('.cart-qty-btn.minus');
+        const plusBtn   = row.querySelector('.cart-qty-btn.plus');
+        const valEl     = row.querySelector('.cart-qty-value');
+        const removeBtn = row.querySelector('.cart-remove-btn');
+
+        // checked by default
+        checkbox.checked = true;
+
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) {
+            selectedIndexes.add(index);
+          } else {
+            selectedIndexes.delete(index);
+          }
+          if (selectAllEl) {
+            selectAllEl.checked = cart.length > 0 && cart.every((_, i) => selectedIndexes.has(i));
+          }
+          updateCheckoutSummary(cart);
+        });
+
+        minusBtn.addEventListener('click', () => {
+          let q = parseInt(valEl.textContent) || 1;
+          if (q > 1) {
+            q--;
+            valEl.textContent = q;
+            item.qty = q;
+            localStorage.setItem('trendify_cart', JSON.stringify(cart));
+            updateCartCounter();
+            updateCheckoutSummary(cart);
+          }
+        });
+
+        plusBtn.addEventListener('click', () => {
+          let q = parseInt(valEl.textContent) || 1;
+          q++;
+          valEl.textContent = q;
+          item.qty = q;
+          localStorage.setItem('trendify_cart', JSON.stringify(cart));
+          updateCartCounter();
+          updateCheckoutSummary(cart);
+        });
+
+        removeBtn.addEventListener('click', () => {
+          const newCart = cart.filter((_, i) => i !== index);
+          localStorage.setItem('trendify_cart', JSON.stringify(newCart));
+          selectedIndexes.delete(index);
+          updateCartCounter();
+          renderCartItemsPanel();
+        });
+
+        listEl.appendChild(row);
+      });
+
+      if (selectAllEl) {
+        selectAllEl.onchange = () => {
+          if (selectAllEl.checked) {
+            selectedIndexes = new Set(cart.map((_, idx) => idx));
+          } else {
+            selectedIndexes.clear();
+          }
+          document.querySelectorAll('.cart-select-checkbox').forEach(cb => {
+            cb.checked = selectAllEl.checked;
+          });
+          updateCheckoutSummary(cart);
+        };
+        // select-all checked because everything is selected
+        selectAllEl.checked = true;
+      }
+
+      updateCheckoutSummary(cart);
+    }
+
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
+      const selectedItems = cart.filter((_, idx) => selectedIndexes.has(idx));
+      if (selectedItems.length === 0) return;
+
+      // Save selected items for checkout flow
+      localStorage.setItem('trendify_checkout', JSON.stringify(selectedItems));
+      // Later you can build checkout.html; for now this is the target
+      window.location.href = 'checkout.html';
     });
 
-    window.updateAddButtonState = function() {
-      const hasProfile = localStorage.getItem('hasProfile') === 'true';
-      const btn = document.querySelector('.hover-add-btn');
-      if (!btn) return;
-      btn.textContent = hasProfile ? 'Add to cart' : 'Sign in to add to cart';
-    };
-
     updateCartCounter();
-  })();
-
-</script>
+    renderCartItemsPanel();
+  </script>
 
 </body>
 </html>

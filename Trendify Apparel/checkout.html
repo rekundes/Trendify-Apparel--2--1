@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – Trendify</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="img/logo.png" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    body { background: #fff; color: #000; }
+
+    /* centered logo */
+    .checkout-header {
+      padding: 20px 0 10px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 10px;
+    }
+    .checkout-header img {
+      max-width: 220px;
+      height: auto;
+    }
+
+    /* top progress */
+    .progress {
+      max-width: 960px;
+      margin: 20px auto 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+    }
+    .progress-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: #000;
+      color: #fff;
+    }
+    .progress-step.inactive .progress-circle {
+      background: #fff;
+      color: #000;
+      opacity: .4;
+    }
+    .progress-label {
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 11px;
+    }
+    .progress-line {
+      position: absolute;
+      top: 11px;
+      right: -50%;
+      width: 100%;
+      height: 2px;
+      background: #ddd;
+      z-index: -1;
+    }
+    .progress-step:not(:last-child) .progress-line { display: block; }
+    .progress-step:last-child .progress-line { display: none; }
+
+    /* layout */
+    .checkout-layout {
+      max-width: 1100px;
+      margin: 10px auto 40px;
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 40px;
+      padding: 0 20px;
+    }
+
+    /* left form */
+    .checkout-form h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    .form-control {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+    .form-control label { font-weight: 600; }
+    .form-control input,
+    .form-control select {
+      padding: 9px 10px;
+      font-size: 13px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .place-order-btn {
+      margin-top: 18px;
+      padding: 12px 26px;
+      border-radius: 999px;
+      border: none;
+      background: #000;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* right summary */
+    .summary-card {
+      border-left: 1px solid #eee;
+      padding-left: 24px;
+      font-size: 13px;
+    }
+    .summary-card h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      letter-spacing: .5px;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .summary-line.total {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid #ddd;
+      font-weight: 700;
+    }
+    .summary-items { margin-top: 18px; }
+    .summary-item-row {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    .summary-thumb img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      background:#f4f4f4;
+    }
+    .summary-info-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .summary-info-meta {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 2px;
+    }
+
+    .confirmation {
+      max-width: 600px;
+      margin: 40px auto;
+      text-align: center;
+      display: none;
+    }
+    .confirmation.show { display: block; }
+    .confirmation h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .confirmation p { font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .checkout-layout {
+        grid-template-columns: 1fr;
+      }
+      .summary-card {
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding-left: 0;
+        padding-top: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- centered logo -->
+  <header class="checkout-header">
+    <a href="main.html">
+      <img src="img/title-logo.png" alt="Trendify Apparel">
+      <!-- use your logo path; if this image IS img/logo.png, change src to img/logo.png -->
+    </a>
+  </header>
+
+  <!-- Simple top progress -->
+  <div class="progress">
+    <div class="progress-step">
+      <div class="progress-circle">1</div>
+      <div class="progress-label">Delivery</div>
+      <div class="progress-line"></div>
+    </div>
+    <div class="progress-step inactive">
+      <div class="progress-circle">2</div>
+      <div class="progress-label">Confirmation</div>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="checkout-layout" id="checkoutLayout">
+    <!-- LEFT: FORM -->
+    <section class="checkout-form">
+      <h2>Delivery details</h2>
+
+      <div class="form-row">
+        <div class="form-control">
+          <label for="firstName">Name</label>
+          <input id="firstName" type="text" placeholder="First name">
+        </div>
+        <div class="form-control">
+          <label for="lastName">Surname</label>
+          <input id="lastName" type="text" placeholder="Last name">
+        </div>
+      </div>
+
+      <div class="form-control">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" placeholder="you@example.com">
+      </div>
+
+      <div class="form-row">
+        <div class="form-control">
+          <label for="phoneCode">Prefix</label>
+          <select id="phoneCode">
+            <option value="+63" selected>+63</option>
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="phone">Mobile</label>
+          <input id="phone" type="tel" placeholder="9XX XXX XXXX">
+        </div>
+      </div>
+
+      <div class="form-control">
+        <label for="country">Country</label>
+        <select id="country">
+          <option>Philippines</option>
+        </select>
+      </div>
+
+      <div class="form-control">
+        <label for="address1">Address</label>
+        <input id="address1" type="text" placeholder="Street, building, house number">
+      </div>
+
+      <div class="form-row">
+        <div class="form-control">
+          <label for="postcode">Postcode</label>
+          <input id="postcode" type="text">
+        </div>
+        <div class="form-control">
+          <label for="region">Region</label>
+          <input id="region" type="text" placeholder="Region / Province">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-control">
+          <label for="city">Town / City</label>
+          <input id="city" type="text">
+        </div>
+        <div class="form-control">
+          <label for="district">District</label>
+          <input id="district" type="text">
+        </div>
+      </div>
+
+      <button class="place-order-btn" id="placeOrderBtn">Place order</button>
+    </section>
+
+    <!-- RIGHT: SUMMARY -->
+    <aside class="summary-card">
+      <h3>Your shopping bag</h3>
+      <div id="summaryPrices">
+        <div class="summary-line">
+          <span>Subtotal</span>
+          <span id="summarySubtotal">₱0</span>
+        </div>
+        <div class="summary-line">
+          <span>Delivery</span>
+          <span id="summaryDelivery">₱150</span>
+        </div>
+        <div class="summary-line total">
+          <span>TOTAL</span>
+          <span id="summaryTotal">₱0</span>
+        </div>
+      </div>
+
+      <div class="summary-items">
+        <h3>Items</h3>
+        <div id="summaryItemsList"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- CONFIRMATION VIEW -->
+  <section class="confirmation" id="confirmationBox">
+    <h2>Order placed!</h2>
+    <p>Thank you for shopping with Trendify. A confirmation email will be sent shortly.</p>
+    <p style="margin-top:10px;">
+      You can now close this page or go back to the <a href="main.html">homepage</a>.
+    </p>
+  </section>
+
+  <script>
+    function parsePriceToNumber(p) {
+      if (!p) return 0;
+      return parseFloat(p.replace(/[₱,]/g, '')) || 0;
+    }
+
+    function loadCheckoutItems() {
+      try {
+        const items = JSON.parse(localStorage.getItem('trendify_checkout')) || [];
+        return Array.isArray(items) ? items : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function renderSummary() {
+      const items = loadCheckoutItems();
+      const listEl = document.getElementById('summaryItemsList');
+      const subEl  = document.getElementById('summarySubtotal');
+      const delEl  = document.getElementById('summaryDelivery');
+      const totEl  = document.getElementById('summaryTotal');
+
+      listEl.innerHTML = '';
+
+      let subtotal = 0;
+      const delivery = items.length > 0 ? 150 : 0;
+
+      items.forEach(item => {
+        const priceNum = parsePriceToNumber(item.price);
+        const qty = item.qty || 1;
+        subtotal += priceNum * qty;
+
+        const row = document.createElement('div');
+        row.className = 'summary-item-row';
+        row.innerHTML = `
+          <div class="summary-thumb">
+            <img src="${item.img || 'img/img/placeholder.jpg'}" alt="${item.name}">
+          </div>
+          <div>
+            <div class="summary-info-name">${item.name}</div>
+            <div class="summary-info-meta">
+              Qty: ${qty}${item.size ? ' · Size: ' + item.size : ''}
+            </div>
+            <div class="summary-info-meta">
+              ${item.price}
+            </div>
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+
+      subEl.textContent = '₱' + subtotal.toLocaleString('en-PH');
+      delEl.textContent = '₱' + delivery.toLocaleString('en-PH');
+      const total = subtotal + delivery;
+      totEl.textContent = '₱' + total.toLocaleString('en-PH');
+    }
+
+    renderSummary();
+
+    document.getElementById('placeOrderBtn').addEventListener('click', () => {
+      const items = loadCheckoutItems();
+      if (items.length === 0) {
+        alert('Your checkout selection is empty.');
+        return;
+      }
+
+      const requiredIds = ['firstName','lastName','email','phone','address1','city','postcode'];
+      for (const id of requiredIds) {
+        const el = document.getElementById(id);
+        if (!el || !el.value.trim()) {
+          alert('Please fill in all required fields before placing the order.');
+          el && el.focus();
+          return;
+        }
+      }
+
+      localStorage.removeItem('trendify_checkout');
+
+      const layout = document.getElementById('checkoutLayout');
+      const confirmBox = document.getElementById('confirmationBox');
+      layout.style.display = 'none';
+      confirmBox.classList.add('show');
+    });
+  </script>
+
+</body>
+</html>

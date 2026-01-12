@@ -6,8 +6,8 @@
   <title>Men – Trendify</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="men.css">
-<link rel="icon" href="img/logo.png" type="image/png">
+  <link rel="stylesheet" href="men.css">
+  <link rel="icon" href="img/logo.png" type="image/png">
 </head>
 <body>
 <!-- HEADER -->
@@ -64,7 +64,6 @@
           </div>
         </div>
       </div>
-
     </nav>
 
     <a href="main.html">
@@ -74,7 +73,10 @@
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
       <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
-      <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+      <a href="cart.html" style="position:relative;">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-counter" class="cart-count">0</span>
+      </a>
     </div>
 
   </div>
@@ -99,40 +101,34 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-grid">
-
     <div>
       <h4>CUSTOMER SERVICE</h4>
       <p><a href="#">Help</a></p>
       <p><a href="#">My Purchases</a></p>
       <p><a href="#">Returns</a></p>
     </div>
-
     <div>
       <h4>COMPANY</h4>
       <p><a href="#">About Us</a></p>
       <p><a href="#">Work for Trendify</a></p>
       <p><a href="#">Press</a></p>
     </div>
-
     <div>
       <h4>DISCOVER</h4>
       <p><a href="#">Responsibility</a></p>
       <p><a href="#">Stores</a></p>
       <p><a href="#">Site Map</a></p>
     </div>
-
     <div>
       <h4>FOLLOW US</h4>
       <p>Instagram · Facebook · YouTube</p>
       <p>TikTok · Spotify · Pinterest</p>
       <p>X · LinkedIn</p>
     </div>
-
     <div>
       <h4>LOCATION</h4>
       <p>PHILIPPINES ▼</p>
     </div>
-
   </div>
 
   <div class="footer-bottom">
@@ -157,12 +153,28 @@
   <div class="hover-details">
     <div class="hover-size-row">
       <div class="hover-size-label">Size</div>
-      <div class="hover-size-options">
+
+      <!-- clothing sizes (shirts / jackets / jeans) -->
+      <div class="hover-size-options size-options-clothing">
         <button class="size-chip">S</button>
         <button class="size-chip">M</button>
         <button class="size-chip active">L</button>
         <button class="size-chip">XL</button>
       </div>
+
+      <!-- shoe sizes (only for category=shoes) -->
+      <select class="size-select-shoes">
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+        <option value="39">39</option>
+        <option value="40">40</option>
+        <option value="41">41</option>
+        <option value="42">42</option>
+        <option value="43">43</option>
+        <option value="44">44</option>
+        <option value="45">45</option>
+      </select>
     </div>
 
     <div class="hover-qty-row">
@@ -182,6 +194,7 @@
 
 <!-- SCRIPT -->
 <script>
+  // close dropdowns
   document.addEventListener("click", function(e) {
     const dropdowns = document.querySelectorAll(".dropdown");
     dropdowns.forEach(drop => {
@@ -227,39 +240,69 @@
       { img: "img/img/img/men-shoes2.jpg", name: "Jordan 4 Retro off-white", price: "₱2,995" },
       { img: "img/img/img/men-shoes3.jpg", name: "Chuck taylor all-star", price: "₱2,495" },
       { img: "img/img/img/men-shoes4.jpg", name: "Onitsuka tiger", price: "₱4,595" },
-      { img: "img/img/img/men-shoes5.jpg", name: "Black  Puma Speedcat", price: "₱1,995" },
+      { img: "img/img/img/men-shoes5.jpg", name: "Black Puma Speedcat", price: "₱1,995" },
       { img: "img/img/img/men-shoes6.jpg", name: "ADIDAS SUPERSTAR", price: "₱3,895" }
     ],
     bags: [
       { img: "img/img/img/men-bag1.jpg", name: "CrossBODY bag", price: "₱2,995" },
-      { img: "img/img/img/men-bag2.jpg", name: "louis vuitton", price: "₱3,495" },
-      { img: "img/img/img/men-bag3.jpg", name: "supreme", price: "₱2,495" },
-      { img: "img/img/img/men-bag4.jpg", name: "prada x adidas", price: "₱3,995" },
-      { img: "img/img/img/men-bag5.jpg", name: "nike backpack", price: "₱1,495" },
-      { img: "img/img/img/men-bag6.jpg", name: "bape backpack", price: "₱4,295" }
+      { img: "img/img/img/men-bag2.jpg", name: "Louis Vuitton", price: "₱3,495" },
+      { img: "img/img/img/men-bag3.jpg", name: "Supreme", price: "₱2,495" },
+      { img: "img/img/img/men-bag4.jpg", name: "Prada x Adidas", price: "₱3,995" },
+      { img: "img/img/img/men-bag5.jpg", name: "Nike backpack", price: "₱1,495" },
+      { img: "img/img/img/men-bag6.jpg", name: "Bape backpack", price: "₱4,295" }
     ],
     jewelry: [
       { img: "img/img/img/men-accessories1.jpg", name: "Chain Necklace", price: "₱795" },
       { img: "img/img/img/men-accessories2.jpg", name: "Bracelet", price: "₱695" },
-      { img: "img/img/img/men-accessories3.jpg", name: "watch", price: "₱895" },
-      { img: "img/img/img/men-accessories4.jpg", name: "earring", price: "₱595" },
-      { img: "img/img/img/men-accessories5.jpg", name: "ring", price: "₱1,195" },
-      { img: "img/img/img/men-accessories6.jpg", name: "sun glasses", price: "₱495" }
+      { img: "img/img/img/men-accessories3.jpg", name: "Watch", price: "₱895" },
+      { img: "img/img/img/men-accessories4.jpg", name: "Earring", price: "₱595" },
+      { img: "img/img/img/men-accessories5.jpg", name: "Ring", price: "₱1,195" },
+      { img: "img/img/img/men-accessories6.jpg", name: "Sun glasses", price: "₱495" }
     ]
   };
 
   categoryTitle.textContent = category.replace("-", " ").toUpperCase();
 
-  const hoverPreview = document.getElementById('hoverPreview');
+  const hoverPreview    = document.getElementById('hoverPreview');
   const hoverPreviewImg = document.getElementById('hoverPreviewImg');
   const hoverPriceBadge = document.getElementById('hoverPriceBadge');
-  const hoverCloseBtn = document.querySelector('.hover-close-btn');
+  const hoverCloseBtn   = document.querySelector('.hover-close-btn');
+  const hoverSizeRow    = document.querySelector('.hover-size-row');
+  const sizeOptionsClothing = document.querySelector('.size-options-clothing');
+  const sizeSelectShoes     = document.querySelector('.size-select-shoes');
 
-  // Build HTML string for all products
+  // NO size at all:
+  const noSizeCategories = ['bags', 'jewelry'];
+  // Shoes use dropdown 36–45
+  const shoeCategory = 'shoes';
+
+  // show / hide size UI based on current category
+  function updateSizeUIForCategory() {
+    if (!hoverSizeRow) return;
+
+    if (noSizeCategories.includes(category)) {
+      hoverSizeRow.style.display = 'none';        // bags / jewelry
+    } else {
+      hoverSizeRow.style.display = 'flex';
+
+      if (category === shoeCategory) {
+        // shoes: dropdown only
+        if (sizeOptionsClothing) sizeOptionsClothing.style.display = 'none';
+        if (sizeSelectShoes)     sizeSelectShoes.style.display     = 'inline-block';
+      } else {
+        // shirts / jackets / jeans: chips only
+        if (sizeOptionsClothing) sizeOptionsClothing.style.display = 'flex';
+        if (sizeSelectShoes)     sizeSelectShoes.style.display     = 'none';
+      }
+    }
+  }
+
+  updateSizeUIForCategory();
+
+  /* build products */
   let html = '';
   categories[category].forEach(item => {
     const badgeHtml = item.isNew ? `<div class="badge">New</div>` : '';
-
     html += `
       <div class="product-card">
         ${badgeHtml}
@@ -272,32 +315,33 @@
       </div>
     `;
   });
-
   productGrid.innerHTML = html;
 
-  // Attach click listener to all cards
+  /* card click -> open preview */
   const cards = productGrid.querySelectorAll('.product-card');
   cards.forEach((card, idx) => {
     const item = categories[category][idx];
-
     card.addEventListener('click', () => {
-      if (hoverPreview && hoverPreviewImg && hoverPriceBadge) {
-        hoverPreviewImg.src = item.img;
-        hoverPriceBadge.textContent = item.price;
-        hoverPreview.classList.add('show');
-        hoverPreview.setAttribute('aria-hidden', 'false');
-      }
+      if (!hoverPreview || !hoverPreviewImg || !hoverPriceBadge) return;
+      hoverPreviewImg.src = item.img;
+      hoverPriceBadge.textContent = item.price;
+      hoverPreview.classList.add('show');
+      hoverPreview.setAttribute('aria-hidden', 'false');
+
+      hoverPreview.dataset.name  = item.name;
+      hoverPreview.dataset.price = item.price;
+      hoverPreview.dataset.img   = item.img;
     });
   });
 
-  // Close hover on X button
+  /* close preview */
   hoverCloseBtn.addEventListener('click', () => {
     hoverPreview.classList.remove('show');
     hoverPreviewImg.src = '';
     hoverPreview.setAttribute('aria-hidden', 'true');
   });
 
-  /* ----- SIZE SELECT ----- */
+  /* SIZE CHIPS (for clothing) */
   const sizeChips = document.querySelectorAll('.size-chip');
   let selectedSize = 'L';
 
@@ -309,15 +353,13 @@
     });
   });
 
-  /* ----- QUANTITY CONTROLS ----- */
+  /* QUANTITY */
   const qtyValue = document.querySelector('.qty-value');
   const qtyMinus = document.querySelector('.qty-btn.minus');
-  const qtyPlus = document.querySelector('.qty-btn.plus');
+  const qtyPlus  = document.querySelector('.qty-btn.plus');
   let quantity = 1;
 
-  function renderQty() {
-    qtyValue.textContent = quantity;
-  }
+  function renderQty() { qtyValue.textContent = quantity; }
 
   qtyMinus.addEventListener('click', () => {
     if (quantity > 1) {
@@ -325,33 +367,58 @@
       renderQty();
     }
   });
-
   qtyPlus.addEventListener('click', () => {
     quantity++;
     renderQty();
   });
-
   renderQty();
 
-  /* ----- ADD TO CART BUTTON ----- */
+  /* ADD TO CART */
   const addBtn = document.querySelector('.hover-add-btn');
 
-  addBtn.addEventListener('click', (e) => {
-    const hasProfile = localStorage.getItem('hasProfile') === 'true';
-    if (!hasProfile) {
-      // Prevent other handlers and redirect to sign-in so user can create an account/profile
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      const returnUrl = window.location.href;
-      window.location.href = `sign-in.html?next=${encodeURIComponent(returnUrl)}`;
-      return;
+  addBtn.addEventListener('click', () => {
+    const preview = document.getElementById('hoverPreview');
+    const name  = preview.dataset.name  || document.querySelector('.product-name')?.textContent.trim() || '';
+    const price = preview.dataset.price || document.querySelector('.product-price')?.textContent.trim() || '';
+    const img   = preview.dataset.img   || document.getElementById('hoverPreviewImg').src || '';
+    const qty   = parseInt(document.querySelector('.qty-value').textContent) || 1;
+
+    let sizeToSave;
+    if (noSizeCategories.includes(category)) {
+      sizeToSave = 'One size';                 // bags, jewelry
+    } else if (category === shoeCategory && sizeSelectShoes) {
+      sizeToSave = sizeSelectShoes.value || '36'; // shoes 36–45
+    } else {
+      sizeToSave = selectedSize;              // shirts, jackets, jeans
     }
 
-    // User has profile — proceed to add to cart (placeholder behavior)
-    alert(`Added to cart:\nSize: ${selectedSize}\nQuantity: ${quantity}`);
-    // TODO: Add real cart logic here.
-  });
-</script>
+    const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
+    const existing = cart.find(i =>
+      i.name === name && i.price === price && i.size === sizeToSave
+    );
 
+    if (existing) {
+      existing.qty = (existing.qty || 1) + qty;
+    } else {
+      cart.push({ name, price, img, size: sizeToSave, qty });
+    }
+
+    localStorage.setItem('trendify_cart', JSON.stringify(cart));
+    updateCartCounter();
+    window.location.href = 'cart.html';
+  });
+
+  /* cart counter helper */
+  function updateCartCounter() {
+    const counter = document.getElementById('cart-counter');
+    const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
+    const total = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    if (!counter) return;
+    counter.innerText = total;
+    counter.style.display = total > 0 ? 'block' : 'none';
+  }
+
+  updateCartCounter();
+</script>
 </body>
 </html>

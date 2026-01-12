@@ -331,6 +331,14 @@
       font-weight: 600;
       cursor: pointer;
     }
+    .size-select-shoes {
+  display: none;            /* hidden by default */
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  font-size: 13px;
+}
+
 
     .product-info { padding: 15px; }
 

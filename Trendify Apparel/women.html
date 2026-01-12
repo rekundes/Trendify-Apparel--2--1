@@ -7,17 +7,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="women.css">
   <link rel="icon" href="img/logo.png" type="image/png"> 
-  
 </head>
 
 <body>
-
 <!-- HEADER -->
 <header class="navbar">
   <div class="nav-container">
 
     <nav class="main-nav">
-
       <!-- MEN -->
       <div class="dropdown">
         <input type="checkbox" id="men-toggle" class="toggle">
@@ -67,7 +64,6 @@
           </div>
         </div>
       </div>
-
     </nav>
 
     <a href="main.html">
@@ -77,7 +73,10 @@
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
       <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
-      <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+      <a href="cart.html" style="position:relative;">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-counter" class="cart-count">0</span>
+      </a>
     </div>
 
   </div>
@@ -102,40 +101,34 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-grid">
-
     <div>
       <h4>CUSTOMER SERVICE</h4>
       <p><a href="#">Help</a></p>
       <p><a href="#">My Purchases</a></p>
       <p><a href="#">Returns</a></p>
     </div>
-
     <div>
       <h4>COMPANY</h4>
       <p><a href="#">About Us</a></p>
       <p><a href="#">Work for Trendify</a></p>
       <p><a href="#">Press</a></p>
     </div>
-
     <div>
       <h4>DISCOVER</h4>
       <p><a href="#">Responsibility</a></p>
       <p><a href="#">Stores</a></p>
       <p><a href="#">Site Map</a></p>
     </div>
-
     <div>
       <h4>FOLLOW US</h4>
       <p>Instagram · Facebook · YouTube</p>
       <p>TikTok · Spotify · Pinterest</p>
       <p>X · LinkedIn</p>
     </div>
-
     <div>
       <h4>LOCATION</h4>
       <p>PHILIPPINES ▼</p>
     </div>
-
   </div>
 
   <div class="footer-bottom">
@@ -160,12 +153,28 @@
   <div class="hover-details">
     <div class="hover-size-row">
       <div class="hover-size-label">Size</div>
-      <div class="hover-size-options">
+
+      <!-- clothing sizes (tops / dresses / skirts) -->
+      <div class="hover-size-options size-options-clothing">
         <button class="size-chip">S</button>
         <button class="size-chip">M</button>
         <button class="size-chip active">L</button>
         <button class="size-chip">XL</button>
       </div>
+
+      <!-- shoe sizes (only for category=heels) -->
+      <select class="size-select-heels">
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+        <option value="39">39</option>
+        <option value="40">40</option>
+        <option value="41">41</option>
+        <option value="42">42</option>
+        <option value="43">43</option>
+        <option value="44">44</option>
+        <option value="45">45</option>
+      </select>
     </div>
 
     <div class="hover-qty-row">
@@ -185,152 +194,214 @@
 
 <!-- SCRIPT -->
 <script>
+  // close dropdowns
   document.addEventListener("click", function(e) {
-  document.querySelectorAll(".dropdown").forEach(drop => {
-    const toggle = drop.querySelector(".toggle");
-    if (!drop.contains(e.target)) toggle.checked = false;
+    document.querySelectorAll(".dropdown").forEach(drop => {
+      const toggle = drop.querySelector(".toggle");
+      if (!drop.contains(e.target)) toggle.checked = false;
+    });
   });
-});
 
-/* CATEGORY SYSTEM */
-const params = new URLSearchParams(location.search);
-const category = params.get("category") || "tops";
-const productGrid = document.getElementById("productGrid");
-const categoryTitle = document.getElementById("categoryTitle");
-const hoverPreview = document.getElementById("hoverPreview");
-const hoverPreviewImg = document.getElementById("hoverPreviewImg");
-const hoverPriceBadge = document.getElementById("hoverPriceBadge");
-const hoverCloseBtn = document.querySelector('.hover-close-btn');
+  /* CATEGORY SYSTEM */
+  const params = new URLSearchParams(location.search);
+  const category = params.get("category") || "tops";
+
+  const productGrid   = document.getElementById("productGrid");
+  const categoryTitle = document.getElementById("categoryTitle");
+  const hoverPreview  = document.getElementById("hoverPreview");
+  const hoverPreviewImg = document.getElementById("hoverPreviewImg");
+  const hoverPriceBadge = document.getElementById("hoverPriceBadge");
+  const hoverCloseBtn   = document.querySelector(".hover-close-btn");
+  const hoverSizeRow    = document.querySelector(".hover-size-row");
+  const sizeOptionsClothing = document.querySelector(".size-options-clothing");
+  const sizeSelectHeels     = document.querySelector(".size-select-heels");
 
   const categories = {
     tops: [
       { img: "img/img/women-top1.jpg", secondaryImg: "img/img/women-top2.jpg", name: "Rockmore croptop", price: "₱1,295", isNew: true },
       { img: "img/img/women-top2.jpg", secondaryImg: "img/img/women-top3.jpg", name: "Floral Blouse", price: "₱995" },
       { img: "img/img/women-top3.jpg", secondaryImg: "img/img/women-top4.jpg", name: "Black Top", price: "₱1,195" },
-      { img: "img/img/women-top4.jpg", secondaryImg: "img/img/women-top5.jpg", name: "NIrvana", price: "₱1,395" },
-      { img: "img/img/women-top5.jpg", secondaryImg: "img/img/women-top6.jpg", name: "butterfly", price: "₱1,495" },
-      { img: "img/img/women-top6.jpg", secondaryImg: "img/img/women-top1.jpg", name: "angels", price: "₱895" }
+      { img: "img/img/women-top4.jpg", secondaryImg: "img/img/women-top5.jpg", name: "Nirvana", price: "₱1,395" },
+      { img: "img/img/women-top5.jpg", secondaryImg: "img/img/women-top6.jpg", name: "Butterfly", price: "₱1,495" },
+      { img: "img/img/women-top6.jpg", secondaryImg: "img/img/women-top1.jpg", name: "Angels", price: "₱895" }
     ],
     dresses: [
-      { img: "img/img/img/women-dress1.jpg", name: "sweetheart long sleeve", price: "₱2,495" },
-      { img: "img/img/img/women-dress2.jpg", name: "brown long sleeve", price: "₱2,995" },
-      { img: "img/img/img/women-dress3.jpg", name: "black dress", price: "₱2,295" },
-      { img: "img/img/img/women-dress4.jpg", name: "red long sleeve dress", price: "₱1,995" },
-      { img: "img/img/img/women-dress5.jpg", name: "blue short sleeve dress", price: "₱3,195" },
-      { img: "img/img/img/women-dress6.jpg", name: "green dress", price: "₱2,495" }
+      { img: "img/img/img/women-dress1.jpg", name: "Sweetheart long sleeve", price: "₱2,495" },
+      { img: "img/img/img/women-dress2.jpg", name: "Brown long sleeve", price: "₱2,995" },
+      { img: "img/img/img/women-dress3.jpg", name: "Black dress", price: "₱2,295" },
+      { img: "img/img/img/women-dress4.jpg", name: "Red long sleeve dress", price: "₱1,995" },
+      { img: "img/img/img/women-dress5.jpg", name: "Blue short sleeve dress", price: "₱3,195" },
+      { img: "img/img/img/women-dress6.jpg", name: "Green dress", price: "₱2,495" }
     ],
     skirts: [
-      { img: "img/img/img/women-skirts1.jpg", name: "black skirt", price: "₱1,495" },
-      { img: "img/img/img/women-skirts2.jpg", name: "red skirt", price: "₱1,295" },
-      { img: "img/img/img/women-skirts3.jpg", name: "blue skirt", price: "₱1,695" },
-      { img: "img/img/img/women-skirts4.jpg", name: "brown skirt", price: "₱1,895" },
-      { img: "img/img/img/women-skirts5.jpg", name: "cargo skirt", price: "₱1,595" },
-      { img: "img/img/img/women-skirts6.jpg", name: "pink skirt", price: "₱2,195" }
+      { img: "img/img/img/women-skirts1.jpg", name: "Black skirt", price: "₱1,495" },
+      { img: "img/img/img/women-skirts2.jpg", name: "Red skirt", price: "₱1,295" },
+      { img: "img/img/img/women-skirts3.jpg", name: "Blue skirt", price: "₱1,695" },
+      { img: "img/img/img/women-skirts4.jpg", name: "Brown skirt", price: "₱1,895" },
+      { img: "img/img/img/women-skirts5.jpg", name: "Cargo skirt", price: "₱1,595" },
+      { img: "img/img/img/women-skirts6.jpg", name: "Pink skirt", price: "₱2,195" }
     ],
     heels: [
-      { img: "img/img/img/women-heels1.jpg", name: "red heels", price: "₱1,995" },
-      { img: "img/img/img/women-heels2.jpg", name: "black heels", price: "₱1,895" },
-      { img: "img/img/img/women-heels3.jpg", name: "white heels", price: "₱2,195" },
-      { img: "img/img/img/women-heels4.jpg", name: "pink heels", price: "₱2,495" },
-      { img: "img/img/img/women-heels5.jpg", name: "blue heels", price: "₱2,095" },
-      { img: "img/img/img/women-heels6.jpg", name: "green heels", price: "₱1,795" }
+      { img: "img/img/img/women-heels1.jpg", name: "Red heels", price: "₱1,995" },
+      { img: "img/img/img/women-heels2.jpg", name: "Black heels", price: "₱1,895" },
+      { img: "img/img/img/women-heels3.jpg", name: "White heels", price: "₱2,195" },
+      { img: "img/img/img/women-heels4.jpg", name: "Pink heels", price: "₱2,495" },
+      { img: "img/img/img/women-heels5.jpg", name: "Blue heels", price: "₱2,095" },
+      { img: "img/img/img/women-heels6.jpg", name: "Green heels", price: "₱1,795" }
     ],
     bags: [
-      { img: "img/img/img/women-bags1.jpg", name: "black handbag", price: "₱3,495" },
-      { img: "img/img/img/women-bags2.jpg", name: "white bag", price: "₱2,295" },
-      { img: "img/img/img/women-bags3.jpg", name: "pink bag", price: "₱2,495" },
-      { img: "img/img/img/women-bags4.jpg", name: "green bag", price: "₱1,895" },
-      { img: "img/img/img/women-bags5.jpg", name: "red bag", price: "₱2,995" },
-      { img: "img/img/img/women-bags6.jpg", name: "pink shoulder bag", price: "₱1,595" }
+      { img: "img/img/img/women-bags1.jpg", name: "Black handbag", price: "₱3,495" },
+      { img: "img/img/img/women-bags2.jpg", name: "White bag", price: "₱2,295" },
+      { img: "img/img/img/women-bags3.jpg", name: "Pink bag", price: "₱2,495" },
+      { img: "img/img/img/women-bags4.jpg", name: "Green bag", price: "₱1,895" },
+      { img: "img/img/img/women-bags5.jpg", name: "Red bag", price: "₱2,995" },
+      { img: "img/img/img/women-bags6.jpg", name: "Pink shoulder bag", price: "₱1,595" }
     ],
     jewelry: [
-      { img: "img/img/img/women-jewelry1.jpg", name: "flower bracelet", price: "₱795" },
-      { img: "img/img/img/women-jewelry2.jpg", name: "heart bracelet", price: "₱995" },
-      { img: "img/img/img/women-jewelry3.jpg", name: "rose bracelet", price: "₱895" },
-      { img: "img/img/img/women-jewelry4.jpg", name: "gold ring", price: "₱1,195" },
-      { img: "img/img/img/women-jewelry5.jpg", name: "pink earrings", price: "₱695" },
-      { img: "img/img/img/women-jewelry6.jpg", name: "black earrings", price: "₱495" }
+      { img: "img/img/img/women-jewelry1.jpg", name: "Flower bracelet", price: "₱795" },
+      { img: "img/img/img/women-jewelry2.jpg", name: "Heart bracelet", price: "₱995" },
+      { img: "img/img/img/women-jewelry3.jpg", name: "Rose bracelet", price: "₱895" },
+      { img: "img/img/img/women-jewelry4.jpg", name: "Gold ring", price: "₱1,195" },
+      { img: "img/img/img/women-jewelry5.jpg", name: "Pink earrings", price: "₱695" },
+      { img: "img/img/img/women-jewelry6.jpg", name: "Black earrings", price: "₱495" }
     ]
   };
 
   categoryTitle.textContent = category.toUpperCase();
 
+  // categories with NO size selector
+  const noSizeCategories = ['bags', 'jewelry'];
+  // heels use dropdown 36–45
+  const heelsCategory = 'heels';
+
+  // show/hide + switch size UI
+  function updateSizeUIForCategory() {
+    if (!hoverSizeRow) return;
+
+    if (noSizeCategories.includes(category)) {
+      hoverSizeRow.style.display = 'none';
+    } else {
+      hoverSizeRow.style.display = 'flex';
+
+      if (category === heelsCategory) {
+        if (sizeOptionsClothing) sizeOptionsClothing.style.display = 'none';
+        if (sizeSelectHeels)     sizeSelectHeels.style.display     = 'inline-block';
+      } else {
+        if (sizeOptionsClothing) sizeOptionsClothing.style.display = 'flex';
+        if (sizeSelectHeels)     sizeSelectHeels.style.display     = 'none';
+      }
+    }
+  }
+
+  updateSizeUIForCategory();
+
   /* BUILD PRODUCTS */
-let html = '';
-categories[category].forEach((item, index) => {
-  html += `
-  <div class="product-card" data-index="${index}">
-    ${item.isNew ? `<div class="badge">New</div>` : ``}
-    <img src="${item.img}" class="primary-img">
-    <img src="${item.secondaryImg || item.img}" class="secondary-img">
-    <div class="product-info">
-      <div class="product-name">${item.name}</div>
-      <div class="product-price">${item.price}</div>
-    </div>
-  </div>`;
-});
-productGrid.innerHTML = html;
-
-/* CLICK = SHOW EXACT IMAGE CLICKED */
-document.querySelectorAll(".product-card").forEach(card => {
-  card.addEventListener("click", e => {
-    const item = categories[category][card.dataset.index];
-    const clickedImg = e.target.tagName === "IMG" ? e.target.src : item.img;
-
-    hoverPreviewImg.src = clickedImg;
-    hoverPriceBadge.textContent = item.price;
-    hoverPreview.classList.add("show");
-    hoverPreview.setAttribute("aria-hidden", "false");
-
-    quantity = 1;
-    renderQty();
+  let html = '';
+  categories[category].forEach((item, index) => {
+    html += `
+      <div class="product-card" data-index="${index}">
+        ${item.isNew ? `<div class="badge">New</div>` : ``}
+        <img src="${item.img}" class="primary-img">
+        <img src="${item.secondaryImg || item.img}" class="secondary-img">
+        <div class="product-info">
+          <div class="product-name">${item.name}</div>
+          <div class="product-price">${item.price}</div>
+        </div>
+      </div>`;
   });
-});
+  productGrid.innerHTML = html;
 
-/* CLOSE MODAL */
-hoverCloseBtn.addEventListener("click", () => {
-  hoverPreview.classList.remove("show");
-  hoverPreviewImg.src = "";
-});
+  /* CLICK = SHOW EXACT IMAGE CLICKED */
+  document.querySelectorAll(".product-card").forEach(card => {
+    card.addEventListener("click", e => {
+      const item = categories[category][card.dataset.index];
+      const clickedImg = e.target.tagName === "IMG" ? e.target.src : item.img;
 
-/* SIZE */
-let selectedSize = "L";
-document.querySelectorAll(".size-chip").forEach(chip=>{
-  chip.onclick=()=>{
-    document.querySelectorAll(".size-chip").forEach(c=>c.classList.remove("active"));
-    chip.classList.add("active");
-    selectedSize = chip.textContent.trim();
-  };
-});
+      hoverPreviewImg.src = clickedImg;
+      hoverPriceBadge.textContent = item.price;
+      hoverPreview.classList.add("show");
+      hoverPreview.setAttribute("aria-hidden", "false");
+
+      hoverPreview.dataset.name  = item.name;
+      hoverPreview.dataset.price = item.price;
+      hoverPreview.dataset.img   = clickedImg;
+
+      quantity = 1;
+      renderQty();
+    });
+  });
+
+  /* CLOSE MODAL */
+  hoverCloseBtn.addEventListener("click", () => {
+    hoverPreview.classList.remove("show");
+    hoverPreviewImg.src = "";
+    hoverPreview.setAttribute("aria-hidden", "true");
+  });
+
+  /* SIZE (chips for clothing) */
+  let selectedSize = "L";
+  document.querySelectorAll(".size-chip").forEach(chip => {
+    chip.onclick = () => {
+      document.querySelectorAll(".size-chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      selectedSize = chip.textContent.trim();
+    };
+  });
 
   /* QTY */
   let quantity = 1;
-  const qtyValue = document.querySelector('.qty-value');
-  const qtyMinus = document.querySelector('.qty-btn.minus');
-  const qtyPlus = document.querySelector('.qty-btn.plus');
+  const qtyValue = document.querySelector(".qty-value");
+  const qtyMinus = document.querySelector(".qty-btn.minus");
+  const qtyPlus  = document.querySelector(".qty-btn.plus");
   function renderQty() { qtyValue.textContent = quantity; }
-  qtyMinus.addEventListener('click', () => { if (quantity > 1) { quantity--; renderQty(); } });
-  qtyPlus.addEventListener('click', () => { quantity++; renderQty(); });
+  qtyMinus.addEventListener("click", () => { if (quantity > 1) { quantity--; renderQty(); } });
+  qtyPlus.addEventListener("click", () => { quantity++; renderQty(); });
   renderQty();
 
   /* ADD TO CART */
-  const addBtn = document.querySelector('.hover-add-btn');
-  addBtn.addEventListener('click', (e) => {
-    const hasProfile = localStorage.getItem('hasProfile') === 'true';
-    if (!hasProfile) {
-      // Prevent other handlers and redirect to sign-in so user can create an account/profile
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      const returnUrl = window.location.href;
-      window.location.href = `sign-in.html?next=${encodeURIComponent(returnUrl)}`;
-      return;
+  const addBtn = document.querySelector(".hover-add-btn");
+
+  addBtn.addEventListener("click", () => {
+    const preview = document.getElementById("hoverPreview");
+    const name  = preview.dataset.name  || document.querySelector(".product-name")?.textContent.trim() || "";
+    const price = preview.dataset.price || document.querySelector(".product-price")?.textContent.trim() || "";
+    const img   = preview.dataset.img   || document.getElementById("hoverPreviewImg").src || "";
+    const qty   = parseInt(document.querySelector(".qty-value").textContent) || 1;
+
+    let sizeToSave;
+    if (noSizeCategories.includes(category)) {
+      sizeToSave = "One size";                   // bags, jewelry
+    } else if (category === heelsCategory && sizeSelectHeels) {
+      sizeToSave = sizeSelectHeels.value || "36"; // heels 36–45
+    } else {
+      sizeToSave = selectedSize;                // tops, dresses, skirts
     }
 
-    alert(`Added to cart:\nSize: ${selectedSize}\nQuantity: ${quantity}`);
-  });
-</script>
+    const cart = JSON.parse(localStorage.getItem("trendify_cart")) || [];
+    const existing = cart.find(i => i.name === name && i.price === price && i.size === sizeToSave);
 
+    if (existing) {
+      existing.qty = (existing.qty || 1) + qty;
+    } else {
+      cart.push({ name, price, img, size: sizeToSave, qty });
+    }
+
+    localStorage.setItem("trendify_cart", JSON.stringify(cart));
+    updateCartCounter();
+    window.location.href = "cart.html";
+  });
+
+  /* CART COUNTER */
+  function updateCartCounter() {
+    const counter = document.getElementById("cart-counter");
+    const cart = JSON.parse(localStorage.getItem("trendify_cart")) || [];
+    const total = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    if (!counter) return;
+    counter.innerText = total;
+    counter.style.display = total > 0 ? "block" : "none";
+  }
+
+  updateCartCounter();
+</script>
 </body>
 </html>
-
-
