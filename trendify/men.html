@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Men – Trendify</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="men.css">
+<link rel="icon" href="img/logo.png" type="image/png">
+<style>
+  /* Size chip active state with background color */
+  .size-chip {
+    min-width: 46px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid #555;
+    text-align: center;
+    font-size: 13px;
+    cursor: pointer;
+    background: transparent;
+    color: #000;
+    transition: all 0.3s ease;
+  }
+
+  .size-chip:hover {
+    border-color: #000;
+    background: #f0f0f0;
+  }
+
+  .size-chip.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<header class="navbar">
+  <div class="nav-container">
+
+    <nav class="main-nav">
+      <!-- MEN -->
+      <div class="dropdown">
+        <input type="checkbox" id="men-toggle" class="toggle">
+        <label for="men-toggle">MEN</label>
+
+        <div class="dropdown-area">
+          <div class="section">
+            <label>CLOTHING</label>
+            <div class="sub-menu">
+              <a href="men.html?category=shirts">SHIRTS</a>
+              <a href="men.html?category=jackets">JACKETS</a>
+              <a href="men.html?category=jeans">JEANS</a>
+            </div>
+          </div>
+
+          <div class="section">
+            <label>ACCESSORIES</label>
+            <div class="sub-menu">
+              <a href="men.html?category=shoes">SHOES</a>
+              <a href="men.html?category=bags">BAGS</a>
+              <a href="men.html?category=jewelry">JEWELRY</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WOMEN -->
+      <div class="dropdown">
+        <input type="checkbox" id="women-toggle" class="toggle">
+        <label for="women-toggle">WOMEN</label>
+        <div class="dropdown-area">
+          <div class="section">
+            <label>CLOTHING</label>
+            <div class="sub-menu">
+              <a href="women.html?category=tops">TOPS</a>
+              <a href="women.html?category=dresses">DRESSES</a>
+              <a href="women.html?category=skirts">SKIRTS</a>
+            </div>
+          </div>
+          <div class="section">
+            <label>ACCESSORIES</label>
+            <div class="sub-menu">
+              <a href="women.html?category=heels">HEELS</a>
+              <a href="women.html?category=bags">BAGS</a>
+              <a href="women.html?category=jewelry">JEWELRY</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </nav>
+
+    <a href="main.html">
+      <img src="img/logo.png" class="logo">
+    </a>
+
+    <div class="nav-right">
+      <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="sign-in.html" id="userLink"><i class="fa-regular fa-user"></i></a>
+      <a href="cart.html">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<!-- CATEGORY TITLE -->
+<h1 class="category-title" id="categoryTitle">MEN</h1>
+
+<!-- LOADING INDICATOR -->
+<div id="loadingIndicator" style="text-align: center; padding: 40px; font-size: 18px; color: #666;">
+  Loading products...
+</div>
+
+<!-- PRODUCT GRID -->
+<div class="product-grid" id="productGrid"></div>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <h3>10% off your next purchase by subscribing to the newsletter</h3>
+  <form id="newsletterForm">
+    <input type="email" id="newsletterEmail" placeholder="E-mail" required>
+    <button type="submit">SIGN UP NOW</button>
+    <p>By subscribing, you confirm that you have read the <a href="#">Privacy Policy</a>.</p>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+
+    <div>
+      <h4>CUSTOMER SERVICE</h4>
+      <p><a href="#">Help</a></p>
+      <p><a href="#">My Purchases</a></p>
+      <p><a href="#">Returns</a></p>
+    </div>
+
+    <div>
+      <h4>COMPANY</h4>
+      <p><a href="#">About Us</a></p>
+      <p><a href="#">Work for Trendify</a></p>
+      <p><a href="#">Press</a></p>
+    </div>
+
+    <div>
+      <h4>DISCOVER</h4>
+      <p><a href="#">Responsibility</a></p>
+      <p><a href="#">Stores</a></p>
+      <p><a href="#">Site Map</a></p>
+    </div>
+
+    <div>
+      <h4>FOLLOW US</h4>
+      <p>Instagram · Facebook · YouTube</p>
+      <p>TikTok · Spotify · Pinterest</p>
+      <p>X · LinkedIn</p>
+    </div>
+
+    <div>
+      <h4>LOCATION</h4>
+      <p>PHILIPPINES ▼</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>
+      <a href="#">Privacy Policy and Cookies</a> ·
+      <a href="#">Terms and Conditions</a> ·
+      <a href="#">Ethics Channel</a>
+    </p>
+    <p style="margin-top: 10px;">© 2025 Trendify. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Hover preview with controls -->
+<div id="hoverPreview" class="hover-preview" aria-hidden="true">
+  <button type="button" class="hover-close-btn">✕</button>
+
+  <div class="hover-image-wrapper">
+    <img id="hoverPreviewImg" src="" alt="Product preview" />
+    <div class="hover-price-badge" id="hoverPriceBadge">₱0</div>
+  </div>
+
+  <div class="hover-details">
+    <div class="hover-size-row">
+      <div class="hover-size-label">Size</div>
+      <div class="hover-size-options" id="sizeOptions">
+        <!-- Sizes will be loaded dynamically -->
+      </div>
+    </div>
+
+    <div class="hover-qty-row">
+      <div class="hover-qty-label">Quantity</div>
+      <div class="hover-qty-controls">
+        <button type="button" class="qty-btn minus">−</button>
+        <span class="qty-value">1</span>
+        <button type="button" class="qty-btn plus">+</button>
+      </div>
+    </div>
+
+    <button type="button" class="hover-add-btn">
+      Add to cart
+    </button>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+  // Initialize profile link on page load
+  document.addEventListener("DOMContentLoaded", function() {
+    const userLink = document.getElementById("userLink");
+    
+    // Check if user is logged in
+    if (localStorage.getItem('userLoggedIn') === 'true') {
+      // User is logged in, redirect to profile page
+      userLink.href = "profile.html";
+    } else {
+      // User is not logged in, redirect to sign-in page
+      userLink.href = "sign-in.html";
+    }
+  });
+
+  document.addEventListener("click", function(e) {
+    const dropdowns = document.querySelectorAll(".dropdown");
+    dropdowns.forEach(drop => {
+      const toggle = drop.querySelector(".toggle");
+      if (!drop.contains(e.target)) toggle.checked = false;
+    });
+  });
+
+  /* CATEGORY SYSTEM */
+  const params = new URLSearchParams(window.location.search);
+  const category = params.get("category") || "shirts";
+
+  const categoryTitle = document.getElementById("categoryTitle");
+  const productGrid = document.getElementById("productGrid");
+  const loadingIndicator = document.getElementById("loadingIndicator");
+
+  const hoverPreview = document.getElementById('hoverPreview');
+  const hoverPreviewImg = document.getElementById('hoverPreviewImg');
+  const hoverPriceBadge = document.getElementById('hoverPriceBadge');
+  const hoverCloseBtn = document.querySelector('.hover-close-btn');
+  const sizeOptions = document.getElementById('sizeOptions');
+
+  let currentProduct = null;
+  let productsData = [];
+
+  // Set category title
+  categoryTitle.textContent = category.replace("-", " ").toUpperCase();
+
+  // Fetch products from database
+  async function loadProducts() {
+    try {
+      loadingIndicator.style.display = 'block';
+      productGrid.innerHTML = '';
+      
+      const response = await fetch(`get_products.php?category=${category}`);
+      const products = await response.json();
+      
+      productsData = products;
+      
+      if (products.length === 0) {
+        productGrid.innerHTML = '<p style="text-align: center; padding: 40px; grid-column: 1/-1;">No products found in this category.</p>';
+        loadingIndicator.style.display = 'none';
+        return;
+      }
+      
+      // Build HTML string for all products
+      let html = '';
+      products.forEach(item => {
+        const badgeHtml = item.isNew ? `<div class="badge">New</div>` : '';
+
+        html += `
+          <div class="product-card" data-product-id="${item.id}">
+            ${badgeHtml}
+            <img src="${item.img}" class="primary-img" alt="${item.name}">
+            <img src="${item.secondaryImg || item.img}" class="secondary-img" alt="${item.name}">
+            <div class="product-info">
+              <div class="product-name">${item.name}</div>
+              <div class="product-price">${item.price}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      productGrid.innerHTML = html;
+      loadingIndicator.style.display = 'none';
+
+      // Attach click listener to all cards
+      const cards = productGrid.querySelectorAll('.product-card');
+      cards.forEach((card) => {
+        card.addEventListener('click', async () => {
+          const productId = card.getAttribute('data-product-id');
+          const product = productsData.find(p => p.id == productId);
+          
+          if (product) {
+            await openProductPreview(product);
+          }
+        });
+      });
+      
+    } catch (error) {
+      console.error('Error loading products:', error);
+      productGrid.innerHTML = '<p style="text-align: center; padding: 40px; grid-column: 1/-1; color: red;">Error loading products. Please try again.</p>';
+      loadingIndicator.style.display = 'none';
+    }
+  }
+
+  // Open product preview and load sizes
+  async function openProductPreview(product) {
+    currentProduct = product;
+    
+    hoverPreviewImg.src = product.img;
+    hoverPriceBadge.textContent = product.price;
+    
+    // Load available sizes
+    try {
+      const response = await fetch(`get_sizes.php?product_id=${product.id}`);
+      const sizes = await response.json();
+      
+      if (sizes.error) {
+        sizeOptions.innerHTML = '<p style="color: red; font-size: 12px;">Error loading sizes</p>';
+      } else if (sizes.length === 0) {
+        sizeOptions.innerHTML = '<p style="color: #666; font-size: 12px;">Out of stock</p>';
+      } else {
+        let sizeHtml = '';
+        sizes.forEach((sizeData, index) => {
+          const activeClass = index === 0 ? 'active' : '';
+          sizeHtml += `<button type="button" class="size-chip ${activeClass}" data-size="${sizeData.size}">${sizeData.size}</button>`;
+        });
+        sizeOptions.innerHTML = sizeHtml;
+        
+        // Attach size selection handlers
+        initializeSizeSelection();
+      }
+      
+    } catch (error) {
+      console.error('Error loading sizes:', error);
+      sizeOptions.innerHTML = '<p style="color: red; font-size: 12px;">Error loading sizes</p>';
+    }
+    
+    hoverPreview.classList.add('show');
+    hoverPreview.setAttribute('aria-hidden', 'false');
+  }
+
+  // Close hover on X button
+  hoverCloseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hoverPreview.classList.remove('show');
+    hoverPreviewImg.src = '';
+    hoverPreview.setAttribute('aria-hidden', 'true');
+    currentProduct = null;
+    quantity = 1;
+    renderQty();
+  });
+
+  /* ----- SIZE SELECT ----- */
+  let selectedSize = '';
+
+  function initializeSizeSelection() {
+    const sizeChips = sizeOptions.querySelectorAll('.size-chip');
+    if (sizeChips.length > 0) {
+      selectedSize = sizeChips[0].getAttribute('data-size');
+    }
+    
+    sizeChips.forEach(chip => {
+      chip.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Remove active from all
+        sizeChips.forEach(c => c.classList.remove('active'));
+        
+        // Add active to clicked
+        this.classList.add('active');
+        selectedSize = this.getAttribute('data-size');
+        
+        console.log('Size selected:', selectedSize); // Debug log
+      });
+    });
+  }
+
+  /* ----- QUANTITY CONTROLS ----- */
+  const qtyValue = document.querySelector('.qty-value');
+  const qtyMinus = document.querySelector('.qty-btn.minus');
+  const qtyPlus = document.querySelector('.qty-btn.plus');
+  let quantity = 1;
+
+  function renderQty() {
+    qtyValue.textContent = quantity;
+  }
+
+  qtyMinus.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (quantity > 1) {
+      quantity--;
+      renderQty();
+    }
+  });
+
+  qtyPlus.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    quantity++;
+    renderQty();
+  });
+
+  renderQty();
+
+  /* ----- ADD TO CART BUTTON ----- */
+  const addBtn = document.querySelector('.hover-add-btn');
+
+  addBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!currentProduct) {
+      alert('Please select a product');
+      return;
+    }
+    
+    if (!selectedSize) {
+      alert('Please select a size');
+      return;
+    }
+    
+    // Add to cart via API
+    try {
+      addBtn.textContent = 'Adding...';
+      addBtn.disabled = true;
+      
+      const response = await fetch('add_to_cart.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: currentProduct.id,
+          size: selectedSize,
+          quantity: quantity
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert(`${result.product_name} added to cart!\nSize: ${selectedSize}\nQuantity: ${quantity}`);
+        
+        // Update cart count
+        updateCartCount();
+        
+        // Close preview and reset
+        hoverPreview.classList.remove('show');
+        currentProduct = null;
+        quantity = 1;
+        renderQty();
+      } else {
+        // If not logged in, redirect to sign-in
+        if (result.message === 'Please login first') {
+          const returnUrl = window.location.href;
+          window.location.href = `sign-in.html?next=${encodeURIComponent(returnUrl)}`;
+        } else {
+          alert(result.message || 'Failed to add to cart');
+        }
+      }
+      
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Error adding to cart. Please try again.');
+    } finally {
+      addBtn.textContent = 'Add to cart';
+      addBtn.disabled = false;
+    }
+  });
+
+  /* ----- CART COUNT UPDATE ----- */
+  async function updateCartCount() {
+    try {
+      const response = await fetch('get_cart.php');
+      const result = await response.json();
+      
+      if (result.success && result.item_count > 0) {
+        const cartCountElem = document.getElementById('cartCount');
+        cartCountElem.textContent = result.item_count;
+        cartCountElem.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error updating cart count:', error);
+    }
+  }
+
+  /* ----- NEWSLETTER SUBSCRIPTION ----- */
+  const newsletterForm = document.getElementById('newsletterForm');
+  
+  newsletterForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+    
+    if (!email) {
+      alert('Please enter your email');
+      return;
+    }
+    
+    try {
+      const response = await fetch('subscribe_newsletter.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('Thank you for subscribing! Check your email for your 10% discount code.');
+        emailInput.value = '';
+      } else {
+        alert(result.message || 'Subscription failed. Please try again.');
+      }
+      
+    } catch (error) {
+      console.error('Error subscribing:', error);
+      alert('Error subscribing. Please try again.');
+    }
+  });
+
+  // Initialize page
+  loadProducts();
+  updateCartCount();
+</script>
+
+</body>
+</html>

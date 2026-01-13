@@ -27,28 +27,28 @@
     }
 
     /* Active Link Highlighting */
-.main-nav a.active {
-    border-bottom: 2px solid #000;
-    padding-bottom: 2px;
-}
+    .main-nav a.active {
+        border-bottom: 2px solid #000;
+        padding-bottom: 2px;
+    }
 
-/* Dynamic Cart Counter */
-.nav-right a {
-    position: relative;
-}
+    /* Dynamic Cart Counter */
+    .nav-right a {
+        position: relative;
+    }
 
-.cart-count {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: #ff0000;
-    color: #fff;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px 5px;
-    border-radius: 50%;
-    display: none; /* Hidden when empty */
-}
+    .cart-count {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background: #ff0000;
+        color: #fff;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 2px 5px;
+        border-radius: 50%;
+        display: none; /* Hidden when empty */
+    }
 
     .nav-container {
       width: 100%;
@@ -309,29 +309,29 @@
 
       <!-- MEN -->
       <div class="dropdown">
-  <input type="checkbox" id="men-toggle" class="toggle">
-  <label for="men-toggle">MEN</label>
+        <input type="checkbox" id="men-toggle" class="toggle">
+        <label for="men-toggle">MEN</label>
 
-  <div class="dropdown-area">
-    <div class="section">
-      <label>CLOTHING</label>
-      <div class="sub-menu">
-        <a href="men.html?category=shirts">SHIRTS</a>
-        <a href="men.html?category=jackets">JACKETS</a>
-        <a href="men.html?category=jeans">JEANS</a>
-      </div>
-    </div>
+        <div class="dropdown-area">
+          <div class="section">
+            <label>CLOTHING</label>
+            <div class="sub-menu">
+              <a href="men.html?category=shirts">SHIRTS</a>
+              <a href="men.html?category=jackets">JACKETS</a>
+              <a href="men.html?category=jeans">JEANS</a>
+            </div>
+          </div>
 
-    <div class="section">
-      <label>ACCESSORIES</label>
-      <div class="sub-menu">
-        <a href="men.html?category=shoes">SHOES</a>
-        <a href="men.html?category=bags">BAGS</a>
-        <a href="men.html?category=jewelry">JEWELRY</a>
+          <div class="section">
+            <label>ACCESSORIES</label>
+            <div class="sub-menu">
+              <a href="men.html?category=shoes">SHOES</a>
+              <a href="men.html?category=bags">BAGS</a>
+              <a href="men.html?category=jewelry">JEWELRY</a>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       <!-- WOMEN -->
       <div class="dropdown">
@@ -340,23 +340,22 @@
 
         <div class="dropdown-area">
           <div class="section">
-  <label>CLOTHING</label>
-  <div class="sub-menu">
-    <a href="women.html?category=tops">TOPS</a>
-    <a href="women.html?category=dresses">DRESSES</a>
-    <a href="women.html?category=skirts">SKIRTS</a>
-  </div>
-</div>
+            <label>CLOTHING</label>
+            <div class="sub-menu">
+              <a href="women.html?category=tops">TOPS</a>
+              <a href="women.html?category=dresses">DRESSES</a>
+              <a href="women.html?category=skirts">SKIRTS</a>
+            </div>
+          </div>
 
-<div class="section">
-  <label>SHOES & ACCESSORIES</label>
-  <div class="sub-menu">
-    <a href="women.html?category=heels">HEELS</a>
-    <a href="women.html?category=bags">BAGS</a>
-    <a href="women.html?category=jewelry">JEWELRY</a>
-  </div>
-</div>
-
+          <div class="section">
+            <label>SHOES & ACCESSORIES</label>
+            <div class="sub-menu">
+              <a href="women.html?category=heels">HEELS</a>
+              <a href="women.html?category=bags">BAGS</a>
+              <a href="women.html?category=jewelry">JEWELRY</a>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -369,8 +368,13 @@
     <!-- RIGHT NAV -->
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
-      <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+      <a href="sign-in.html" id="userLink">
+        <i class="fa-regular fa-user"></i>
+      </a>
+      <a href="cart.html">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
     </div>
 
   </div>
@@ -394,16 +398,17 @@
   </div>
 
   <div class="photo-card">
-    <img src="img/img1.jpg" alt="">
+    <img src="img/img/img/men-accessories3.jpg" alt="">
   </div>
 </section>
 
 <!-- NEWSLETTER -->
 <section class="newsletter">
   <h3>10% off your next purchase by subscribing to the newsletter</h3>
-      <form onsubmit="event.preventDefault(); window.location.href='sign-in.html';">
-        <input type="email" placeholder="E-mail">
-        <button type="button" class="signup-btn" onclick="window.location.href='sign-in.html'">SIGN UP NOW</button>
+  <form id="newsletterForm">
+    <input type="email" id="newsletterEmail" placeholder="E-mail" required>
+    <button type="submit">SIGN UP NOW</button>
+  </form>
 </section>
 
 <!-- FOOTER -->
@@ -455,9 +460,7 @@
   </div>
 </footer>
 
-
-
-<!-- OUTSIDE CLICK SCRIPT -->
+<!-- SCRIPTS -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     // 1. Highlight Active Nav Link
@@ -470,28 +473,114 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 2. Simple Cart Counter Logic
-    // This assumes you store cart items in localStorage
-    function updateCartCounter() {
-        const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
-        const counter = document.getElementById('cart-counter');
-        if (cart.length > 0) {
-            counter.innerText = cart.length;
-            counter.style.display = 'block';
-        } else {
-            counter.style.display = 'none';
-        }
+    // 2. Update Profile Link Based on Login Status
+    const userLink = document.getElementById("userLink");
+    
+    // Check if user is logged in
+    if (localStorage.getItem('userLoggedIn') === 'true') {
+        // User is logged in, redirect to profile page
+        userLink.href = "profile.html";
+    } else {
+        // User is not logged in, redirect to sign-in page
+        userLink.href = "sign-in.html";
     }
-    updateCartCounter();
+
+    // 3. Update Cart Counter
+    updateCartCount();
 });
 
+// Close dropdowns when clicking outside
+document.addEventListener("click", function(e) {
+    const dropdowns = document.querySelectorAll(".dropdown");
+
+    dropdowns.forEach(drop => {
+        const toggle = drop.querySelector(".toggle");
+
+        if (!drop.contains(e.target)) {
+            toggle.checked = false;
+        }
+    });
+});
+
+// Update cart count from database
+async function updateCartCount() {
+    try {
+        const response = await fetch('get_cart.php');
+        const result = await response.json();
+        
+        if (result.success && result.item_count > 0) {
+            const cartCountElem = document.getElementById('cartCount');
+            cartCountElem.textContent = result.item_count;
+            cartCountElem.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Error updating cart count:', error);
+        // Fallback to localStorage if API fails
+        const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
+        const cartCountElem = document.getElementById('cartCount');
+        if (cart.length > 0) {
+            cartCountElem.textContent = cart.length;
+            cartCountElem.style.display = 'block';
+        }
+    }
+}
+
+// Newsletter subscription
+const newsletterForm = document.getElementById('newsletterForm');
+
+newsletterForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+    
+    if (!email) {
+        alert('Please enter your email');
+        return;
+    }
+    
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    
+    if (!isLoggedIn) {
+        // Redirect to sign-in page
+        const returnUrl = window.location.href;
+        window.location.href = `sign-in.html?next=${encodeURIComponent(returnUrl)}`;
+        return;
+    }
+    
+    try {
+        const response = await fetch('subscribe_newsletter.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Thank you for subscribing! Check your email for your 10% discount code.');
+            emailInput.value = '';
+        } else {
+            alert(result.message || 'Subscription failed. Please try again.');
+        }
+        
+    } catch (error) {
+        console.error('Error subscribing:', error);
+        alert('Error subscribing. Please try again.');
+    }
+});
 
 function logout() {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userLoggedIn');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
     alert("You have logged out.");
-    window.location.reload(); // Refresh the page to update the UI
+    window.location.reload();
 }
-
 </script>
 
 </body>
