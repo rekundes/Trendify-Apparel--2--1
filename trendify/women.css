@@ -274,6 +274,14 @@
       background: transparent;
       color: #000;
     }
+    .size-select-heels {
+  display: none;          /* hidden unless category = heels */
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  font-size: 13px;
+}
+
 
     .size-chip.active {
       border-color: #000000;

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Men – Trendify</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="men.css">
+  <link rel="icon" href="img/logo.png" type="image/png">
+</head>
+<body>
+<!-- HEADER -->
+<header class="navbar">
+  <div class="nav-container">
+
+    <nav class="main-nav">
+      <!-- MEN -->
+      <div class="dropdown">
+        <input type="checkbox" id="men-toggle" class="toggle">
+        <label for="men-toggle">MEN</label>
+
+        <div class="dropdown-area">
+          <div class="section">
+            <label>CLOTHING</label>
+            <div class="sub-menu">
+              <a href="men.html?category=shirts">SHIRTS</a>
+              <a href="men.html?category=jackets">JACKETS</a>
+              <a href="men.html?category=jeans">JEANS</a>
+            </div>
+          </div>
+
+          <div class="section">
+            <label>ACCESSORIES</label>
+            <div class="sub-menu">
+              <a href="men.html?category=shoes">SHOES</a>
+              <a href="men.html?category=bags">BAGS</a>
+              <a href="men.html?category=jewelry">JEWELRY</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WOMEN -->
+      <div class="dropdown">
+        <input type="checkbox" id="women-toggle" class="toggle">
+        <label for="women-toggle">WOMEN</label>
+        <div class="dropdown-area">
+          <div class="section">
+            <label>CLOTHING</label>
+            <div class="sub-menu">
+              <a href="women.html?category=tops">TOPS</a>
+              <a href="women.html?category=dresses">DRESSES</a>
+              <a href="women.html?category=skirts">SKIRTS</a>
+            </div>
+          </div>
+          <div class="section">
+            <label>ACCESSORIES</label>
+            <div class="sub-menu">
+              <a href="women.html?category=heels">HEELS</a>
+              <a href="women.html?category=bags">BAGS</a>
+              <a href="women.html?category=jewelry">JEWELRY</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <a href="main.html">
+      <img src="img/logo.png" class="logo">
+    </a>
+
+    <div class="nav-right">
+      <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
+      <a href="cart.html" style="position:relative;">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-counter" class="cart-count">0</span>
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<!-- CATEGORY TITLE -->
+<h1 class="category-title" id="categoryTitle">MEN</h1>
+
+<!-- PRODUCT GRID -->
+<div class="product-grid" id="productGrid"></div>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <h3>10% off your next purchase by subscribing to the newsletter</h3>
+  <form>
+    <input type="email" placeholder="E-mail">
+    <button type="submit">SIGN UP NOW</button>
+    <p>By subscribing, you confirm that you have read the <a href="#">Privacy Policy</a>.</p>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>CUSTOMER SERVICE</h4>
+      <p><a href="#">Help</a></p>
+      <p><a href="#">My Purchases</a></p>
+      <p><a href="#">Returns</a></p>
+    </div>
+    <div>
+      <h4>COMPANY</h4>
+      <p><a href="#">About Us</a></p>
+      <p><a href="#">Work for Trendify</a></p>
+      <p><a href="#">Press</a></p>
+    </div>
+    <div>
+      <h4>DISCOVER</h4>
+      <p><a href="#">Responsibility</a></p>
+      <p><a href="#">Stores</a></p>
+      <p><a href="#">Site Map</a></p>
+    </div>
+    <div>
+      <h4>FOLLOW US</h4>
+      <p>Instagram · Facebook · YouTube</p>
+      <p>TikTok · Spotify · Pinterest</p>
+      <p>X · LinkedIn</p>
+    </div>
+    <div>
+      <h4>LOCATION</h4>
+      <p>PHILIPPINES ▼</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>
+      <a href="#">Privacy Policy and Cookies</a> ·
+      <a href="#">Terms and Conditions</a> ·
+      <a href="#">Ethics Channel</a>
+    </p>
+    <p style="margin-top: 10px;">© 2025 Trendify. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Hover preview with controls -->
+<div id="hoverPreview" class="hover-preview" aria-hidden="true">
+  <button type="button" class="hover-close-btn">✕</button>
+
+  <div class="hover-image-wrapper">
+    <img id="hoverPreviewImg" src="" alt="Product preview" />
+    <div class="hover-price-badge" id="hoverPriceBadge">₱0</div>
+  </div>
+
+  <div class="hover-details">
+    <div class="hover-size-row">
+      <div class="hover-size-label">Size</div>
+
+      <!-- clothing sizes (shirts / jackets / jeans) -->
+      <div class="hover-size-options size-options-clothing">
+        <button class="size-chip">S</button>
+        <button class="size-chip">M</button>
+        <button class="size-chip active">L</button>
+        <button class="size-chip">XL</button>
+      </div>
+
+      <!-- shoe sizes (only for category=shoes) -->
+      <select class="size-select-shoes">
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+        <option value="39">39</option>
+        <option value="40">40</option>
+        <option value="41">41</option>
+        <option value="42">42</option>
+        <option value="43">43</option>
+        <option value="44">44</option>
+        <option value="45">45</option>
+      </select>
+    </div>
+
+    <div class="hover-qty-row">
+      <div class="hover-qty-label">Quantity</div>
+      <div class="hover-qty-controls">
+        <button class="qty-btn minus">−</button>
+        <span class="qty-value">1</span>
+        <button class="qty-btn plus">+</button>
+      </div>
+    </div>
+
+    <button type="button" class="hover-add-btn">
+      Add to cart
+    </button>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+  // close dropdowns
+  document.addEventListener("click", function(e) {
+    const dropdowns = document.querySelectorAll(".dropdown");
+    dropdowns.forEach(drop => {
+      const toggle = drop.querySelector(".toggle");
+      if (!drop.contains(e.target)) toggle.checked = false;
+    });
+  });
+
+  /* CATEGORY SYSTEM */
+  const params = new URLSearchParams(window.location.search);
+  const category = params.get("category") || "shirts";
+
+  const categoryTitle = document.getElementById("categoryTitle");
+  const productGrid = document.getElementById("productGrid");
+
+  const categories = {
+    shirts: [
+      { img: "img/img/img/men-shirt1.jpg", name: "Enigma 8-Ball", price: "₱299" },
+      { img: "img/img/img/men-shirt2.jpg", name: "Enigma Eyes That Peak", price: "₱299" },
+      { img: "img/img/img/men-shirt3.jpg", name: "Universe", price: "₱299" },
+      { img: "img/img/img/men-shirt4.jpg", name: "Chicago 23", price: "₱399" },
+      { img: "img/img/img/men-shirt5.jpg", name: "Death riot", price: "₱499" },
+      { img: "img/img/img/men-shirt6.jpg", name: "Porche 911", price: "₱299" }
+    ],
+    jackets: [
+      { img: "img/img/img/men-jacket1.jpg", name: "Ferrari", price: "₱899" },
+      { img: "img/img/img/men-jacket2.jpg", name: "Srel", price: "₱999" },
+      { img: "img/img/img/men-jacket3.jpg", name: "Sincere", price: "₱799" },
+      { img: "img/img/img/men-jacket4.jpg", name: "Cartier", price: "₱699" },
+      { img: "img/img/img/men-jacket5.jpg", name: "Tokyo Japan", price: "₱899" },
+      { img: "img/img/img/men-jacket6.jpg", name: "New York", price: "₱749" }
+    ],
+    jeans: [
+      { img: "img/img/img/men-jeans1.jpg", name: "Skull", price: "₱799" },
+      { img: "img/img/img/men-jeans2.jpg", name: "Techwear", price: "₱899" },
+      { img: "img/img/img/men-jeans3.jpg", name: "BAGGY", price: "₱499" },
+      { img: "img/img/img/men-jeans4.jpg", name: "CARGO", price: "₱599" },
+      { img: "img/img/img/men-jeans5.jpg", name: "BLUE JEANS", price: "₱399" },
+      { img: "img/img/img/men-jeans6.jpg", name: "WHITE CARGO", price: "₱499" }
+    ],
+    shoes: [
+      { img: "img/img/img/men-shoes1.jpg", name: "Nike Air Jordan 1 Retro High OG", price: "₱3,495" },
+      { img: "img/img/img/men-shoes2.jpg", name: "Jordan 4 Retro off-white", price: "₱2,995" },
+      { img: "img/img/img/men-shoes3.jpg", name: "Chuck taylor all-star", price: "₱2,495" },
+      { img: "img/img/img/men-shoes4.jpg", name: "Onitsuka tiger", price: "₱4,595" },
+      { img: "img/img/img/men-shoes5.jpg", name: "Black Puma Speedcat", price: "₱1,995" },
+      { img: "img/img/img/men-shoes6.jpg", name: "ADIDAS SUPERSTAR", price: "₱3,895" }
+    ],
+    bags: [
+      { img: "img/img/img/men-bag1.jpg", name: "CrossBODY bag", price: "₱2,995" },
+      { img: "img/img/img/men-bag2.jpg", name: "Louis Vuitton", price: "₱3,495" },
+      { img: "img/img/img/men-bag3.jpg", name: "Supreme", price: "₱2,495" },
+      { img: "img/img/img/men-bag4.jpg", name: "Prada x Adidas", price: "₱3,995" },
+      { img: "img/img/img/men-bag5.jpg", name: "Nike backpack", price: "₱1,495" },
+      { img: "img/img/img/men-bag6.jpg", name: "Bape backpack", price: "₱4,295" }
+    ],
+    jewelry: [
+      { img: "img/img/img/men-accessories1.jpg", name: "Chain Necklace", price: "₱795" },
+      { img: "img/img/img/men-accessories2.jpg", name: "Bracelet", price: "₱695" },
+      { img: "img/img/img/men-accessories3.jpg", name: "Watch", price: "₱895" },
+      { img: "img/img/img/men-accessories4.jpg", name: "Earring", price: "₱595" },
+      { img: "img/img/img/men-accessories5.jpg", name: "Ring", price: "₱1,195" },
+      { img: "img/img/img/men-accessories6.jpg", name: "Sun glasses", price: "₱495" }
+    ]
+  };
+
+  categoryTitle.textContent = category.replace("-", " ").toUpperCase();
+
+  const hoverPreview    = document.getElementById('hoverPreview');
+  const hoverPreviewImg = document.getElementById('hoverPreviewImg');
+  const hoverPriceBadge = document.getElementById('hoverPriceBadge');
+  const hoverCloseBtn   = document.querySelector('.hover-close-btn');
+  const hoverSizeRow    = document.querySelector('.hover-size-row');
+  const sizeOptionsClothing = document.querySelector('.size-options-clothing');
+  const sizeSelectShoes     = document.querySelector('.size-select-shoes');
+
+  // NO size at all:
+  const noSizeCategories = ['bags', 'jewelry'];
+  // Shoes use dropdown 36–45
+  const shoeCategory = 'shoes';
+
+  // show / hide size UI based on current category
+  function updateSizeUIForCategory() {
+    if (!hoverSizeRow) return;
+
+    if (noSizeCategories.includes(category)) {
+      hoverSizeRow.style.display = 'none';        // bags / jewelry
+    } else {
+      hoverSizeRow.style.display = 'flex';
+
+      if (category === shoeCategory) {
+        // shoes: dropdown only
+        if (sizeOptionsClothing) sizeOptionsClothing.style.display = 'none';
+        if (sizeSelectShoes)     sizeSelectShoes.style.display     = 'inline-block';
+      } else {
+        // shirts / jackets / jeans: chips only
+        if (sizeOptionsClothing) sizeOptionsClothing.style.display = 'flex';
+        if (sizeSelectShoes)     sizeSelectShoes.style.display     = 'none';
+      }
+    }
+  }
+
+  updateSizeUIForCategory();
+
+  /* build products */
+  let html = '';
+  categories[category].forEach(item => {
+    const badgeHtml = item.isNew ? `<div class="badge">New</div>` : '';
+    html += `
+      <div class="product-card">
+        ${badgeHtml}
+        <img src="${item.img}" class="primary-img">
+        <img src="${item.secondaryImg || item.img}" class="secondary-img">
+        <div class="product-info">
+          <div class="product-name">${item.name}</div>
+          <div class="product-price">${item.price}</div>
+        </div>
+      </div>
+    `;
+  });
+  productGrid.innerHTML = html;
+
+  /* card click -> open preview */
+  const cards = productGrid.querySelectorAll('.product-card');
+  cards.forEach((card, idx) => {
+    const item = categories[category][idx];
+    card.addEventListener('click', () => {
+      if (!hoverPreview || !hoverPreviewImg || !hoverPriceBadge) return;
+      hoverPreviewImg.src = item.img;
+      hoverPriceBadge.textContent = item.price;
+      hoverPreview.classList.add('show');
+      hoverPreview.setAttribute('aria-hidden', 'false');
+
+      hoverPreview.dataset.name  = item.name;
+      hoverPreview.dataset.price = item.price;
+      hoverPreview.dataset.img   = item.img;
+    });
+  });
+
+  /* close preview */
+  hoverCloseBtn.addEventListener('click', () => {
+    hoverPreview.classList.remove('show');
+    hoverPreviewImg.src = '';
+    hoverPreview.setAttribute('aria-hidden', 'true');
+  });
+
+  /* SIZE CHIPS (for clothing) */
+  const sizeChips = document.querySelectorAll('.size-chip');
+  let selectedSize = 'L';
+
+  sizeChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      sizeChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedSize = chip.textContent.trim();
+    });
+  });
+
+  /* QUANTITY */
+  const qtyValue = document.querySelector('.qty-value');
+  const qtyMinus = document.querySelector('.qty-btn.minus');
+  const qtyPlus  = document.querySelector('.qty-btn.plus');
+  let quantity = 1;
+
+  function renderQty() { qtyValue.textContent = quantity; }
+
+  qtyMinus.addEventListener('click', () => {
+    if (quantity > 1) {
+      quantity--;
+      renderQty();
+    }
+  });
+  qtyPlus.addEventListener('click', () => {
+    quantity++;
+    renderQty();
+  });
+  renderQty();
+
+  /* ADD TO CART */
+  const addBtn = document.querySelector('.hover-add-btn');
+
+  addBtn.addEventListener('click', () => {
+    const preview = document.getElementById('hoverPreview');
+    const name  = preview.dataset.name  || document.querySelector('.product-name')?.textContent.trim() || '';
+    const price = preview.dataset.price || document.querySelector('.product-price')?.textContent.trim() || '';
+    const img   = preview.dataset.img   || document.getElementById('hoverPreviewImg').src || '';
+    const qty   = parseInt(document.querySelector('.qty-value').textContent) || 1;
+
+    let sizeToSave;
+    if (noSizeCategories.includes(category)) {
+      sizeToSave = 'One size';                 // bags, jewelry
+    } else if (category === shoeCategory && sizeSelectShoes) {
+      sizeToSave = sizeSelectShoes.value || '36'; // shoes 36–45
+    } else {
+      sizeToSave = selectedSize;              // shirts, jackets, jeans
+    }
+
+    const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
+    const existing = cart.find(i =>
+      i.name === name && i.price === price && i.size === sizeToSave
+    );
+
+    if (existing) {
+      existing.qty = (existing.qty || 1) + qty;
+    } else {
+      cart.push({ name, price, img, size: sizeToSave, qty });
+    }
+
+    localStorage.setItem('trendify_cart', JSON.stringify(cart));
+    updateCartCounter();
+    window.location.href = 'cart.html';
+  });
+
+  /* cart counter helper */
+  function updateCartCounter() {
+    const counter = document.getElementById('cart-counter');
+    const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
+    const total = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    if (!counter) return;
+    counter.innerText = total;
+    counter.style.display = total > 0 ? 'block' : 'none';
+  }
+
+  updateCartCounter();
+</script>
+</body>
+</html>
