@@ -19,6 +19,7 @@
             background: #fff;
         }
 
+        /* ---------------- NAVIGATION BAR ---------------- */
         .navbar {
             position: sticky;
             top: 0;
@@ -32,6 +33,7 @@
             border-bottom: 1px solid #e7e7e7;
         }
 
+        /* GRID: LEFT NAV | LOGO | RIGHT NAV */
         .nav-container {
             width: 100%;
             max-width: 1400px;
@@ -40,6 +42,7 @@
             align-items: center;
         }
 
+        /* LEFT NAV */
         .main-nav {
             display: flex;
             align-items: center;
@@ -56,12 +59,17 @@
             cursor: pointer;
         }
 
+
+        
+
+        /* CENTER LOGO */
         .logo {
             width: 70px;
             display: block;
             margin: 0 auto;
         }
 
+        /* RIGHT NAV */
         .nav-right {
             display: flex;
             justify-content: flex-end;
@@ -75,6 +83,7 @@
             cursor: pointer;
         }
 
+        /* ---------------- CLICK DROPDOWN ---------------- */
         .dropdown {
             position: relative;
         }
@@ -102,6 +111,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
+        /* ---------------- SUBMENU (hover only) ---------------- */
         .section {
             position: relative;
         }
@@ -138,10 +148,11 @@
             opacity: 0.7;
         }
 
+        /* ---------------- SIGN IN PAGE ---------------- */
         .center-box {
             width: 100%;
             max-width: 420px;
-            margin: 60px auto;
+            margin: 60px auto   ;
             text-align: center;
         }
 
@@ -186,11 +197,6 @@
             cursor: pointer;
         }
 
-        .black-btn:disabled {
-            background: #666;
-            cursor: not-allowed;
-        }
-
         .white-btn {
             background: #fff;
             color: #000;
@@ -207,20 +213,6 @@
             text-decoration: underline;
             cursor: pointer;
         }
-
-        .error-msg {
-            color: red;
-            font-size: 14px;
-            margin-bottom: 10px;
-            display: none;
-        }
-
-        .success-msg {
-            color: green;
-            font-size: 14px;
-            margin-bottom: 10px;
-            display: none;
-        }
     </style>
 </head>
 
@@ -235,55 +227,56 @@
 
             <!-- MEN -->
             <div class="dropdown">
-                <input type="checkbox" id="men-toggle" class="toggle">
-                <label for="men-toggle">MEN</label>
+  <input type="checkbox" id="men-toggle" class="toggle">
+  <label for="men-toggle">MEN</label>
 
-                <div class="dropdown-area">
-                    <div class="section">
-                        <label>CLOTHING</label>
-                        <div class="sub-menu">
-                            <a href="men.html?category=shirts">SHIRTS</a>
-                            <a href="men.html?category=jackets">JACKETS</a>
-                            <a href="men.html?category=jeans">JEANS</a>
-                        </div>
-                    </div>
+  <div class="dropdown-area">
+    <div class="section">
+      <label>CLOTHING</label>
+      <div class="sub-menu">
+        <a href="men.html?category=shirts">SHIRTS</a>
+        <a href="men.html?category=jackets">JACKETS</a>
+        <a href="men.html?category=jeans">JEANS</a>
+      </div>
+    </div>
 
-                    <div class="section">
-                        <label>ACCESSORIES</label>
-                        <div class="sub-menu">
-                            <a href="men.html?category=shoes">SHOES</a>
-                            <a href="men.html?category=bags">BAGS</a>
-                            <a href="men.html?category=jewelry">JEWELRY</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="section">
+      <label>ACCESSORIES</label>
+      <div class="sub-menu">
+        <a href="men.html?category=shoes">SHOES</a>
+        <a href="men.html?category=bags">BAGS</a>
+        <a href="men.html?category=jewelry">JEWELRY</a>
+      </div>
+    </div>
+  </div>
+</div>
 
             <!-- WOMEN -->
             <div class="dropdown">
-                <input type="checkbox" id="women-toggle" class="toggle">
-                <label for="women-toggle">WOMEN</label>
+        <input type="checkbox" id="women-toggle" class="toggle">
+        <label for="women-toggle">WOMEN</label>
 
-                <div class="dropdown-area">
-                    <div class="section">
-                        <label>CLOTHING</label>
-                        <div class="sub-menu">
-                            <a href="women.html?category=tops">TOPS</a>
-                            <a href="women.html?category=dresses">DRESSES</a>
-                            <a href="women.html?category=skirts">SKIRTS</a>
-                        </div>
-                    </div>
+        <div class="dropdown-area">
+          <div class="section">
+  <label>CLOTHING</label>
+  <div class="sub-menu">
+    <a href="women.html?category=tops">TOPS</a>
+    <a href="women.html?category=dresses">DRESSES</a>
+    <a href="women.html?category=skirts">SKIRTS</a>
+  </div>
+</div>
 
-                    <div class="section">
-                        <label>SHOES & ACCESSORIES</label>
-                        <div class="sub-menu">
-                            <a href="women.html?category=heels">HEELS</a>
-                            <a href="women.html?category=bags">BAGS</a>
-                            <a href="women.html?category=jewelry">JEWELRY</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="section">
+  <label>SHOES & ACCESSORIES</label>
+  <div class="sub-menu">
+    <a href="women.html?category=heels">HEELS</a>
+    <a href="women.html?category=bags">BAGS</a>
+    <a href="women.html?category=jewelry">JEWELRY</a>
+  </div>
+</div>
+
+        </div>
+      </div>
         </nav>
 
         <!-- CENTER LOGO -->
@@ -294,7 +287,7 @@
         <!-- RIGHT NAV -->
         <div class="nav-right">
             <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-            <a href="sign-in.html" id="userLink"><i class="fa-regular fa-user"></i></a>
+            <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
             <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
         </div>
 
@@ -307,13 +300,9 @@
 
     <h2 class="signin-heading">SIGN IN</h2>
 
-    <!-- ERROR/SUCCESS MESSAGES -->
-    <p class="error-msg" id="errorMsg"></p>
-    <p class="success-msg" id="successMsg"></p>
-
-    <form class="signin-form" id="signinForm">
-        <input type="email" id="email" placeholder="E-mail" required />
-        <input type="password" id="password" placeholder="Password" required />
+    <form class="signin-form">
+        <input type="email" placeholder="E-mail" />
+        <input type="password" placeholder="Password" />
 
         <div class="stay">
             <input type="checkbox" id="stay-signed" />
@@ -328,24 +317,8 @@
     </form>
 </section>
 
-<!-- SCRIPT -->
+<!-- OUTSIDE CLICK SCRIPT -->
 <script>
-    // Check if already logged in and redirect
-    document.addEventListener("DOMContentLoaded", function() {
-        // If user is already logged in, redirect to profile
-        if (localStorage.getItem('userLoggedIn') === 'true') {
-            window.location.href = 'profile.html';
-        }
-
-        // Update profile icon link
-        const userLink = document.getElementById("userLink");
-        if (localStorage.getItem('userLoggedIn') === 'true') {
-            userLink.href = "profile.html";
-        } else {
-            userLink.href = "sign-in.html";
-        }
-    });
-
     document.addEventListener("click", function(e) {
         const dropdowns = document.querySelectorAll(".dropdown");
 
@@ -357,97 +330,26 @@
             }
         });
     });
+// Sign-in form behavior: set logged-in flag and redirect if 'next' is provided
+document.querySelector('.signin-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Mark as logged in and create a simple profile flag
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('hasProfile', 'true');
 
-    const errorMsg = document.getElementById('errorMsg');
-    const successMsg = document.getElementById('successMsg');
-
-    function showError(message) {
-        errorMsg.textContent = message;
-        errorMsg.style.display = 'block';
-        successMsg.style.display = 'none';
+    // Respect next parameter for redirect
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get('next');
+    if (next) {
+        // Use decodeURI to avoid double-encoding issues
+        window.location.href = decodeURIComponent(next);
+    } else {
+        window.location.href = 'main.html';
     }
-
-    function showSuccess(message) {
-        successMsg.textContent = message;
-        successMsg.style.display = 'block';
-        errorMsg.style.display = 'none';
-    }
-
-    function clearMessages() {
-        errorMsg.style.display = 'none';
-        successMsg.style.display = 'none';
-    }
-
-    // SIGN IN FORM - Connected to Database
-    document.getElementById('signinForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        clearMessages();
-
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const submitBtn = document.querySelector('.black-btn');
-
-        if (!email || !password) {
-            showError('Please enter email and password');
-            return;
-        }
-
-        try {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Signing in...';
-
-            const response = await fetch('login.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                // Store user info in localStorage
-                localStorage.setItem('userLoggedIn', 'true');
-localStorage.setItem("userId", result.user.id);
-
-localStorage.setItem('userEmail', result.user.email);
-localStorage.setItem('userName', result.user.first_name);
-
-
-                showSuccess('Login successful! Redirecting...');
-
-                // Check if there's a return URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const returnUrl = urlParams.get('next');
-
-                // Redirect after a short delay
-                setTimeout(() => {
-                    if (returnUrl) {
-                        // Redirect back to the page they came from
-                        window.location.href = decodeURIComponent(returnUrl);
-                    } else {
-                        // Default redirect to main page
-                        window.location.href = 'main.html';
-                    }
-                }, 1000);
-            } else {
-                showError(result.message || 'Invalid email or password');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'SIGN IN';
-            }
-
-        } catch (error) {
-            console.error('Error:', error);
-            showError('Connection error. Please make sure XAMPP is running.');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'SIGN IN';
-        }
-    });
+});
 </script>
 
 </body>
 </html>
+
+
