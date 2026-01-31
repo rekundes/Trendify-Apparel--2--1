@@ -93,6 +93,30 @@
       cursor: pointer;
     }
 
+    .account-btn {
+      padding: 8px 16px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .account-btn:hover {
+      opacity: 0.8;
+    }
+
+    .account-btn.show {
+      display: flex;
+    }
+
     /* ---------------- DROPDOWN ---------------- */
     .dropdown { position: relative; }
     .toggle { display: none; }
@@ -368,8 +392,15 @@
     <!-- RIGHT NAV -->
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="sign-in.html" id="userLink">
+      <a href="sign-in.html" id="userLink" style="display:none;">
         <i class="fa-regular fa-user"></i>
+      </a>
+      <a id="signInBtn" href="sign-in.html" class="account-btn" style="background:transparent;color:#000;border:1px solid #000;display:none;">
+        SIGN IN
+      </a>
+      <a href="profile.html" id="accountBtn" class="account-btn">
+        <i class="fa-regular fa-user"></i>
+        <span>MY ACCOUNT</span>
       </a>
       <a href="cart.html">
         <i class="fa-solid fa-cart-shopping"></i>
@@ -462,50 +493,69 @@
 
 <!-- SCRIPTS -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // 1. Highlight Active Nav Link
-    const currentPath = window.location.pathname.split("/").pop();
-    const navLinks = document.querySelectorAll(".main-nav a, .main-nav label");
+document.addEventListener("DOMContentLoaded", async function() {
+  // 1. Highlight Active Nav Link
+  const currentPath = window.location.pathname.split("/").pop();
+  const navLinks = document.querySelectorAll(".main-nav a, .main-nav label");
     
-    navLinks.forEach(link => {
-        if (link.getAttribute("href") === currentPath) {
-            link.classList.add("active");
-        }
-    });
-
-    // 2. Update Profile Link Based on Login Status
-    const userLink = document.getElementById("userLink");
-    
-    // Check if user is logged in
-    if (localStorage.getItem('userLoggedIn') === 'true') {
-        // User is logged in, redirect to profile page
-        userLink.href = "profile.html";
-    } else {
-        // User is not logged in, redirect to sign-in page
-        userLink.href = "sign-in.html";
+  navLinks.forEach(link => {
+    if (link.getAttribute("href") === currentPath) {
+      link.classList.add("active");
     }
+  });
 
-    // 3. Update Cart Counter
-    updateCartCount();
+  // 2. Check Session and Update Account Button / Sign In Button
+  try {
+    const response = await fetch('session_check.php', { credentials: 'include' });
+    const data = await response.json();
+        
+    const userLink = document.getElementById("userLink");
+    const accountBtn = document.getElementById("accountBtn");
+    const signInBtn = document.getElementById("signInBtn");
+        
+    if (data.logged_in) {
+      // User is logged in - show MY ACCOUNT button
+      if (userLink) userLink.style.display = "none";
+      if (signInBtn) signInBtn.style.display = "none";
+      if (accountBtn) accountBtn.classList.add("show");
+    } else {
+      // User not logged in - show user icon and sign-in button
+      if (userLink) userLink.style.display = "block";
+      if (signInBtn) signInBtn.style.display = "inline-flex";
+      if (accountBtn) accountBtn.classList.remove("show");
+    }
+  } catch (error) {
+    console.error('Session check failed:', error);
+    // Default to sign-in visible
+    const userLink = document.getElementById("userLink");
+    const accountBtn = document.getElementById("accountBtn");
+    const signInBtn = document.getElementById("signInBtn");
+    if (userLink) userLink.style.display = "block";
+    if (signInBtn) signInBtn.style.display = "inline-flex";
+    if (accountBtn) accountBtn.classList.remove("show");
+  }
+
+  // 3. Update Cart Counter
+  updateCartCount();
 });
 
 // Close dropdowns when clicking outside
 document.addEventListener("click", function(e) {
-    const dropdowns = document.querySelectorAll(".dropdown");
+  const dropdowns = document.querySelectorAll(".dropdown");
 
-    dropdowns.forEach(drop => {
-        const toggle = drop.querySelector(".toggle");
+  dropdowns.forEach(drop => {
+    const toggle = drop.querySelector(".toggle");
 
-        if (!drop.contains(e.target)) {
-            toggle.checked = false;
-        }
-    });
+    if (!drop.contains(e.target)) {
+      toggle.checked = false;
+    }
+  });
 });
 
 // Update cart count from database
 async function updateCartCount() {
     try {
-        const response = await fetch('get_cart.php');
+        const response = await fetch('get_cart.php', { credentials: 'include' });
         const result = await response.json();
         
         if (result.success && result.item_count > 0) {
@@ -555,6 +605,7 @@ newsletterForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ email: email })
         });
         

@@ -1,5 +1,8 @@
 <?php
+// IMPORTANT: session_start() MUST be called before ANY output
+session_start();
 header('Content-Type: application/json');
+header('Access-Control-Allow-Credentials: true');
 require_once 'config.php';
 
 // Get JSON input

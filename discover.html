@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Women – Discover More · Trendify</title>
+  <title>Men – Discover More · Trendify</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <style>
-    /* Styling matches discover.html for consistency */
+  <link rel="icon" href="img/logo.png" type="image/png">
+</head>
+<style>
+    /* Styling matches discover-women.html for consistency */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
     body { background: #fff; }
 
@@ -21,8 +22,32 @@
     .nav-right { display: flex; justify-content: flex-end; align-items: center; gap: 22px; }
     .nav-right i { font-size: 22px; color: #000; }
 
-    /* HERO */
-    .hero { width: 100%; height: 520px; background: url('img/img3.jpg') center/cover no-repeat; display: flex; align-items: center; justify-content: center; }
+    /* ACCOUNT BUTTON */
+    .account-btn {
+      display: none !important;
+      padding: 8px 12px;
+      border: 1px solid #000;
+      border-radius: 4px;
+      background: white;
+      color: black;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .account-btn:hover {
+      background: #000;
+      color: white;
+    }
+
+    .account-btn.show {
+      display: inline-block !important;
+    }
+
+    /* HERO - Updated to use img1.jpg which is often used for Men's landing */
+    .hero { width: 100%; height: 520px; background: url('img/img1.jpg') center/cover no-repeat; display: flex; align-items: center; justify-content: center; }
     .hero h1 { font-size: 48px; color: #fff; letter-spacing: 3px; text-shadow: 0 4px 10px rgba(0,0,0,0.4); }
 
     /* CATEGORIES */
@@ -35,7 +60,7 @@
     /* FEATURED */
     .section-title { text-align: center; font-size: 26px; margin-top: 40px; margin-bottom: 20px; letter-spacing: 1px; }
     .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; padding: 0 40px 60px; }
-    .product-card { border: 1px solid #eee; border-radius: 6px; overflow: hidden; transition: 0.3s ease; cursor: pointer; }
+    .product-card { border: 1px solid #eee; border-radius: 6px; overflow: hidden; transition: 0.3s ease; }
     .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .product-card img { width: 100%; height: 340px; object-fit: cover; }
     .product-info { padding: 15px; }
@@ -46,86 +71,80 @@
     .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 25px; }
     .footer-bottom { text-align: center; margin-top: 30px; }
     footer a { text-decoration: none; color: inherit; }
-  </style>
-</head>
+</style>
 <body>
-
 <header class="navbar">
   <div class="nav-container">
     <nav class="main-nav">
-      <!-- no dropdowns on this discover page -->
-    </nav>
+        </nav>
 
     <a href="main.html"><img src="img/logo.png" class="logo" alt="Trendify"></a>
 
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
+      <a id="userLink" href="sign-in.html" style="display:none;"><i class="fa-regular fa-user"></i></a>
+      <a id="accountBtn" href="profile.html" class="account-btn"><i class="fa-solid fa-user"></i> MY ACCOUNT</a>
       <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
     </div>
   </div>
 </header>
 
 <section class="hero">
-  <h1>WOMEN'S COLLECTION</h1>
+  <h1>MEN'S COLLECTION</h1>
 </section>
 
 <section class="categories">
-  <a href="women.html?category=tops" class="cat-card">
-    <img src="img/img/women-top3.jpg" onerror="this.src='img/img/placeholder.jpg'">
-    <span>TOPS</span>
+  <a href="men.html?category=shirts" class="cat-card">
+    <img src="img/img/img/men-shirt1.jpg" onerror="this.src='img/img/placeholder.jpg'">
+    <span>SHIRTS</span>
   </a>
-  <a href="women.html?category=dresses" class="cat-card">
-    <img src="img/img/img/women-dress1.jpg" onerror="this.src='img/img/placeholder.jpg'">
-    <span>DRESSES</span>
+  <a href="men.html?category=jackets" class="cat-card">
+    <img src="img/img/img/men-jacket1.jpg" onerror="this.src='img/img/placeholder.jpg'">
+    <span>JACKETS</span>
   </a>
-  <a href="women.html?category=skirts" class="cat-card">
-    <img src="img/img/img/women-skirts1.jpg" onerror="this.src='img/img/placeholder.jpg'">
-    <span>SKIRTS</span>
+  <a href="men.html?category=jeans" class="cat-card">
+    <img src="img/img/img/men-jeans1.jpg" onerror="this.src='img/img/placeholder.jpg'">
+    <span>JEANS</span>
   </a>
-  <a href="women.html?category=heels" class="cat-card">
-    <img src="img/img/img/women-heels1.jpg" onerror="this.src='img/img/placeholder.jpg'">
-    <span>HEELS</span>
+  <a href="men.html?category=shoes" class="cat-card">
+    <img src="img/img/img/men-shoes1.jpg" onerror="this.src='img/img/placeholder.jpg'">
+    <span>SHOES</span>
   </a>
 </section>
 
-<h2 class="section-title">FEATURED WOMEN</h2>
+<h2 class="section-title">FEATURED MEN</h2>
 <section class="product-grid">
-  <!-- 0: tops -->
-  <div class="product-card">
-    <img src="img/img/women-top1.jpg" onerror="this.src='img/img/placeholder.jpg'">
+  <a href="men.html?category=shirts" class="product-card">
+    <img src="img/img/img/men-shirt2.jpg" onerror="this.src='img/img/placeholder.jpg'">
     <div class="product-info">
-      <div class="product-name">Rockmore Croptop</div>
-      <div class="product-price">₱1,295</div>
+      <div class="product-name">Enigma Eyes That Peak</div>
+      <div class="product-price">₱299</div>
     </div>
-  </div>
+  </a>
 
-  <!-- 1: dresses -->
-  <div class="product-card">
-    <img src="img/img/img/women-dress2.jpg" onerror="this.src='img/img/placeholder.jpg'">
+  <a href="men.html?category=jackets" class="product-card">
+    <img src="img/img/img/men-jacket5.jpg" onerror="this.src='img/img/placeholder.jpg'">
     <div class="product-info">
-      <div class="product-name">Brown Long Sleeve Dress</div>
+      <div class="product-name">Tokyo Japan Jacket</div>
+      <div class="product-price">₱899</div>
+    </div>
+  </a>
+
+  <a href="men.html?category=jeans" class="product-card">
+    <img src="img/img/img/men-jeans4.jpg" onerror="this.src='img/img/placeholder.jpg'">
+    <div class="product-info">
+      <div class="product-name">CARGO JEANS</div>
+      <div class="product-price">₱599</div>
+    </div>
+  </a>
+
+  <a href="men.html?category=shoes" class="product-card">
+    <img src="img/img/img/men-shoes2.jpg" onerror="this.src='img/img/placeholder.jpg'">
+    <div class="product-info">
+      <div class="product-name">Jordan 4 Retro off-white</div>
       <div class="product-price">₱2,995</div>
     </div>
-  </div>
-
-  <!-- 2: skirts -->
-  <div class="product-card">
-    <img src="img/img/img/women-skirts3.jpg" onerror="this.src='img/img/placeholder.jpg'">
-    <div class="product-info">
-      <div class="product-name">Blue Skirt</div>
-      <div class="product-price">₱1,695</div>
-    </div>
-  </div>
-
-  <!-- 3: heels -->
-  <div class="product-card">
-    <img src="img/img/img/women-heels2.jpg" onerror="this.src='img/img/placeholder.jpg'">
-    <div class="product-info">
-      <div class="product-name">Black Heels</div>
-      <div class="product-price">₱1,895</div>
-    </div>
-  </div>
+  </a>
 </section>
 
 <footer>
@@ -167,19 +186,30 @@
 </footer>
 
 <script>
-  // When a featured card is clicked, go to the matching women category
-  const featuredCategoryByIndex = [
-    'tops',    // 0: Rockmore Croptop
-    'dresses', // 1: Brown Long Sleeve Dress
-    'skirts',  // 2: Blue Skirt
-    'heels'    // 3: Black Heels
-  ];
-
-  document.querySelectorAll('.product-card').forEach((card, index) => {
-    card.addEventListener('click', () => {
-      const category = featuredCategoryByIndex[index] || 'tops';
-      window.location.href = `women.html?category=${category}`;
-    });
+  // Check Session and Update Account Button
+  document.addEventListener("DOMContentLoaded", async function() {
+    try {
+      const response = await fetch('session_check.php', { credentials: 'include' });
+      const data = await response.json();
+      
+      const userLink = document.getElementById("userLink");
+      const accountBtn = document.getElementById("accountBtn");
+      
+      if (data.logged_in) {
+        // User is logged in - show MY ACCOUNT button
+        userLink.style.display = "none";
+        accountBtn.classList.add("show");
+      } else {
+        // User not logged in - show user icon
+        userLink.style.display = "block";
+        accountBtn.classList.remove("show");
+      }
+    } catch (error) {
+      console.error('Session check failed:', error);
+      // Default to sign-in
+      document.getElementById("userLink").style.display = "block";
+      document.getElementById("accountBtn").classList.remove("show");
+    }
   });
 </script>
 

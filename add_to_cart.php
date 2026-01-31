@@ -1,4 +1,7 @@
 <?php
+header('Content-Type: application/json');
+header('Access-Control-Allow-Credentials: true');
+session_start();
 require "config.php";
 
 if (!isset($_SESSION['user_id'])) {

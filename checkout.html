@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – Trendify</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="img/logo.png" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    body { background: #f9f9f9; color: #000; }
+
+    .checkout-header { padding: 20px 0 10px; text-align: center; border-bottom: 1px solid #eee; margin-bottom: 20px; background: #fff; }
+    .checkout-header img { max-width: 220px; height: auto; }
+
+    .progress { max-width: 1200px; margin: 0 auto 30px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 0 20px; }
+    .progress-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .progress-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 13px; background: #fff; color: #000; font-weight: bold; }
+    .progress-step.active .progress-circle { background: #000; color: #fff; border-color: #000; }
+    .progress-step.inactive .progress-circle { background: #f0f0f0; color: #999; border-color: #ddd; }
+    .progress-label { margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; font-weight: 600; }
+    .progress-line { position: absolute; top: 14px; left: 50%; right: -50%; height: 2px; background: #ddd; z-index: -1; }
+    .progress-step.active ~ .progress-step .progress-line { background: #ddd; }
+    .progress-step:last-child .progress-line { display: none; }
+
+    .checkout-layout { max-width: 1200px; margin: 0 auto 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; padding: 0 20px; }
+
+    .checkout-form { background: #fff; padding: 30px; border-radius: 6px; }
+    .checkout-form h2 { font-size: 16px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    .form-section { margin-bottom: 25px; }
+    .form-section h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 12px; font-weight: 700; }
+    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-control { display: flex; flex-direction: column; gap: 5px; }
+    .form-control label { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-control input, .form-control select { padding: 11px 12px; font-size: 13px; border-radius: 3px; border: 1px solid #ddd; background: #fff; }
+    .form-control input:focus, .form-control select:focus { outline: none; border-color: #000; }
+    .phone-group { display: grid; grid-template-columns: 80px 1fr; gap: 12px; }
+    .place-order-btn { width: 100%; margin-top: 25px; padding: 14px; border: none; background: #000; color: #fff; font-weight: 700; cursor: pointer; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; border-radius: 3px; }
+    .place-order-btn:hover { background: #222; }
+
+    .summary-card { background: #fff; padding: 25px; border-radius: 6px; height: fit-content; position: sticky; top: 20px; }
+    .summary-card h3 { font-size: 14px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: 700; }
+    .summary-promo { margin-bottom: 18px; }
+    .summary-promo select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; cursor: pointer; background: #f9f9f9; }
+    .summary-prices { margin-bottom: 20px; }
+    .summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+    .summary-line span:first-child { color: #666; }
+    .summary-line.discount span:last-child { color: #4caf50; font-weight: 600; }
+    .summary-line.delivery span:last-child { color: #d32f2f; }
+    .summary-line.total { margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd; font-weight: 700; font-size: 14px; }
+    .summary-items-header { font-size: 12px; text-transform: uppercase; margin-bottom: 12px; color: #666; font-weight: 600; }
+    .summary-items { margin: 15px 0; max-height: 300px; overflow-y: auto; }
+    .summary-item-row { display: grid; grid-template-columns: 70px 1fr; gap: 12px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; }
+    .summary-item-row:last-child { border-bottom: none; }
+    .summary-thumb img { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; background:#f4f4f4; }
+    .summary-info { display: flex; flex-direction: column; gap: 4px; }
+    .summary-info-name { font-size: 12px; font-weight: 600; }
+    .summary-info-meta { font-size: 11px; color: #999; }
+    .summary-info-price { font-size: 12px; font-weight: 600; color: #d32f2f; }
+
+    .payment-section { display: none; }
+    .payment-section.show { display: block; }
+    .payment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .edit-btn { padding: 8px 16px; border: 1px solid #000; background: #fff; cursor: pointer; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .edit-btn:hover { background: #f0f0f0; }
+    .payment-box { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; }
+    .payment-box input[type="radio"] { margin-right: 12px; }
+    .payment-box-title { font-weight: 600; font-size: 13px; text-transform: uppercase; margin-bottom: 8px; }
+    .payment-box-desc { font-size: 12px; color: #666; line-height: 1.5; }
+    .delivery-summary { background: #f5f5f5; padding: 20px; border-radius: 4px; margin-bottom: 25px; }
+    .delivery-summary h4 { font-size: 12px; text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
+    .delivery-summary-line { font-size: 12px; margin-bottom: 6px; line-height: 1.6; }
+    .confirm-order-btn { width: 100%; padding: 14px; background: #000; color: #fff; border: none; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 3px; margin-top: 25px; }
+    .confirm-order-btn:hover { background: #222; }
+
+    .confirmation { max-width: 600px; margin: 40px auto; text-align: center; display: none; }
+    .confirmation.show { display: block; }
+    .confirmation h2 { font-size: 22px; margin-bottom: 10px; }
+    .confirmation p { font-size: 14px; }
+
+    .confirmation-layout { max-width: 1200px; margin: 0 auto 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; padding: 0 20px; display: none; }
+    .confirmation-layout.show { display: grid; }
+    .confirmation-content { background: #fff; padding: 30px; border-radius: 6px; }
+    .confirmation-title { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+    .confirmation-subtitle { font-size: 13px; color: #666; margin-bottom: 25px; line-height: 1.6; }
+    .confirmation-details { background: #f5f5f5; padding: 20px; border-radius: 4px; margin-bottom: 25px; }
+    .confirmation-detail-line { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 12px; line-height: 1.6; }
+    .confirmation-detail-line:last-child { margin-bottom: 0; }
+    .confirmation-detail-label { font-weight: 600; }
+    .confirmation-detail-value { text-align: right; }
+    .view-purchases-btn { width: 100%; padding: 14px; background: #000; color: #fff; border: none; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 3px; }
+    .view-purchases-btn:hover { background: #222; }
+
+    @media (max-width: 900px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .summary-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="checkout-header">
+    <a href="main.html">
+      <img src="img/title-logo.png" alt="Trendify Apparel">
+    </a>
+  </header>
+
+  <div class="progress">
+    <div class="progress-step active">
+      <div class="progress-circle">1</div>
+      <div class="progress-label">Delivery</div>
+      <div class="progress-line"></div>
+    </div>
+    <div class="progress-step inactive">
+      <div class="progress-circle">2</div>
+      <div class="progress-label">Payment</div>
+      <div class="progress-line"></div>
+    </div>
+    <div class="progress-step inactive">
+      <div class="progress-circle">3</div>
+      <div class="progress-label">Confirmation</div>
+    </div>
+  </div>
+
+  <div class="checkout-layout" id="checkoutLayout">
+
+    <section class="checkout-form">
+      <h2>Delivery Details</h2>
+
+      <div class="form-section">
+        <div class="form-row full">
+          <div class="form-control">
+            <label for="firstName">Name</label>
+            <input id="firstName" type="text" placeholder="">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-control">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" placeholder="">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Phone</h3>
+        <div class="phone-group">
+          <select id="phoneCode">
+            <option value="+63">+63</option>
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+          </select>
+          <input id="phone" type="tel" placeholder="Mobile" required maxlength="11" pattern="[0-9]{11}" title="Mobile number must be 11 digits">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-row full">
+          <div class="form-control">
+            <label for="address1">Address</label>
+            <input id="address1" type="text" placeholder="">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-row">
+          <div class="form-control">
+            <label for="postcode">Postal Code</label>
+            <input id="postcode" type="text">
+          </div>
+          <div class="form-control">
+            <label for="city">State / City</label>
+            <select id="city">
+              <option>Select city</option>
+              <option>Manila</option>
+              <option>Quezon City</option>
+              <option>Caloocan</option>
+              <option>Las Piñas</option>
+              <option>Makati</option>
+              <option>Mandaluyong</option>
+              <option>Marikina</option>
+              <option>Muntinlupa</option>
+              <option>Parañaque</option>
+              <option>Pasay</option>
+              <option>Pasig</option>
+              <option>San Juan</option>
+              <option>Taguig</option>
+              <option>Valenzuela</option>
+              <option>Malabon</option>
+              <option>Navotas</option>
+              <option>Antipolo</option>
+              <option>Angono</option>
+              <option>Cainta</option>
+              <option>Morong</option>
+              <option>Tanay</option>
+              <option>Taytay</option>
+              <option>Binangonan</option>
+              <option>San Mateo</option>
+              <option>Baras</option>
+              <option>Cogeo</option>
+              <option>Jala-jala</option>
+              <option>Pililla</option>
+              <option>Rodriguez</option>
+              <option>Teresa</option>
+              <option>Bulacan</option>
+              <option>Baliuag</option>
+              <option>Gapan</option>
+              <option>Nueva Ecija</option>
+              <option>Cavite</option>
+              <option>Laguna</option>
+              <option>Batangas</option>
+              <option>Bataan</option>
+              <option>Pampanga</option>
+              <option>Tarlac</option>
+              <option>Nueva Vizcaya</option>
+              <option>Quirino</option>
+              <option>Aurora</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="place-order-btn" id="placeOrderBtn">Continue to Payment</button>
+    </section>
+
+    <!-- PAYMENT SECTION -->
+    <section class="checkout-form payment-section" id="paymentSection">
+      <div class="payment-header">
+        <h2>Payment Method</h2>
+        <button class="edit-btn" onclick="goBackToDelivery()">Edit</button>
+      </div>
+
+      <div class="delivery-summary">
+        <h4>Delivery Details</h4>
+        <div class="delivery-summary-line"><strong>Name:</strong> <span id="summaryName">-</span></div>
+        <div class="delivery-summary-line"><strong>Email:</strong> <span id="summaryEmail">-</span></div>
+        <div class="delivery-summary-line"><strong>Phone:</strong> <span id="summaryPhone">-</span></div>
+        <div class="delivery-summary-line"><strong>Address:</strong> <span id="summaryAddress">-</span></div>
+        <div class="delivery-summary-line"><strong>City:</strong> <span id="summaryCity">-</span></div>
+        <div class="delivery-summary-line"><strong>Postal Code:</strong> <span id="summaryPostal">-</span></div>
+        <div class="delivery-summary-line"><strong>Delivery Method:</strong> HOME</div>
+        <div class="delivery-summary-line"><strong>Delivery Date:</strong> <span id="summaryDeliveryDate">-</span></div>
+      </div>
+
+      <div class="form-section">
+        <h3>Select Payment Method</h3>
+        
+        <label class="payment-box">
+          <input type="radio" name="paymentMethod" value="cod" checked onclick="selectPaymentMethod('cod')">
+          <div class="payment-box-title">Cash on Delivery</div>
+          <div class="payment-box-desc">Remember that you will need to pay the courier the total amount for the purchase when you receive the package.</div>
+        </label>
+      </div>
+
+      <button class="confirm-order-btn" id="confirmOrderBtn">Confirm Order</button>
+    </section>
+
+    <aside class="summary-card">
+      <h3>Your Shopping Bag</h3>
+
+      <div class="summary-prices">
+        <div class="summary-line">
+          <span>Subtotal</span>
+          <span id="summarySubtotal">₱0</span>
+        </div>
+        <div class="summary-line discount">
+          <span>Discount</span>
+          <span id="summaryDiscount">₱0</span>
+        </div>
+        <div class="summary-line delivery">
+          <span>Delivery</span>
+          <span id="summaryDelivery">₱150</span>
+        </div>
+        <div class="summary-line total">
+          <span>TOTAL</span>
+          <span id="summaryTotal">₱0</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <div class="summary-items-header">Items (<span id="itemCount">0</span>)</div>
+        <div class="summary-items" id="summaryItemsList"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="confirmation-layout" id="confirmationLayout">
+    <section class="confirmation-content">
+      <h2 class="confirmation-title">Thank You For Your Purchase!</h2>
+      <p class="confirmation-subtitle">In a few minutes you will receive an e-mail with the details of your order.</p>
+
+      <div class="confirmation-details">
+        <div class="confirmation-detail-line">
+          <span class="confirmation-detail-label">ORDER #:</span>
+          <span class="confirmation-detail-value" id="confirmOrderNumber">-</span>
+        </div>
+        <div class="confirmation-detail-line">
+          <span class="confirmation-detail-label">ORDER DATE:</span>
+          <span class="confirmation-detail-value" id="confirmOrderDate">-</span>
+        </div>
+        <div class="confirmation-detail-line">
+          <span class="confirmation-detail-label">AUTHORIZATION CODE:</span>
+          <span class="confirmation-detail-value" id="confirmAuthCode">-</span>
+        </div>
+        <div class="confirmation-detail-line">
+          <span class="confirmation-detail-label">TOTAL AMOUNT:</span>
+          <span class="confirmation-detail-value" id="confirmTotalAmount">-</span>
+        </div>
+        <div class="confirmation-detail-line">
+          <span class="confirmation-detail-label">DELIVERY:</span>
+          <span class="confirmation-detail-value" id="confirmDeliveryDate">-</span>
+        </div>
+      </div>
+
+      <button class="view-purchases-btn" onclick="window.location.href='profile.html'">View My Purchases</button>
+    </section>
+
+    <aside class="summary-card" style="position: static; top: auto;">
+      <h3>Your Shopping Bag</h3>
+
+      <div class="summary-prices">
+        <div class="summary-line">
+          <span>Subtotal</span>
+          <span id="confirmSubtotal">₱0</span>
+        </div>
+        <div class="summary-line discount">
+          <span>Discount</span>
+          <span id="confirmDiscount">₱0</span>
+        </div>
+        <div class="summary-line delivery">
+          <span>Delivery</span>
+          <span id="confirmDelivery">₱150</span>
+        </div>
+        <div class="summary-line total">
+          <span>TOTAL</span>
+          <span id="confirmTotal">₱0</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <div class="summary-items-header">Items (<span id="confirmItemCount">0</span>)</div>
+        <div class="summary-items" id="confirmItemsList"></div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="confirmation" id="confirmationBox">
+    <h2>Order placed!</h2>
+    <p>Thank you for shopping with Trendify. A confirmation email will be sent shortly.</p>
+    <p style="margin-top:10px;">You can now close this page or go back to the <a href="main.html">homepage</a>.</p>
+  </section>
+
+  <script>
+    let deliveryData = {};
+
+    function parsePriceToNumber(p) { return parseFloat(p.replace(/[₱,]/g, '')) || 0; }
+
+    function loadCheckoutItems() {
+      try { return JSON.parse(localStorage.getItem('trendify_checkout')) || []; } 
+      catch (e) { return []; }
+    }
+
+    function renderSummary() {
+      const items = loadCheckoutItems();
+      const listEl = document.getElementById('summaryItemsList');
+      const subEl  = document.getElementById('summarySubtotal');
+      const delEl  = document.getElementById('summaryDelivery');
+      const totEl  = document.getElementById('summaryTotal');
+      const countEl = document.getElementById('itemCount');
+
+      listEl.innerHTML = '';
+      let subtotal = 0;
+      let totalQty = 0;
+      const delivery = items.length > 0 ? 150 : 0;
+
+      items.forEach(item => {
+        const priceNum = parsePriceToNumber(item.price);
+        const qty = item.qty || 1;
+        totalQty += qty;
+        subtotal += priceNum * qty;
+
+        const row = document.createElement('div');
+        row.className = 'summary-item-row';
+        row.innerHTML = `
+          <div class="summary-thumb"><img src="${item.img || 'img/img/placeholder.jpg'}" alt="${item.name}"></div>
+          <div class="summary-info">
+            <div class="summary-info-name">${item.name}</div>
+            <div class="summary-info-meta">Quantity ${qty}${item.size ? ' · Size: ' + item.size : ''}</div>
+            <div class="summary-info-price">${item.price}</div>
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+
+      countEl.textContent = totalQty;
+      subEl.textContent = '₱' + subtotal.toLocaleString('en-PH');
+      delEl.textContent = '₱' + delivery.toLocaleString('en-PH');
+      totEl.textContent = '₱' + (subtotal + delivery).toLocaleString('en-PH');
+    }
+
+    function getDeliveryDate() {
+      const today = new Date();
+      const startDate = new Date(today);
+      startDate.setDate(startDate.getDate() + 1); // Tomorrow
+      const endDate = new Date(today);
+      endDate.setDate(endDate.getDate() + 7); // 7 days from today
+      
+      const options = { weekday: 'long', month: 'short', day: 'numeric' };
+      return `${startDate.toLocaleDateString('en-PH', options)} - ${endDate.toLocaleDateString('en-PH', options)}`;
+    }
+
+    function goBackToDelivery() {
+      document.getElementById('paymentSection').classList.remove('show');
+      document.querySelector('.checkout-form:not(.payment-section)').style.display = 'block';
+      document.querySelector('.progress-step:nth-child(1)').classList.add('active');
+      document.querySelector('.progress-step:nth-child(2)').classList.remove('active');
+      document.querySelector('.progress-step:nth-child(2)').classList.add('inactive');
+    }
+
+    function selectPaymentMethod(method) {
+      console.log('Payment method selected:', method);
+    }
+
+    renderSummary();
+
+    document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+      const items = loadCheckoutItems();
+      if (items.length === 0) return alert('Your checkout selection is empty.');
+
+      // Validate required fields
+      const firstName = document.getElementById('firstName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address1').value.trim();
+      const city = document.getElementById('city').value;
+      const postal = document.getElementById('postcode').value.trim();
+
+      if (!firstName) return alert('Please enter your name.'), document.getElementById('firstName').focus();
+      if (!email) return alert('Please enter your email.'), document.getElementById('email').focus();
+      if (!phone) return alert('Please enter your mobile number.'), document.getElementById('phone').focus();
+      if (!/^[0-9]{11}$/.test(phone)) return alert('Mobile number must be exactly 11 digits.'), document.getElementById('phone').focus();
+      if (!address) return alert('Please enter your address.'), document.getElementById('address1').focus();
+      if (city === 'Select city') return alert('Please select a city.'), document.getElementById('city').focus();
+      if (!postal) return alert('Please enter your postal code.'), document.getElementById('postcode').focus();
+
+      // Save delivery data
+      deliveryData = {
+        firstName,
+        email,
+        phone: document.getElementById('phoneCode').value + phone,
+        address,
+        city,
+        postal
+      };
+
+      // Populate payment section summary
+      document.getElementById('summaryName').textContent = firstName;
+      document.getElementById('summaryEmail').textContent = email;
+      document.getElementById('summaryPhone').textContent = deliveryData.phone;
+      document.getElementById('summaryAddress').textContent = address;
+      document.getElementById('summaryCity').textContent = city;
+      document.getElementById('summaryPostal').textContent = postal;
+      document.getElementById('summaryDeliveryDate').textContent = getDeliveryDate();
+
+      // Switch to payment section
+      document.querySelector('.checkout-form:not(.payment-section)').style.display = 'none';
+      document.getElementById('paymentSection').classList.add('show');
+      
+      // Update progress bar
+      document.querySelector('.progress-step:nth-child(1)').classList.remove('active');
+      document.querySelector('.progress-step:nth-child(1)').classList.add('inactive');
+      document.querySelector('.progress-step:nth-child(2)').classList.remove('inactive');
+      document.querySelector('.progress-step:nth-child(2)').classList.add('active');
+    });
+
+    document.getElementById('confirmOrderBtn').addEventListener('click', async () => {
+      const items = loadCheckoutItems();
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+      const payload = {
+        firstName: deliveryData.firstName,
+        email: deliveryData.email,
+        phoneCode: document.getElementById('phoneCode').value,
+        phone: deliveryData.phone,
+        address1: deliveryData.address,
+        city: deliveryData.city,
+        postcode: deliveryData.postal,
+        paymentMethod: paymentMethod,
+        items: items,
+        subtotal: parsePriceToNumber(document.getElementById('summarySubtotal').textContent),
+        delivery: parsePriceToNumber(document.getElementById('summaryDelivery').textContent),
+        total: parsePriceToNumber(document.getElementById('summaryTotal').textContent)
+      };
+
+      try {
+        const res = await fetch('checkout_process.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+        
+        const text = await res.text();
+        console.log('Raw response:', text);
+        
+        const result = JSON.parse(text);
+        console.log('Parsed response:', result);
+        
+        if (result.success) {
+          // Generate order details
+          const orderNumber = 'EXY' + Date.now().toString().slice(-6);
+          const authCode = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+          const today = new Date();
+          const orderDate = (today.getMonth() + 1).toString().padStart(2, '0') + '/' + today.getDate().toString().padStart(2, '0') + '/' + today.getFullYear();
+          
+          // Populate confirmation details
+          document.getElementById('confirmOrderNumber').textContent = orderNumber;
+          document.getElementById('confirmOrderDate').textContent = orderDate;
+          document.getElementById('confirmAuthCode').textContent = authCode.substring(0, 8) + '-' + authCode.substring(8, 12) + '-' + authCode.substring(12, 32);
+          document.getElementById('confirmTotalAmount').textContent = '₱' + payload.total.toLocaleString('en-PH');
+          document.getElementById('confirmDeliveryDate').textContent = getDeliveryDate();
+
+          // Populate order summary
+          document.getElementById('confirmSubtotal').textContent = '₱' + payload.subtotal.toLocaleString('en-PH');
+          document.getElementById('confirmDiscount').textContent = '₱' + (payload.subtotal * 0.4).toLocaleString('en-PH');
+          document.getElementById('confirmDelivery').textContent = '₱' + payload.delivery.toLocaleString('en-PH');
+          document.getElementById('confirmTotal').textContent = '₱' + payload.total.toLocaleString('en-PH');
+
+          // Populate items list
+          const confirmItemsList = document.getElementById('confirmItemsList');
+          confirmItemsList.innerHTML = '';
+          items.forEach(item => {
+            const qty = item.qty || 1;
+            const row = document.createElement('div');
+            row.className = 'summary-item-row';
+            row.innerHTML = `
+              <div class="summary-thumb"><img src="${item.img || 'img/img/placeholder.jpg'}" alt="${item.name}"></div>
+              <div class="summary-info">
+                <div class="summary-info-name">${item.name}</div>
+                <div class="summary-info-meta">Quantity ${qty}${item.size ? ' · Size: ' + item.size : ''}</div>
+                <div class="summary-info-price">${item.price}</div>
+              </div>
+            `;
+            confirmItemsList.appendChild(row);
+          });
+          document.getElementById('confirmItemCount').textContent = items.length;
+
+          // Hide checkout layout and show confirmation
+          localStorage.removeItem('trendify_checkout');
+          document.getElementById('checkoutLayout').style.display = 'none';
+          document.getElementById('confirmationLayout').classList.add('show');
+          
+          // Update progress bar
+          document.querySelector('.progress-step:nth-child(2)').classList.remove('active');
+          document.querySelector('.progress-step:nth-child(2)').classList.add('inactive');
+          document.querySelector('.progress-step:nth-child(3)').classList.remove('inactive');
+          document.querySelector('.progress-step:nth-child(3)').classList.add('active');
+        } else {
+          alert(result.message);
+        }
+      } catch (e) {
+        console.error('Error details:', e);
+        alert('An error occurred while placing your order. Check console for details.');
+      }
+    });
+  </script>
+
+</body>
+</html>

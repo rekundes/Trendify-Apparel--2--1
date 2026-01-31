@@ -72,7 +72,8 @@
 
     <div class="nav-right">
       <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
+      <a id="userLink" href="sign-in.html" style="display:none;"><i class="fa-regular fa-user"></i></a>
+      <a id="accountBtn" href="profile.html" class="account-btn"><i class="fa-solid fa-user"></i> MY ACCOUNT</a>
       <a href="cart.html" style="position:relative;">
         <i class="fa-solid fa-cart-shopping"></i>
         <span id="cart-counter" class="cart-count">0</span>
@@ -194,6 +195,32 @@
 
 <!-- SCRIPT -->
 <script>
+  // Check Session and Update Account Button
+  document.addEventListener("DOMContentLoaded", async function() {
+    try {
+      const response = await fetch('session_check.php', { credentials: 'include' });
+      const data = await response.json();
+      
+      const userLink = document.getElementById("userLink");
+      const accountBtn = document.getElementById("accountBtn");
+      
+      if (data.logged_in) {
+        // User is logged in - show MY ACCOUNT button
+        userLink.style.display = "none";
+        accountBtn.classList.add("show");
+      } else {
+        // User not logged in - show user icon
+        userLink.style.display = "block";
+        accountBtn.classList.remove("show");
+      }
+    } catch (error) {
+      console.error('Session check failed:', error);
+      // Default to sign-in
+      document.getElementById("userLink").style.display = "block";
+      document.getElementById("accountBtn").classList.remove("show");
+    }
+  });
+
   // close dropdowns
   document.addEventListener("click", function(e) {
     const dropdowns = document.querySelectorAll(".dropdown");
@@ -306,8 +333,8 @@
     html += `
       <div class="product-card">
         ${badgeHtml}
-        <img src="${item.img}" class="primary-img">
-        <img src="${item.secondaryImg || item.img}" class="secondary-img">
+        <img src="${item.img}" class="primary-img" onerror="this.onerror=null;this.src='${item.fallback || 'img/img1.jpg'}'">
+        <img src="${item.secondaryImg || item.img}" class="secondary-img" onerror="this.onerror=null;this.src='${item.fallback || item.secondaryImg || 'img/img1.jpg'}'">
         <div class="product-info">
           <div class="product-name">${item.name}</div>
           <div class="product-price">${item.price}</div>
@@ -376,7 +403,39 @@
   /* ADD TO CART */
   const addBtn = document.querySelector('.hover-add-btn');
 
-  addBtn.addEventListener('click', () => {
+  addBtn.addEventListener('click', async () => {
+    // check if logged in via session
+    try {
+      const sessionCheck = await fetch('session_check.php', { credentials: 'include' });
+      const sessionData = await sessionCheck.json();
+      
+      if (!sessionData.logged_in) {
+        const msg = document.createElement('div');
+        msg.textContent = '⚠️ Please sign in first!';
+        Object.assign(msg.style, {
+          position:'fixed',
+          bottom:'20px',
+          right:'20px',
+          background:'#f44336',
+          color:'white',
+          padding:'12px 20px',
+          borderRadius:'8px',
+          boxShadow:'0 2px 6px rgba(0,0,0,.3)',
+          zIndex:9999
+        });
+        document.body.appendChild(msg);
+        setTimeout(()=>{
+          msg.remove();
+          window.location.href = `sign-in.html?next=${encodeURIComponent(window.location.href)}`;
+        },1500);
+        return;
+      }
+    } catch (error) {
+      console.error('Session check failed:', error);
+      window.location.href = `sign-in.html?next=${encodeURIComponent(window.location.href)}`;
+      return;
+    }
+
     const preview = document.getElementById('hoverPreview');
     const name  = preview.dataset.name  || document.querySelector('.product-name')?.textContent.trim() || '';
     const price = preview.dataset.price || document.querySelector('.product-price')?.textContent.trim() || '';
@@ -385,37 +444,70 @@
 
     let sizeToSave;
     if (noSizeCategories.includes(category)) {
-      sizeToSave = 'One size';                 // bags, jewelry
+      sizeToSave = 'One size';
     } else if (category === shoeCategory && sizeSelectShoes) {
-      sizeToSave = sizeSelectShoes.value || '36'; // shoes 36–45
+      sizeToSave = sizeSelectShoes.value || '36';
     } else {
-      sizeToSave = selectedSize;              // shirts, jackets, jeans
+      sizeToSave = selectedSize;
     }
 
-    const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
-    const existing = cart.find(i =>
-      i.name === name && i.price === price && i.size === sizeToSave
-    );
+    const cartItem = { name, price, img, size: sizeToSave, qty };
 
-    if (existing) {
-      existing.qty = (existing.qty || 1) + qty;
-    } else {
-      cart.push({ name, price, img, size: sizeToSave, qty });
+    try {
+      const res = await fetch("add_to_cart.php", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        credentials: 'include',
+        body: JSON.stringify(cartItem)
+      });
+
+      const data = await res.json();
+
+      if(data.success){
+        // green success message
+        const successMsg = document.createElement('div');
+        successMsg.textContent = '✅ Added to cart!';
+        Object.assign(successMsg.style,{
+          position:'fixed',
+          bottom:'20px',
+          right:'20px',
+          background:'#4caf50',
+          color:'white',
+          padding:'12px 20px',
+          borderRadius:'8px',
+          zIndex:9999
+        });
+        document.body.appendChild(successMsg);
+        setTimeout(()=>successMsg.remove(),2000);
+
+        // update counter
+        updateCartCounter();
+      }
+    } 
+    catch(err){
+      alert("Server error");
+      console.error(err);
     }
-
-    localStorage.setItem('trendify_cart', JSON.stringify(cart));
-    updateCartCounter();
-    window.location.href = 'cart.html';
   });
 
   /* cart counter helper */
-  function updateCartCounter() {
-    const counter = document.getElementById('cart-counter');
-    const cart = JSON.parse(localStorage.getItem('trendify_cart')) || [];
-    const total = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-    if (!counter) return;
-    counter.innerText = total;
-    counter.style.display = total > 0 ? 'block' : 'none';
+  async function updateCartCounter() {
+    try {
+      const response = await fetch('get_cart.php', { credentials: 'include' });
+      const result = await response.json();
+      
+      const counter = document.getElementById('cart-counter');
+      if (!counter) return;
+      
+      if (result.success && result.item_count > 0) {
+        counter.textContent = result.item_count;
+        counter.style.display = 'block';
+      } else {
+        counter.style.display = 'none';
+      }
+    } catch (error) {
+      console.error('Error updating cart count:', error);
+    }
   }
 
   updateCartCounter();

@@ -81,14 +81,33 @@
       color: #000;
       cursor: pointer;
     }
+    /* ACCOUNT BUTTON */
+    .account-btn {
+      display: none !important;
+      padding: 8px 12px;
+      border: 1px solid #000;
+      border-radius: 4px;
+      background: white;
+      color: black;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
+    .account-btn:hover {
+      background: #000;
+      color: white;
+    }
+
+    .account-btn.show {
+      display: inline-block !important;
+    }
     /* DROPDOWN */
     .dropdown { position: relative; }
     .toggle { display: none; }
-
-    .toggle:checked + label + .dropdown-area {
-      display: flex;
-    }
+    .toggle:checked + label + .dropdown-area { display: flex; }
 
     .dropdown-area {
       position: absolute;
@@ -121,9 +140,7 @@
       border-left: 2px solid #000;
     }
 
-    .section:hover .sub-menu {
-      display: flex;
-    }
+    .section:hover .sub-menu { display: flex; }
 
     .sub-menu a {
       font-size: 14px;
@@ -142,13 +159,15 @@
       letter-spacing: 1px;
     }
 
-    /* PRODUCT GRID (match men) */
+    /* PRODUCT GRID */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       column-gap: 0;
       row-gap: 40px;
       padding: 0 0 80px;
+      min-height: 500px;
+      width: 100%;
     }
 
     .product-card {
@@ -156,7 +175,7 @@
       cursor: pointer;
     }
 
-    /* Product Badge */
+    /* Product Badge Styling */
     .badge {
       position: absolute;
       top: 10px;
@@ -170,6 +189,7 @@
       z-index: 10;
     }
 
+    /* Card images */
     .product-card .primary-img,
     .product-card .secondary-img {
       width: 100%;
@@ -178,8 +198,16 @@
     }
 
     .product-card .secondary-img {
-  display: none;          /* keep secondary hidden in grid */
-}
+      display: none;
+    }
+
+    .product-card:hover .primary-img {
+      display: none;
+    }
+
+    .product-card:hover .secondary-img {
+      display: block;
+    }
 
     /* Hover Preview Overlay (white, with details) */
     .hover-preview {
@@ -215,6 +243,7 @@
       background: #f4f4f4;
     }
 
+    /* Price badge on image */
     .hover-price-badge {
       position: absolute;
       left: 22px;
@@ -241,6 +270,7 @@
       line-height: 1;
     }
 
+    /* Bottom controls */
     .hover-details {
       display: flex;
       flex-direction: column;
@@ -274,14 +304,6 @@
       background: transparent;
       color: #000;
     }
-    .size-select-heels {
-  display: none;          /* hidden unless category = heels */
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #555;
-  font-size: 13px;
-}
-
 
     .size-chip.active {
       border-color: #000000;
@@ -333,10 +355,16 @@
       font-weight: 600;
       cursor: pointer;
     }
+    .size-select-shoes {
+  display: none;            /* hidden by default */
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  font-size: 13px;
+}
 
-    .product-info {
-      padding: 15px;
-    }
+
+    .product-info { padding: 15px; }
 
     .product-name {
       font-size: 15px;
@@ -396,6 +424,12 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
+.product-card.removed {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+  transition: 0.3s ease;
+}
 
     .footer-bottom {
       text-align: center;

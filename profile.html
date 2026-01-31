@@ -82,6 +82,25 @@
         color: #000;
     }
 
+    /* ACCOUNT BUTTON */
+    .account-btn {
+        padding: 8px 12px !important;
+        border: 1px solid #000;
+        border-radius: 4px;
+        background: white;
+        color: black;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .account-btn:hover {
+        background: #000;
+        color: white;
+    }
+
     /* Cart Counter */
     .cart-count {
         position: absolute;
@@ -159,46 +178,111 @@
     /* PROFILE CONTENT */
     .profile-container {
         width: 100%;
-        max-width: 400px;
-        margin: 80px auto;
-        text-align: center;
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 0 20px;
     }
 
-    .profile-container h2 {
-        font-size: 22px;
-        margin-bottom: 40px;
+    .profile-header {
+        margin-bottom: 30px;
+    }
+
+    .profile-username {
+        font-size: 24px;
+        font-weight: 700;
         letter-spacing: 1px;
+        margin-bottom: 20px;
+    }
+
+    .profile-alert {
+        background: #f5e6e0;
+        border: 1px solid #e8d5cc;
+        border-radius: 4px;
+        padding: 16px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .profile-alert-content h3 {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .profile-alert-content p {
+        font-size: 13px;
+        line-height: 1.5;
+        color: #666;
+    }
+
+    .profile-alert-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        color: #999;
+    }
+
+    .profile-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
     }
 
     .profile-option {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 16px 20px;
-        border-bottom: 1px solid #ddd;
-        font-weight: bold;
+        padding: 18px 0;
+        border-bottom: 1px solid #e0e0e0;
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: opacity 0.2s;
+        text-decoration: none;
+        color: #000;
     }
 
     .profile-option:hover {
-        background: #f2f2f2;
+        opacity: 0.7;
     }
 
     .profile-option i {
-        font-size: 18px;
+        font-size: 16px;
+        color: #999;
+    }
+
+    .profile-divider {
+        height: 40px;
     }
 
     .signout-btn {
-        margin-top: 50px;
+        margin-top: 40px;
         padding: 14px 20px;
-        background: #000;
-        color: #fff;
+        background: transparent;
+        color: #000;
         border: none;
-        border-radius: 4px;
-        font-weight: bold;
+        border-radius: 0;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         cursor: pointer;
         width: 100%;
+        text-align: left;
+        padding: 18px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .signout-btn:hover {
+        opacity: 0.7;
     }
 
     /* FOOTER */
@@ -310,7 +394,7 @@
         <!-- RIGHT NAV -->
         <div class="nav-right">
             <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
-            <a href="profile.html" id="userLink"><i class="fa-regular fa-user"></i></a>
+            <a href="profile.html" id="accountBtn" class="account-btn"><i class="fa-solid fa-user"></i> MY ACCOUNT</a>
             <a href="cart.html">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span class="cart-count" id="cartCount">0</span>
@@ -320,24 +404,57 @@
 </header>
 
 <!-- PROFILE CONTENT -->
-<!-- PROFILE CONTENT -->
 <div class="profile-container">
-    <h2 id="userName">USERNAME</h2>
+    <div class="profile-header">
+        <div class="profile-username" id="userName">THIRDPOGI60</div>
 
-    <div class="profile-option" onclick="navigate('purchases.html')">
-        <span>My Purchases</span>
-        <i class="fa-solid fa-arrow-right"></i>
-    </div>
-    <div class="profile-option" onclick="navigate('details.html')">
-        <span>My Details</span>
-        <i class="fa-solid fa-arrow-right"></i>
-    </div>
-    <div class="profile-option" onclick="navigate('wishlist.html')">
-        <span>Wishlist</span>
-        <i class="fa-solid fa-arrow-right"></i>
+        <div class="profile-alert">
+            <div class="profile-alert-content">
+                <h3>Complete</h3>
+                <p>Complete your profile to manage your orders easily and receive personalized content.</p>
+            </div>
+            <button class="profile-alert-close" onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
     </div>
 
-    <button class="signout-btn" onclick="signOut()">Sign Out</button>
+    <div class="profile-menu">
+        <a href="#" class="profile-option" onclick="navigate('purchases.html'); return false;">
+            <span>MY PURCHASES</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#" class="profile-option" onclick="navigate('returns.html'); return false;">
+            <span>RETURNS</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#" class="profile-option" onclick="navigate('details.html'); return false;">
+            <span>MY DETAILS</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#" class="profile-option" onclick="navigate('addresses.html'); return false;">
+            <span>MY ADDRESSES</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#" class="profile-option" onclick="navigate('subscriptions.html'); return false;">
+            <span>MY SUBSCRIPTIONS</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#" class="profile-option" onclick="navigate('cards.html'); return false;">
+            <span>MY CARDS</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#" class="profile-option" onclick="navigate('help.html'); return false;">
+            <span>HELP</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#" class="profile-option" onclick="navigate('wishlist.html'); return false;">
+            <span>WISHLIST</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+        <div class="profile-divider"></div>
+
+        <button class="signout-btn" onclick="signOut()">SIGN OUT</button>
+    </div>
 </div>
 
 
@@ -391,17 +508,30 @@
 <script>
     // Initialize on page load
     document.addEventListener("DOMContentLoaded", function() {
-        // Update profile icon link
-        const userLink = document.getElementById("userLink");
-        if (localStorage.getItem('userLoggedIn') === 'true') {
-            userLink.href = "profile.html";
-        } else {
-            userLink.href = "sign-in.html";
-        }
-
-        // Update cart count
+        // Check if user is logged in via session
+        checkUserSession();
         updateCartCount();
     });
+
+    // Check user session
+    async function checkUserSession() {
+        try {
+            const response = await fetch('session_check.php', { credentials: 'include' });
+            const data = await response.json();
+            
+            if (data.logged_in && data.user) {
+                // Display user email or first name
+                const userName = data.user.first_name || data.user.email || 'User';
+                document.getElementById('userName').textContent = userName.toUpperCase();
+            } else {
+                // Not logged in, redirect
+                window.location.href = 'sign-in.html';
+            }
+        } catch (error) {
+            console.error('Error checking session:', error);
+            window.location.href = 'sign-in.html';
+        }
+    }
 
     // Close dropdowns when clicking outside
     document.addEventListener("click", function(e) {
@@ -414,22 +544,8 @@
         });
     });
 
-    // Redirect to sign-in if not logged in
-    if (localStorage.getItem('userLoggedIn') !== 'true') {
-        window.location.href = 'sign-in.html';
-    } else {
-        // Show username
-        const userName = localStorage.getItem('userName') || 'User';
-        document.getElementById('userName').textContent = userName;
-    }
-
     function signOut() {
-        // Clear all user data
-        localStorage.removeItem('userLoggedIn');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userName');
-        alert('You have been signed out.');
-        window.location.href = 'sign-in.html';
+        window.location.href = 'logout.php';
     }
 
     function navigate(url) {
@@ -439,7 +555,7 @@
     // Update cart count
     async function updateCartCount() {
         try {
-            const response = await fetch('get_cart.php');
+            const response = await fetch('get_cart.php', { credentials: 'include' });
             const result = await response.json();
             
             if (result.success && result.item_count > 0) {

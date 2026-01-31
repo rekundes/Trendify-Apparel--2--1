@@ -69,6 +69,30 @@
       cursor: pointer;
     }
 
+    /* ACCOUNT BUTTON */
+    .account-btn {
+      display: none !important;
+      padding: 8px 12px;
+      border: 1px solid #000;
+      border-radius: 4px;
+      background: white;
+      color: black;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .account-btn:hover {
+      background: #000;
+      color: white;
+    }
+
+    .account-btn.show {
+      display: inline-block !important;
+    }
+
     /* ---------------- DROPDOWN ---------------- */
     .dropdown { position: relative; }
     .toggle { display: none; }
@@ -281,7 +305,8 @@
 
     <!-- RIGHT NAV -->
     <div class="nav-right">
-      <a href="sign-in.html"><i class="fa-regular fa-user"></i></a>
+      <a id="userLink" href="sign-in.html" style="display:none;"><i class="fa-regular fa-user"></i></a>
+      <a id="accountBtn" href="profile.html" class="account-btn"><i class="fa-solid fa-user"></i> MY ACCOUNT</a>
       <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
     </div>
 
@@ -358,6 +383,32 @@
 
 <!-- OUTSIDE CLICK SCRIPT -->
 <script>
+  // Check Session and Update Account Button
+  document.addEventListener("DOMContentLoaded", async function() {
+    try {
+      const response = await fetch('session_check.php', { credentials: 'include' });
+      const data = await response.json();
+      
+      const userLink = document.getElementById("userLink");
+      const accountBtn = document.getElementById("accountBtn");
+      
+      if (data.logged_in) {
+        // User is logged in - show MY ACCOUNT button
+        userLink.style.display = "none";
+        accountBtn.classList.add("show");
+      } else {
+        // User not logged in - show user icon
+        userLink.style.display = "block";
+        accountBtn.classList.remove("show");
+      }
+    } catch (error) {
+      console.error('Session check failed:', error);
+      // Default to sign-in
+      document.getElementById("userLink").style.display = "block";
+      document.getElementById("accountBtn").classList.remove("show");
+    }
+  });
+
   document.addEventListener("click", function(e) {
     const dropdowns = document.querySelectorAll(".dropdown");
 
