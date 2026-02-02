@@ -372,7 +372,44 @@ document.querySelector('.signin-form').addEventListener('submit', async function
                 }
             }
         } else {
-            alert('Login failed: ' + data.message);
+            if (typeof data.seconds_left !== 'undefined' && !isNaN(data.seconds_left)) {
+                // show or update a persistent lockout banner with live countdown
+                let banner = document.getElementById('lockout-banner');
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'lockout-banner';
+                    banner.style.position = 'fixed';
+                    banner.style.top = '12px';
+                    banner.style.right = '12px';
+                    banner.style.background = 'rgba(0,0,0,0.85)';
+                    banner.style.color = '#fff';
+                    banner.style.padding = '10px 14px';
+                    banner.style.borderRadius = '6px';
+                    banner.style.fontFamily = 'Arial, sans-serif';
+                    banner.style.fontSize = '14px';
+                    banner.style.zIndex = 9999;
+                    document.body.appendChild(banner);
+                }
+
+                let secs = parseInt(data.seconds_left, 10);
+                banner.textContent = 'Account locked. Try again in ' + secs + ' seconds';
+
+                // clear existing interval if any
+                if (window._lockoutInterval) clearInterval(window._lockoutInterval);
+                window._lockoutInterval = setInterval(() => {
+                    secs--;
+                    if (secs <= 0) {
+                        clearInterval(window._lockoutInterval);
+                        window._lockoutInterval = null;
+                        banner.textContent = 'You can try logging in again.';
+                        setTimeout(() => { if (banner) banner.remove(); }, 3000);
+                    } else {
+                        banner.textContent = 'Account locked. Try again in ' + secs + ' seconds';
+                    }
+                }, 1000);
+            } else {
+                alert('Login failed: ' + data.message);
+            }
         }
     } catch (error) {
         alert('Error logging in: ' + error.message);
