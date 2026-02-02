@@ -56,9 +56,8 @@ $lock_stmt->close();
 
 if ($is_locked) {
     $time_left = min($time_left, 300); // Cap at 5 minutes (300 seconds)
-    $mins = floor($time_left / 60);
-    $secs = $time_left % 60;
-    echo json_encode(['success' => false, 'message' => 'Account locked. Try again in ' . sprintf('%d:%02d', $mins, $secs)]);
+    // Return raw seconds_left so the client can render a live countdown
+    echo json_encode(['success' => false, 'message' => 'Account locked. Try again in ' . $time_left . ' seconds', 'seconds_left' => (int)$time_left]);
     exit;
 }
 
