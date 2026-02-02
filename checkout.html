@@ -117,11 +117,6 @@
     <div class="progress-step inactive">
       <div class="progress-circle">2</div>
       <div class="progress-label">Payment</div>
-      <div class="progress-line"></div>
-    </div>
-    <div class="progress-step inactive">
-      <div class="progress-circle">3</div>
-      <div class="progress-label">Confirmation</div>
     </div>
   </div>
 
@@ -289,72 +284,6 @@
     </aside>
   </div>
 
-  <div class="confirmation-layout" id="confirmationLayout">
-    <section class="confirmation-content">
-      <h2 class="confirmation-title">Thank You For Your Purchase!</h2>
-      <p class="confirmation-subtitle">In a few minutes you will receive an e-mail with the details of your order.</p>
-
-      <div class="confirmation-details">
-        <div class="confirmation-detail-line">
-          <span class="confirmation-detail-label">ORDER #:</span>
-          <span class="confirmation-detail-value" id="confirmOrderNumber">-</span>
-        </div>
-        <div class="confirmation-detail-line">
-          <span class="confirmation-detail-label">ORDER DATE:</span>
-          <span class="confirmation-detail-value" id="confirmOrderDate">-</span>
-        </div>
-        <div class="confirmation-detail-line">
-          <span class="confirmation-detail-label">AUTHORIZATION CODE:</span>
-          <span class="confirmation-detail-value" id="confirmAuthCode">-</span>
-        </div>
-        <div class="confirmation-detail-line">
-          <span class="confirmation-detail-label">TOTAL AMOUNT:</span>
-          <span class="confirmation-detail-value" id="confirmTotalAmount">-</span>
-        </div>
-        <div class="confirmation-detail-line">
-          <span class="confirmation-detail-label">DELIVERY:</span>
-          <span class="confirmation-detail-value" id="confirmDeliveryDate">-</span>
-        </div>
-      </div>
-
-      <button class="view-purchases-btn" onclick="window.location.href='profile.html'">View My Purchases</button>
-    </section>
-
-    <aside class="summary-card" style="position: static; top: auto;">
-      <h3>Your Shopping Bag</h3>
-
-      <div class="summary-prices">
-        <div class="summary-line">
-          <span>Subtotal</span>
-          <span id="confirmSubtotal">₱0</span>
-        </div>
-        <div class="summary-line discount">
-          <span>Discount</span>
-          <span id="confirmDiscount">₱0</span>
-        </div>
-        <div class="summary-line delivery">
-          <span>Delivery</span>
-          <span id="confirmDelivery">₱150</span>
-        </div>
-        <div class="summary-line total">
-          <span>TOTAL</span>
-          <span id="confirmTotal">₱0</span>
-        </div>
-      </div>
-
-      <div style="margin-bottom: 15px;">
-        <div class="summary-items-header">Items (<span id="confirmItemCount">0</span>)</div>
-        <div class="summary-items" id="confirmItemsList"></div>
-      </div>
-    </aside>
-  </div>
-
-  <section class="confirmation" id="confirmationBox">
-    <h2>Order placed!</h2>
-    <p>Thank you for shopping with Trendify. A confirmation email will be sent shortly.</p>
-    <p style="margin-top:10px;">You can now close this page or go back to the <a href="main.html">homepage</a>.</p>
-  </section>
-
   <script>
     let deliveryData = {};
 
@@ -512,56 +441,14 @@
         console.log('Parsed response:', result);
         
         if (result.success) {
-          // Generate order details
-          const orderNumber = 'EXY' + Date.now().toString().slice(-6);
-          const authCode = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-          const today = new Date();
-          const orderDate = (today.getMonth() + 1).toString().padStart(2, '0') + '/' + today.getDate().toString().padStart(2, '0') + '/' + today.getFullYear();
+          // Show success message
+          alert('✓ Order placed successfully! Order #' + result.order_id + '\n\nYou will receive an email confirmation shortly.');
           
-          // Populate confirmation details
-          document.getElementById('confirmOrderNumber').textContent = orderNumber;
-          document.getElementById('confirmOrderDate').textContent = orderDate;
-          document.getElementById('confirmAuthCode').textContent = authCode.substring(0, 8) + '-' + authCode.substring(8, 12) + '-' + authCode.substring(12, 32);
-          document.getElementById('confirmTotalAmount').textContent = '₱' + payload.total.toLocaleString('en-PH');
-          document.getElementById('confirmDeliveryDate').textContent = getDeliveryDate();
-
-          // Populate order summary
-          document.getElementById('confirmSubtotal').textContent = '₱' + payload.subtotal.toLocaleString('en-PH');
-          document.getElementById('confirmDiscount').textContent = '₱' + (payload.subtotal * 0.4).toLocaleString('en-PH');
-          document.getElementById('confirmDelivery').textContent = '₱' + payload.delivery.toLocaleString('en-PH');
-          document.getElementById('confirmTotal').textContent = '₱' + payload.total.toLocaleString('en-PH');
-
-          // Populate items list
-          const confirmItemsList = document.getElementById('confirmItemsList');
-          confirmItemsList.innerHTML = '';
-          items.forEach(item => {
-            const qty = item.qty || 1;
-            const row = document.createElement('div');
-            row.className = 'summary-item-row';
-            row.innerHTML = `
-              <div class="summary-thumb"><img src="${item.img || 'img/img/placeholder.jpg'}" alt="${item.name}"></div>
-              <div class="summary-info">
-                <div class="summary-info-name">${item.name}</div>
-                <div class="summary-info-meta">Quantity ${qty}${item.size ? ' · Size: ' + item.size : ''}</div>
-                <div class="summary-info-price">${item.price}</div>
-              </div>
-            `;
-            confirmItemsList.appendChild(row);
-          });
-          document.getElementById('confirmItemCount').textContent = items.length;
-
-          // Hide checkout layout and show confirmation
+          // Clear checkout data and redirect
           localStorage.removeItem('trendify_checkout');
-          document.getElementById('checkoutLayout').style.display = 'none';
-          document.getElementById('confirmationLayout').classList.add('show');
-          
-          // Update progress bar
-          document.querySelector('.progress-step:nth-child(2)').classList.remove('active');
-          document.querySelector('.progress-step:nth-child(2)').classList.add('inactive');
-          document.querySelector('.progress-step:nth-child(3)').classList.remove('inactive');
-          document.querySelector('.progress-step:nth-child(3)').classList.add('active');
+          window.location.href = 'main.html';
         } else {
-          alert(result.message);
+          alert('Order failed: ' + result.message);
         }
       } catch (e) {
         console.error('Error details:', e);

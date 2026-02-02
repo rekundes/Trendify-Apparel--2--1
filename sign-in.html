@@ -358,13 +358,18 @@ document.querySelector('.signin-form').addEventListener('submit', async function
             localStorage.setItem('hasProfile', 'true');
             localStorage.setItem('user', JSON.stringify(data.user));
             
-            // Respect next parameter for redirect
-            const params = new URLSearchParams(window.location.search);
-            const next = params.get('next');
-            if (next) {
-                window.location.href = decodeURIComponent(next);
+            // Use redirect from server response if available
+            if (data.redirect) {
+                window.location.href = data.redirect;
             } else {
-                window.location.href = 'main.html';
+                // Fallback: respect next parameter for redirect
+                const params = new URLSearchParams(window.location.search);
+                const next = params.get('next');
+                if (next) {
+                    window.location.href = decodeURIComponent(next);
+                } else {
+                    window.location.href = 'main.html';
+                }
             }
         } else {
             alert('Login failed: ' + data.message);

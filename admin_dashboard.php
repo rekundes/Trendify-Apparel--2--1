@@ -1,5 +1,46 @@
 <?php
-// Admin dashboard converted from static HTML to PHP to use the PHP peso symbol
+require_once 'config.php';
+
+// Check if user is admin
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    header('Location: sign-in.html');
+    exit;
+}
+
+$admin_name = ($_SESSION['first_name'] ?? 'Admin') . ' ' . ($_SESSION['last_name'] ?? '');
+
+// Get statistics from database
+$total_sales = $conn->query("SELECT SUM(total_amount) as total FROM orders")->fetch_assoc()['total'] ?? 0;
+$total_orders = $conn->query("SELECT COUNT(*) as count FROM orders")->fetch_assoc()['count'] ?? 0;
+$total_customers = $conn->query("SELECT COUNT(*) as count FROM users WHERE is_admin = 0")->fetch_assoc()['count'] ?? 0;
+$total_products = $conn->query("SELECT COUNT(*) as count FROM products")->fetch_assoc()['count'] ?? 0;
+
+// Get recent orders
+$recent_orders = [];
+$orders_sql = "SELECT o.order_id, o.order_date, o.status, o.total_amount, 
+                      o.first_name, o.last_name
+               FROM orders o
+               ORDER BY o.order_id DESC LIMIT 4";
+$result = $conn->query($orders_sql);
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $recent_orders[] = $row;
+    }
+}
+
+// Get top products from order items
+$top_products = [];
+$products_sql = "SELECT product_name, SUM(quantity) as total_sold, AVG(price) as avg_price
+                 FROM order_items
+                 GROUP BY product_name
+                 ORDER BY total_sold DESC
+                 LIMIT 3";
+$result = $conn->query($products_sql);
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $top_products[] = $row;
+    }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -36,36 +77,34 @@
     <aside class="sidebar">
       <div class="brand"><img src="img/logo.png" alt="Trendify logo" style="width:32px;height:32px;object-fit:contain;vertical-align:middle;margin-right:10px;border-radius:4px">Trendify Admin</div>
       <nav class="nav">
-        <a href="main.html">Dashboard</a>
-        <a href="women.html">Women Store</a>
-        <a href="men.html">Men Store</a>
-        <a href="cart.html">Orders</a>
-        <a href="create_acc.html">Users</a>
-        <a href="sign-in.html">Sign In</a>
+        <a href="admin_dashboard.php">Dashboard</a>
+        <a href="admin_orders.php">Orders</a>
+        <a href="admin_users.php">Users</a>
+        <a href="logout.php">Sign Out</a>
       </nav>
     </aside>
     <main>
       <div class="header">
         <h1 style="margin:0;font-size:20px">Overview</h1>
-        <div style="color:var(--muted)">Welcome back, Admin</div>
+        <div style="color:var(--muted)">Welcome back, <?= htmlspecialchars($admin_name) ?></div>
       </div>
 
       <section class="cards">
         <div class="card">
           <div style="color:var(--muted);font-size:12px">Total Sales</div>
-          <div class="value"><?= '₱' ?>12,430</div>
+          <div class="value">₱<?= number_format($total_sales, 2) ?></div>
         </div>
         <div class="card">
           <div style="color:var(--muted);font-size:12px">Orders</div>
-          <div class="value">1,024</div>
+          <div class="value"><?= $total_orders ?></div>
         </div>
         <div class="card">
           <div style="color:var(--muted);font-size:12px">Products</div>
-          <div class="value">214</div>
+          <div class="value"><?= $total_products ?></div>
         </div>
         <div class="card">
           <div style="color:var(--muted);font-size:12px">Customers</div>
-          <div class="value">3,820</div>
+          <div class="value"><?= $total_customers ?></div>
         </div>
       </section>
 
@@ -76,10 +115,18 @@
             <tr><th>Order</th><th>Customer</th><th>Status</th><th>Total</th></tr>
           </thead>
           <tbody>
-            <tr><td>#1024</td><td>Sarah J.</td><td>Shipped</td><td><?= '₱' ?>89.00</td></tr>
-            <tr><td>#1023</td><td>Mark D.</td><td>Processing</td><td><?= '₱' ?>45.50</td></tr>
-            <tr><td>#1022</td><td>Lina W.</td><td>Delivered</td><td><?= '₱' ?>120.00</td></tr>
-            <tr><td>#1021</td><td>Tom R.</td><td>Cancelled</td><td><?= '₱' ?>0.00</td></tr>
+            <?php if (count($recent_orders) > 0): ?>
+              <?php foreach ($recent_orders as $order): ?>
+                <tr>
+                  <td>#<?= htmlspecialchars($order['order_id']) ?></td>
+                  <td><?= htmlspecialchars(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')) ?></td>
+                  <td><?= htmlspecialchars($order['status'] ?? 'Processing') ?></td>
+                  <td>₱<?= number_format($order['total_amount'] ?? 0, 2) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr><td colspan="4" style="text-align:center;color:var(--muted)">No orders yet</td></tr>
+            <?php endif; ?>
           </tbody>
         </table>
       </section>
@@ -87,9 +134,19 @@
       <section style="margin-top:18px">
         <h2 style="margin:0 0 12px 0;font-size:16px">Top Products</h2>
         <div class="products">
-          <div class="prod"><img src="img/img/img/men-shirt6.jpg" alt="p"><div><div style="font-weight:600">porche 911</div><div style="color:var(--muted);font-size:13px"><?= '₱' ?>24.00 • 120 sold</div></div></div>
-          <div class="prod"><img src="img/img/women-top3.jpg" alt="p"><div><div style="font-weight:600">black top</div><div style="color:var(--muted);font-size:13px"><?= '₱' ?>48.00 • 90 sold</div></div></div>
-          <div class="prod"><img src="img/img/img/men-shoes1.jpg" alt="p"><div><div style="font-weight:600">Nike Air Jordan 1 Retro High OG</div><div style="color:var(--muted);font-size:13px"><?= '₱' ?>65.00 • 75 sold</div></div></div>
+          <?php if (count($top_products) > 0): ?>
+            <?php foreach ($top_products as $product): ?>
+              <div class="prod">
+                <img src="img/img/placeholder.jpg" alt="product" style="width:56px;height:56px;background:#f0f0f0">
+                <div>
+                  <div style="font-weight:600"><?= htmlspecialchars($product['product_name']) ?></div>
+                  <div style="color:var(--muted);font-size:13px">₱<?= number_format($product['avg_price'] ?? 0, 2) ?> • <?= (int)$product['total_sold'] ?> sold</div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <p style="color:var(--muted);font-size:13px">No products sold yet</p>
+          <?php endif; ?>
         </div>
       </section>
 
@@ -97,3 +154,6 @@
   </div>
 </body>
 </html>
+<?php
+$conn->close();
+?>

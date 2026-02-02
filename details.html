@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Details – Trendify</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #fff;
+            color: #000;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: #fff;
+            width: 100%;
+            padding: 14px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .main-nav a {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .logo {
+            width: 70px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .nav-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-right i {
+            font-size: 22px;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .account-btn {
+            padding: 8px 12px;
+            border: 1px solid #000;
+            border-radius: 4px;
+            background: white;
+            color: black;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .account-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        .back-link {
+            font-size: 12px;
+            color: #666;
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+
+        .details-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .details-section h2 {
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-left {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #000;
+            min-height: 20px;
+        }
+
+        .detail-right {
+            text-align: right;
+        }
+
+        .edit-btn {
+            background: none;
+            border: none;
+            color: #000;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0;
+        }
+
+        .edit-btn:hover {
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #000;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .save-btn {
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .save-btn:hover {
+            background: #333;
+        }
+
+        .cancel-btn {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            color: #000;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .delete-account-btn {
+            padding: 10px 20px;
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .delete-account-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="main-nav">
+                <a href="main.html">Store</a>
+            </div>
+            <a href="main.html">
+                <img src="img/title-logo.png" alt="Trendify" class="logo">
+            </a>
+            <div class="nav-right">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <a href="cart.html"><i class="fa-solid fa-bag-shopping"></i></a>
+                <a href="profile.html"><i class="fa-solid fa-user"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="profile.html" class="back-link">← Back to Profile</a>
+
+        <div class="details-section">
+            <h2>MY DETAILS</h2>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value" id="nameValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('name')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">E-mail</div>
+                    <div class="detail-value" id="emailValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('email')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">Mobile</div>
+                    <div class="detail-value" id="mobileValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('mobile')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">Password</div>
+                    <div class="detail-value">••••••••</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('password')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">Date of birth</div>
+                    <div class="detail-value" id="dobValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('dob')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">Gender</div>
+                    <div class="detail-value" id="genderValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('gender')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">Address</div>
+                    <div class="detail-value" id="addressValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('address')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">State/City</div>
+                    <div class="detail-value" id="stateValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('state')">EDIT</button>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-left">
+                    <div class="detail-label">Postal Code</div>
+                    <div class="detail-value" id="postalValue">-</div>
+                </div>
+                <div class="detail-right">
+                    <button class="edit-btn" onclick="editField('postal')">EDIT</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e7e7e7;">
+                <button class="delete-account-btn" onclick="deleteAccount()">DELETE ACCOUNT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Edit Field</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <form id="editForm" onsubmit="saveField(event)">
+                <div class="form-group" id="formGroupContainer"></div>
+                <div class="button-group">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="save-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let userDetails = {};
+        let currentEditField = '';
+
+        function loadUserDetails() {
+            const user = JSON.parse(localStorage.getItem('user')) || {};
+            userDetails = {
+                name: (user.first_name || '') + (user.last_name ? ' ' + user.last_name : ''),
+                email: user.email || '',
+                mobile: localStorage.getItem('userMobile') || '',
+                dob: localStorage.getItem('userDob') || '',
+                gender: localStorage.getItem('userGender') || '',
+                address: localStorage.getItem('userAddress') || '',
+                state: localStorage.getItem('userState') || '',
+                postal: localStorage.getItem('userPostal') || ''
+            };
+
+            document.getElementById('nameValue').textContent = userDetails.name || '-';
+            document.getElementById('emailValue').textContent = userDetails.email || '-';
+            document.getElementById('mobileValue').textContent = userDetails.mobile || '-';
+            document.getElementById('dobValue').textContent = userDetails.dob || '-';
+            document.getElementById('genderValue').textContent = userDetails.gender || '-';
+            document.getElementById('addressValue').textContent = userDetails.address || '-';
+            document.getElementById('stateValue').textContent = userDetails.state || '-';
+            document.getElementById('postalValue').textContent = userDetails.postal || '-';
+        }
+
+        function editField(field) {
+            currentEditField = field;
+            const modal = document.getElementById('editModal');
+            const container = document.getElementById('formGroupContainer');
+            const title = document.getElementById('modalTitle');
+
+            let formHTML = '';
+            let fieldLabel = '';
+
+            switch (field) {
+                case 'name':
+                    fieldLabel = 'Full Name';
+                    formHTML = `<input type="text" id="editInput" value="${escapeHtml(userDetails.name)}" required>`;
+                    break;
+                case 'email':
+                    fieldLabel = 'E-mail';
+                    formHTML = `<input type="email" id="editInput" value="${escapeHtml(userDetails.email)}" required>`;
+                    break;
+                case 'mobile':
+                    fieldLabel = 'Mobile Number';
+                    formHTML = `<input type="tel" id="editInput" value="${escapeHtml(userDetails.mobile)}">`;
+                    break;
+                case 'password':
+                    fieldLabel = 'New Password';
+                    formHTML = `<input type="password" id="editInput" placeholder="Enter new password" required>`;
+                    break;
+                case 'dob':
+                    fieldLabel = 'Date of Birth';
+                    formHTML = `<input type="date" id="editInput" value="${userDetails.dob}">`;
+                    break;
+                case 'gender':
+                    fieldLabel = 'Gender';
+                    formHTML = `<select id="editInput">
+                        <option value="">Select Gender</option>
+                        <option value="Male" ${userDetails.gender === 'Male' ? 'selected' : ''}>Male</option>
+                        <option value="Female" ${userDetails.gender === 'Female' ? 'selected' : ''}>Female</option>
+                        <option value="Other" ${userDetails.gender === 'Other' ? 'selected' : ''}>Other</option>
+                    </select>`;
+                    break;
+                case 'address':
+                    fieldLabel = 'Address';
+                    formHTML = `<input type="text" id="editInput" value="${escapeHtml(userDetails.address)}" placeholder="Enter your street address">`;
+                    break;
+                case 'state':
+                    fieldLabel = 'State/City (Luzon)';
+                    formHTML = `<select id="editInput">
+                        <option value="">Select City/Province</option>
+                        <option value="Manila" ${userDetails.state === 'Manila' ? 'selected' : ''}>Manila</option>
+                        <option value="Quezon City" ${userDetails.state === 'Quezon City' ? 'selected' : ''}>Quezon City</option>
+                        <option value="Caloocan" ${userDetails.state === 'Caloocan' ? 'selected' : ''}>Caloocan</option>
+                        <option value="Makati" ${userDetails.state === 'Makati' ? 'selected' : ''}>Makati</option>
+                        <option value="Pasig" ${userDetails.state === 'Pasig' ? 'selected' : ''}>Pasig</option>
+                        <option value="Valenzuela" ${userDetails.state === 'Valenzuela' ? 'selected' : ''}>Valenzuela</option>
+                        <option value="Las Piñas" ${userDetails.state === 'Las Piñas' ? 'selected' : ''}>Las Piñas</option>
+                        <option value="Parañaque" ${userDetails.state === 'Parañaque' ? 'selected' : ''}>Parañaque</option>
+                        <option value="Marikina" ${userDetails.state === 'Marikina' ? 'selected' : ''}>Marikina</option>
+                        <option value="San Juan" ${userDetails.state === 'San Juan' ? 'selected' : ''}>San Juan</option>
+                        <option value="Mandaluyong" ${userDetails.state === 'Mandaluyong' ? 'selected' : ''}>Mandaluyong</option>
+                        <option value="Taguig" ${userDetails.state === 'Taguig' ? 'selected' : ''}>Taguig</option>
+                        <option value="Malabon" ${userDetails.state === 'Malabon' ? 'selected' : ''}>Malabon</option>
+                        <option value="Navotas" ${userDetails.state === 'Navotas' ? 'selected' : ''}>Navotas</option>
+                        <option value="Batangas" ${userDetails.state === 'Batangas' ? 'selected' : ''}>Batangas</option>
+                        <option value="Laguna" ${userDetails.state === 'Laguna' ? 'selected' : ''}>Laguna</option>
+                        <option value="Cavite" ${userDetails.state === 'Cavite' ? 'selected' : ''}>Cavite</option>
+                        <option value="Rizal" ${userDetails.state === 'Rizal' ? 'selected' : ''}>Rizal</option>
+                        <option value="Bulacan" ${userDetails.state === 'Bulacan' ? 'selected' : ''}>Bulacan</option>
+                        <option value="Nueva Ecija" ${userDetails.state === 'Nueva Ecija' ? 'selected' : ''}>Nueva Ecija</option>
+                        <option value="Pangasinan" ${userDetails.state === 'Pangasinan' ? 'selected' : ''}>Pangasinan</option>
+                        <option value="Pampanga" ${userDetails.state === 'Pampanga' ? 'selected' : ''}>Pampanga</option>
+                        <option value="Tarlac" ${userDetails.state === 'Tarlac' ? 'selected' : ''}>Tarlac</option>
+                        <option value="Nueva Vizcaya" ${userDetails.state === 'Nueva Vizcaya' ? 'selected' : ''}>Nueva Vizcaya</option>
+                        <option value="Quirino" ${userDetails.state === 'Quirino' ? 'selected' : ''}>Quirino</option>
+                        <option value="Aurora" ${userDetails.state === 'Aurora' ? 'selected' : ''}>Aurora</option>
+                    </select>`;
+                    break;
+                case 'postal':
+                    fieldLabel = 'Postal Code';
+                    formHTML = `<input type="text" id="editInput" value="${escapeHtml(userDetails.postal)}" placeholder="e.g., 1000">`;
+                    break;
+            }
+
+            title.textContent = `Edit ${fieldLabel}`;
+            container.innerHTML = `<div class="form-group"><label>${fieldLabel}</label>${formHTML}</div>`;
+            modal.classList.add('show');
+
+            setTimeout(() => {
+                const inp = document.getElementById('editInput');
+                if (inp) inp.focus();
+            }, 100);
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('show');
+            currentEditField = '';
+        }
+
+        function saveField(event) {
+            event.preventDefault();
+            const input = document.getElementById('editInput');
+            if (!input) return;
+            const newValue = input.value.trim();
+
+            // Basic validation
+            if ((currentEditField === 'name' || currentEditField === 'email' || currentEditField === 'password') && !newValue) {
+                alert('This field is required');
+                return;
+            }
+
+            // Update local copy and localStorage
+            switch (currentEditField) {
+                case 'name':
+                    userDetails.name = newValue;
+                    localStorage.setItem('userName', newValue);
+                    break;
+                case 'email':
+                    userDetails.email = newValue;
+                    localStorage.setItem('userEmail', newValue);
+                    break;
+                case 'mobile':
+                    userDetails.mobile = newValue;
+                    localStorage.setItem('userMobile', newValue);
+                    break;
+                case 'dob':
+                    userDetails.dob = newValue;
+                    localStorage.setItem('userDob', newValue);
+                    break;
+                case 'gender':
+                    userDetails.gender = newValue;
+                    localStorage.setItem('userGender', newValue);
+                    break;
+                case 'address':
+                    userDetails.address = newValue;
+                    localStorage.setItem('userAddress', newValue);
+                    break;
+                case 'state':
+                    userDetails.state = newValue;
+                    localStorage.setItem('userState', newValue);
+                    break;
+                case 'postal':
+                    userDetails.postal = newValue;
+                    localStorage.setItem('userPostal', newValue);
+                    break;
+                case 'password':
+                    // for now do not store passwords in localStorage; backend call would go here
+                    break;
+            }
+
+            // Update UI
+            document.getElementById('nameValue').textContent = userDetails.name || '-';
+            document.getElementById('emailValue').textContent = userDetails.email || '-';
+            document.getElementById('mobileValue').textContent = userDetails.mobile || '-';
+            document.getElementById('dobValue').textContent = userDetails.dob || '-';
+            document.getElementById('genderValue').textContent = userDetails.gender || '-';
+            document.getElementById('addressValue').textContent = userDetails.address || '-';
+            document.getElementById('stateValue').textContent = userDetails.state || '-';
+            document.getElementById('postalValue').textContent = userDetails.postal || '-';
+
+            alert('Details updated successfully!');
+            closeModal();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        function deleteAccount() {
+            const confirmation = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+            
+            if (confirmation) {
+                const finalConfirm = confirm('Please confirm: Deleting your account will remove all your data including orders and profile information. Continue?');
+                
+                if (finalConfirm) {
+                    fetch('delete_account.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Account deleted successfully. Redirecting...');
+                            localStorage.clear();
+                            window.location.href = 'main.html';
+                        } else {
+                            alert('Error: ' + (data.message || 'Failed to delete account'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting your account');
+                    });
+                }
+            }
+        }
+
+        // small helper to escape HTML in values
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // Load details on page load
+        loadUserDetails();
+    </script>
+</body>
+</html>
+

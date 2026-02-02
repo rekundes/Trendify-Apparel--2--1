@@ -40,63 +40,41 @@ $total    = floatval($data['total'] ?? 0);
 // Get user_id from session if logged in
 $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
 
-// Create orders table if it doesn't exist
-$create_orders_table = "CREATE TABLE IF NOT EXISTS orders (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT DEFAULT 0,
-  first_name VARCHAR(255) NOT NULL,
-  last_name VARCHAR(255),
-  email VARCHAR(255) NOT NULL,
-  phone_prefix VARCHAR(10),
-  phone_number VARCHAR(20),
-  country VARCHAR(100),
-  address VARCHAR(500),
-  city VARCHAR(100),
-  postcode VARCHAR(20),
-  subtotal DECIMAL(10,2),
-  delivery_fee DECIMAL(10,2),
-  total DECIMAL(10,2),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
+// Use prepared statements to prevent SQL injection
+$shipping_address = "Address: $address1, City: $city, Postal: $postcode, Country: $country";
 
-$conn->query($create_orders_table);
-
-// Create order_items table if it doesn't exist
-$create_items_table = "CREATE TABLE IF NOT EXISTS order_items (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  order_id INT NOT NULL,
-  product_name VARCHAR(255),
-  product_price DECIMAL(10,2),
-  quantity INT DEFAULT 1,
-  size VARCHAR(50),
-  img_url VARCHAR(500),
-  FOREIGN KEY (order_id) REFERENCES orders(id)
-)";
-
-$conn->query($create_items_table);
-
-// Insert order
+// Insert order with customer information
 $order_sql = "INSERT INTO orders 
-    (user_id, first_name, last_name, email, phone_prefix, phone_number, country, address, city, postcode, subtotal, delivery_fee, total)
-    VALUES ($user_id,'$firstName','$lastName','$email','$phoneCode','$phone','$country','$address1','$city','$postcode',$subtotal,$delivery,$total)";
+    (user_id, first_name, last_name, email, phone, city, postcode, status, total_amount, shipping_address, order_date)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 'Processing', ?, ?, NOW())";
 
-if ($conn->query($order_sql)) {
-    $order_id = $conn->insert_id;
+$stmt = $conn->prepare($order_sql);
+if (!$stmt) {
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
+    exit;
+}
+
+$stmt->bind_param("issssssis", $user_id, $firstName, $lastName, $email, $phone, $city, $postcode, $total, $shipping_address);
+
+if ($stmt->execute()) {
+    $order_id = $stmt->insert_id;
+    $stmt->close();
 
     // Insert items
     if (is_array($data['items']) && count($data['items']) > 0) {
+        $item_sql = "INSERT INTO order_items 
+            (order_id, product_name, price, quantity, product_size)
+            VALUES (?, ?, ?, ?, ?)";
+        $item_stmt = $conn->prepare($item_sql);
+        
         foreach ($data['items'] as $item) {
-            $name = $conn->real_escape_string($item['name'] ?? 'Unknown Product');
+            $name = $item['name'] ?? 'Unknown Product';
             $price = floatval($item['price'] ?? 0);
             $qty = intval($item['qty'] ?? $item['quantity'] ?? 1);
-            $size = $conn->real_escape_string($item['size'] ?? '');
-            $img = $conn->real_escape_string($item['img'] ?? '');
-
-            $item_sql = "INSERT INTO order_items 
-                (order_id, product_name, product_price, quantity, size, img_url)
-                VALUES ($order_id,'$name',$price,$qty,'$size','$img')";
+            $size = $item['size'] ?? '';
             
-            $conn->query($item_sql);
+            $item_stmt->bind_param("isids", $order_id, $name, $price, $qty, $size);
+            $item_stmt->execute();
 
             // Remove item from cart if it has an ID
             if (isset($item['id'])) {
@@ -104,6 +82,7 @@ if ($conn->query($order_sql)) {
                 $conn->query("DELETE FROM cart WHERE id = $cart_id");
             }
         }
+        $item_stmt->close();
     }
 
     echo json_encode([
@@ -114,4 +93,6 @@ if ($conn->query($order_sql)) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
 }
+$conn->close();
+?>
 ?>
