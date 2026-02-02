@@ -54,7 +54,7 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("issssssis", $user_id, $firstName, $lastName, $email, $phone, $city, $postcode, $total, $shipping_address);
+$stmt->bind_param("issssssds", $user_id, $firstName, $lastName, $email, $phone, $city, $postcode, $total, $shipping_address);
 
 if ($stmt->execute()) {
     $order_id = $stmt->insert_id;
@@ -94,5 +94,4 @@ if ($stmt->execute()) {
     echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
 }
 $conn->close();
-?>
 ?>
