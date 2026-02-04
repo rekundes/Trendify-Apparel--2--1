@@ -37,31 +37,38 @@ $time_left = 0;
 
 if ($lock_result->num_rows > 0) {
     $lock_data = $lock_result->fetch_assoc();
-    if ($lock_data['is_locked'] && $lock_data['locked_until']) {
-        $now = new DateTime();
-        $until = new DateTime($lock_data['locked_until']);
-        if ($now < $until) {
+    if (!empty($lock_data['is_locked']) && !empty($lock_data['locked_until'])) {
+        // Use unix timestamps to avoid DateTime/timezone parsing issues
+        $now_ts = time();
+        $until_ts = strtotime($lock_data['locked_until']);
+        if ($until_ts === false) {
+            // If parsing failed, treat as not locked and reset
+            $until_ts = $now_ts;
+        }
+
+        if ($now_ts < $until_ts) {
             $is_locked = true;
-            $time_left = $until->getTimestamp() - $now->getTimestamp();
+            $time_left = $until_ts - $now_ts;
         } else {
             $reset = "UPDATE login_attempts SET failed_attempts = 0, is_locked = 0, locked_until = NULL WHERE email = ?";
             $rs = $conn->prepare($reset);
             $rs->bind_param("s", $email);
             $rs->execute();
             $rs->close();
+            $is_locked = false;  // Clear flag so login can proceed
         }
     }
 }
 $lock_stmt->close();
 
 if ($is_locked) {
-    $time_left = min($time_left, 300); // Cap at 5 minutes (300 seconds)
+    $time_left = min($time_left, 10); // Cap at 10 seconds
     // Return raw seconds_left so the client can render a live countdown
     echo json_encode(['success' => false, 'message' => 'Account locked. Try again in ' . $time_left . ' seconds', 'seconds_left' => (int)$time_left]);
     exit;
 }
 
-$sql = "SELECT user_id, email, password_hash, first_name, last_name, is_admin FROM users WHERE email = ?";
+$sql = "SELECT user_id, email, password_hash, first_name, last_name, is_admin, role FROM users WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -87,6 +94,7 @@ if (password_verify($password, $user['password_hash'])) {
     $_SESSION['first_name'] = $user['first_name'];
     $_SESSION['last_name'] = $user['last_name'];
     $_SESSION['is_admin'] = $user['is_admin'];
+    $_SESSION['role'] = $user['role'];
     
     $clr = "UPDATE login_attempts SET failed_attempts = 0, is_locked = 0, locked_until = NULL WHERE email = ?";
     $clr_stmt = $conn->prepare($clr);
@@ -94,12 +102,20 @@ if (password_verify($password, $user['password_hash'])) {
     $clr_stmt->execute();
     $clr_stmt->close();
     
-    $redirect = $user['is_admin'] ? 'admin_dashboard.php' : 'main.html';
+    // Route based on role/admin status
+    $redirect = 'main.html';
+    if ($user['role'] === 'superadmin') {
+        $redirect = 'superadmin_dashboard.php';
+    } elseif ($user['is_admin'] || $user['role'] === 'admin') {
+        $redirect = 'admin_dashboard.php';
+    }
+    
     echo json_encode([
         'success' => true,
         'message' => 'Login successful',
         'redirect' => $redirect,
         'is_admin' => $user['is_admin'],
+        'role' => $user['role'],
         'user' => [
             'user_id' => $user['user_id'],
             'email' => $user['email'],
@@ -124,12 +140,13 @@ if (password_verify($password, $user['password_hash'])) {
     $chk_stmt->close();
     
     if ($attempts >= 3) {
-        $lck = "UPDATE login_attempts SET is_locked = 1, locked_until = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE email = ?";
+        // Lock for 10 seconds
+        $lck = "UPDATE login_attempts SET is_locked = 1, locked_until = DATE_ADD(NOW(), INTERVAL 10 SECOND) WHERE email = ?";
         $lck_stmt = $conn->prepare($lck);
         $lck_stmt->bind_param("s", $email);
         $lck_stmt->execute();
         $lck_stmt->close();
-        echo json_encode(['success' => false, 'message' => 'Too many failed attempts. Account locked for 5 minutes.']);
+        echo json_encode(['success' => false, 'message' => 'Too many failed attempts. Account locked for 10 seconds.', 'seconds_left' => 10]);
     } else {
         $left = 3 - $attempts;
         echo json_encode(['success' => false, 'message' => "Invalid email or password. Attempts left: $left"]);

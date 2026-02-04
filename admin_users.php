@@ -119,7 +119,7 @@ if ($result->num_rows > 0) {
                   <td><?= date('M d, Y', strtotime($user['created_at'])) ?></td>
                   <td>
                     <?php if ($_SESSION['user_id'] != $user['user_id']): ?>
-                      <button class="delete-btn" onclick="deleteUser(<?= $user['user_id'] ?>, '<?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>')" style="padding:6px 12px;background:#ef4444;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600">Remove</button>
+                      <button class="btn btn-primary" onclick="resetPassword(<?= $user['user_id'] ?>, '<?= htmlspecialchars($user['email']) ?>')">Reset Password</button>
                     <?php else: ?>
                       <span style="color:var(--muted);font-size:12px">You</span>
                     <?php endif; ?>
@@ -134,32 +134,39 @@ if ($result->num_rows > 0) {
       </div>
     </main>
   </div>
-  <script>
-    function deleteUser(userId, userName) {
-      if (confirm('Are you sure you want to delete user "' + userName + '"? This cannot be undone.')) {
-        fetch('delete_user.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ user_id: userId })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert('User deleted successfully');
-            location.reload();
-          } else {
-            alert('Error deleting user: ' + data.message);
+      <script>
+        async function resetPassword(userId, email) {
+          if (!confirm('Generate a temporary password for ' + email + '?')) return;
+
+          try {
+            const res = await fetch('admin_reset_password.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ user_id: userId })
+            });
+            const data = await res.json();
+            if (data.success) {
+              // show temporary password to admin
+              const pwd = data.temp_password;
+              // prompt to copy
+              const copy = confirm('Temporary password generated:\n' + pwd + '\n\nPress OK to copy to clipboard.');
+              if (copy && navigator.clipboard) {
+                await navigator.clipboard.writeText(pwd);
+                alert('Temporary password copied to clipboard. Share it securely with the user.');
+              } else {
+                alert('Temporary password:\n' + pwd);
+              }
+            } else {
+              alert('Error: ' + (data.message || 'Unable to reset password'));
+            }
+          } catch (err) {
+            alert('Request error: ' + err.message);
           }
-        })
-        .catch(err => {
-          alert('Error: ' + err.message);
-        });
-      }
-    }
-  </script>
-</body>
-</html>
+        }
+      </script>
+    </body>
+    </html>
 <?php
 $conn->close();
 ?>

@@ -9,9 +9,21 @@ $users_sql = "CREATE TABLE IF NOT EXISTS users (
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     is_admin TINYINT DEFAULT 0,
+    role ENUM('customer', 'admin', 'superadmin') DEFAULT 'customer',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
+
+// Check if role column exists, if not add it
+$check_role = $conn->query("SHOW COLUMNS FROM users WHERE Field = 'role'");
+if ($check_role && $check_role->num_rows === 0) {
+    $add_role = "ALTER TABLE users ADD COLUMN role ENUM('customer', 'admin', 'superadmin') DEFAULT 'customer' AFTER is_admin";
+    if ($conn->query($add_role)) {
+        echo "✓ Added role column to users table<br>";
+    } else {
+        echo "Note: Role column already exists or couldn't be added<br>";
+    }
+}
 
 if ($conn->query($users_sql) === TRUE) {
     echo "✓ Users table created/verified<br>";

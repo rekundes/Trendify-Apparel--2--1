@@ -195,6 +195,17 @@
             border-radius: 4px;
             font-size: 15px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .black-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .black-btn:hover:not(:disabled) {
+            background: #333;
         }
 
         .white-btn {
@@ -330,12 +341,76 @@
             }
         });
     });
+// Lockout timer management
+function checkAccountLockout(email) {
+    const lockoutKey = `lockout_${email}`;
+    const lockoutEnd = localStorage.getItem(lockoutKey);
+    
+    if (lockoutEnd) {
+        const now = Date.now();
+        const endTime = parseInt(lockoutEnd);
+        
+        if (now < endTime) {
+            return Math.ceil((endTime - now) / 1000);
+        } else {
+            localStorage.removeItem(lockoutKey);
+            return 0;
+        }
+    }
+    return 0;
+}
+
+function startLockoutCountdown(email, secondsLeft) {
+    const lockoutKey = `lockout_${email}`;
+    const endTime = Date.now() + (secondsLeft * 1000);
+    localStorage.setItem(lockoutKey, endTime);
+    
+    const signInBtn = document.querySelector('.black-btn');
+    const emailInput = document.querySelector('input[type="email"]');
+    
+    const updateTimer = () => {
+        const remaining = checkAccountLockout(email);
+        
+        if (remaining > 0) {
+            signInBtn.disabled = true;
+            signInBtn.textContent = `LOCKED - Try again in ${remaining}s`;
+            setTimeout(updateTimer, 1000);
+        } else {
+            signInBtn.disabled = false;
+            signInBtn.textContent = 'SIGN IN';
+            localStorage.removeItem(lockoutKey);
+        }
+    };
+    
+    updateTimer();
+}
+
+// Check for existing lockout on page load
+window.addEventListener('load', function() {
+    const emailInput = document.querySelector('input[type="email"]');
+    const email = emailInput.value || localStorage.getItem('lastAttemptedEmail');
+    
+    if (email) {
+        const lockoutTime = checkAccountLockout(email);
+        if (lockoutTime > 0) {
+            startLockoutCountdown(email, lockoutTime);
+        }
+    }
+});
+
 // Sign-in form behavior: set logged-in flag and redirect if 'next' is provided
 document.querySelector('.signin-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const email = document.querySelector('input[type="email"]').value;
     const password = document.querySelector('input[type="password"]').value;
+    const signInBtn = document.querySelector('.black-btn');
+    
+    // Do not block submission based on localStorage lockout alone.
+    // The server is authoritative — send credentials and let it decide.
+    
+    // Save email for future lockout checks
+    localStorage.setItem('lastAttemptedEmail', email);
     
     try {
         const response = await fetch('login.php', {
@@ -353,6 +428,9 @@ document.querySelector('.signin-form').addEventListener('submit', async function
         const data = await response.json();
         
         if (data.success) {
+            // Clear lockout on successful login
+            localStorage.removeItem(`lockout_${email}`);
+            
             // Mark as logged in
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('hasProfile', 'true');
@@ -372,12 +450,57 @@ document.querySelector('.signin-form').addEventListener('submit', async function
                 }
             }
         } else {
-            alert('Login failed: ' + data.message);
+            // Check if this is a lockout response
+            if (data.seconds_left) {
+                startLockoutCountdown(email, data.seconds_left);
+                alert('Login failed: ' + data.message);
+            } else {
+                alert('Login failed: ' + data.message);
+            }
         }
     } catch (error) {
         alert('Error logging in: ' + error.message);
     }
 });
+
+// Update lockout UI when email input changes
+function updateLockoutUI(email) {
+    const signInBtn = document.querySelector('.black-btn');
+    if (!email) {
+        signInBtn.disabled = false;
+        signInBtn.textContent = 'SIGN IN';
+        return;
+    }
+
+    const remaining = checkAccountLockout(email);
+    if (remaining > 0) {
+        signInBtn.disabled = true;
+        signInBtn.textContent = `LOCKED - Try again in ${remaining}s`;
+
+        if (window._lockoutInterval) clearInterval(window._lockoutInterval);
+        window._lockoutInterval = setInterval(() => {
+            const r = checkAccountLockout(email);
+            if (r > 0) {
+                signInBtn.textContent = `LOCKED - Try again in ${r}s`;
+            } else {
+                clearInterval(window._lockoutInterval);
+                signInBtn.disabled = false;
+                signInBtn.textContent = 'SIGN IN';
+            }
+        }, 1000);
+    } else {
+        signInBtn.disabled = false;
+        signInBtn.textContent = 'SIGN IN';
+    }
+}
+
+const emailInput = document.querySelector('input[type="email"]');
+emailInput.addEventListener('input', function() {
+    updateLockoutUI(this.value.trim());
+});
+
+// Apply UI on load for any prefilled email
+updateLockoutUI(emailInput.value.trim());
 </script>
 
 </body>
