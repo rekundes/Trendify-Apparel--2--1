@@ -109,6 +109,7 @@ if ($result && $result->num_rows > 0) {
         <a href="admin_dashboard.php">Dashboard</a>
         <a href="admin_orders.php">Orders</a>
         <a href="admin_users.php">Users</a>
+        <a href="admin_reviews.php">Reviews</a>
         <a href="logout.php">Sign Out</a>
       </nav>
     </aside>
@@ -150,7 +151,19 @@ if ($result && $result->num_rows > 0) {
                 <tr>
                   <td>#<?= htmlspecialchars($order['order_id']) ?></td>
                   <td><?= htmlspecialchars(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')) ?></td>
-                  <td><?= htmlspecialchars($order['status'] ?? 'Processing') ?></td>
+                  <td>
+                    <?php
+                      $status = htmlspecialchars($order['status'] ?? 'Processing');
+                      $badge_styles = [
+                        'Processing' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#fef3c7;color:#92400e',
+                        'Shipped' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#dbeafe;color:#0284c7',
+                        'Delivered' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#dcfce7;color:#166534',
+                        'Cancelled' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#fee2e2;color:#dc2626'
+                      ];
+                      $style = $badge_styles[$status] ?? 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#f3f4f6;color:#374151';
+                    ?>
+                    <span style="<?= $style ?>"><?= $status ?></span>
+                  </td>
                   <td>₱<?= number_format($order['total_amount'] ?? 0, 2) ?></td>
                   <td><?= isset($order['estimated_delivery']) ? date('M d, Y', strtotime($order['estimated_delivery'])) : 'N/A' ?></td>
                   <td>

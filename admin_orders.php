@@ -64,10 +64,14 @@ if ($result && $result->num_rows > 0) {
 $total_revenue = 0;
 $stats = ['Processing' => 0, 'Shipped' => 0, 'Delivered' => 0, 'Cancelled' => 0];
 foreach ($orders as $order) {
-    $total_revenue += $order['total_amount'];
-    if (isset($stats[$order['status']])) {
-        $stats[$order['status']]++;
-    }
+  // Only count delivered orders towards total sales
+  if (isset($order['status']) && strtolower($order['status']) === 'delivered') {
+    $total_revenue += floatval($order['total_amount']);
+  }
+  $st = $order['status'] ?? 'Processing';
+  if (isset($stats[$st])) {
+    $stats[$st]++;
+  }
 }
 ?>
 <!doctype html>
@@ -126,7 +130,7 @@ foreach ($orders as $order) {
       <div class="stats">
         <div class="stat-card">
           <div class="stat-value">₱<?= number_format($total_revenue, 2) ?></div>
-          <div class="stat-label">Total Revenue</div>
+          <div class="stat-label">Total Sales</div>
         </div>
         <div class="stat-card">
           <div class="stat-value"><?= count($orders) ?></div>

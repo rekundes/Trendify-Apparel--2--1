@@ -134,6 +134,7 @@ if ($result && $result->num_rows > 0) {
         <a href="superadmin_dashboard.php" class="active">Dashboard</a>
         <a href="superadmin_orders.php">Orders</a>
         <a href="superadmin_users.php">Users & Admins</a>
+        <a href="superadmin_reviews.php">Reviews</a>
         <a href="superadmin_system.php">System</a>
         <a href="logout.php">Sign Out</a>
       </nav>
@@ -194,7 +195,19 @@ if ($result && $result->num_rows > 0) {
                 <td>#<?= htmlspecialchars($order['order_id']) ?></td>
                 <td><?= htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) ?></td>
                 <td>₱<?= number_format($order['total_amount'], 2) ?></td>
-                <td><span class="badge" style="background:#dbeafe;color:#1e3a8a"><?= htmlspecialchars($order['status']) ?></span></td>
+                <td>
+                  <?php
+                    $status = htmlspecialchars($order['status'] ?? 'Processing');
+                    $badge_styles = [
+                      'Processing' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#fef3c7;color:#92400e',
+                      'Shipped' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#dbeafe;color:#0284c7',
+                      'Delivered' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#dcfce7;color:#166534',
+                      'Cancelled' => 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#fee2e2;color:#dc2626'
+                    ];
+                    $style = $badge_styles[$status] ?? 'display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;background:#f3f4f6;color:#374151';
+                  ?>
+                  <span style="<?= $style ?>"><?= $status ?></span>
+                </td>
                 <td><?= isset($order['estimated_delivery']) ? date('M d, Y', strtotime($order['estimated_delivery'])) : 'N/A' ?></td>
                 <td>
                   <button type="submit" name="complete_order_id" value="<?= htmlspecialchars($order['order_id']) ?>" style="background:#10b981;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:12px;margin-right:4px">Delivered</button>
