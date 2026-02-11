@@ -15,6 +15,13 @@
         .order-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
         .order-id{font-weight:700}
         .muted{color:#666;font-size:13px}
+        .status-badge{display:inline-block;padding:6px 10px;border-radius:4px;font-size:12px;font-weight:600;margin-left:8px}
+        .status-processing{background:#fef3c7;color:#92400e}
+        .status-shipped{background:#dbeafe;color:#0284c7}
+        .status-delivered{background:#dcfce7;color:#166534}
+        .status-cancelled{background:#fee2e2;color:#dc2626}
+        /* Rating image preview forced to black & white */
+        .rating-image-preview img{max-width:100px;max-height:100px;object-fit:cover;filter:grayscale(100%);}
         .items{margin-top:8px}
         .item{display:flex;justify-content:space-between;padding:8px 0;border-top:1px dashed #eaeaea}
         .item:first-child{border-top:none}
@@ -48,6 +55,14 @@
                 }
 
                 const orders = data.orders || [];
+
+                // fetch which products this user already reviewed
+                let reviewedSet = new Set();
+                try {
+                    const rv = await fetch('get_user_reviews.php', { credentials: 'include' });
+                    const jr = await rv.json();
+                    if (jr.success && Array.isArray(jr.reviews)) reviewedSet = new Set(jr.reviews);
+                } catch (e) { console.warn('Could not load user reviews', e); }
                 if (orders.length === 0) {
                     container.innerHTML = '<div class="no-orders">You have no purchases yet.</div>';
                     return;
@@ -59,9 +74,12 @@
 
                     const head = document.createElement('div');
                     head.className = 'order-head';
+                    
+                    const statusClass = 'status-' + (order.status ? order.status.toLowerCase() : 'processing');
+                    
                     head.innerHTML = `<div>
                         <div class="order-id">Order #${order.order_id}</div>
-                        <div class="muted">${order.order_date} • ${order.status}</div>
+                        <div class="muted">${order.order_date}<span class="status-badge ${statusClass}">${order.status || 'Processing'}</span></div>
                     </div>
                     <div style="text-align:right">
                         <div class="muted">Total</div>
@@ -83,7 +101,24 @@
                         const itEl = document.createElement('div');
                         itEl.className = 'item';
                         itEl.innerHTML = `<div class="item-left">${escapeHtml(it.product_name)}<div class="muted" style="font-size:12px">Size: ${escapeHtml(it.product_size || '-') } • Qty: ${it.quantity}</div></div>
-                            <div class="item-right">₱${parseFloat(it.price).toFixed(2)}</div>`;
+                                <div style="text-align:right">
+                                    <div class="item-right">₱${parseFloat(it.price).toFixed(2)}</div>`;
+
+                        // If order delivered, show Buy Again and Rate buttons
+                        if ((order.status || '').toLowerCase() === 'delivered') {
+                            const actionsWrap = document.createElement('div');
+                            actionsWrap.style.marginTop = '8px';
+                            const prodNameEsc = escapeHtml(it.product_name);
+                            const buyBtn = `<button class="buy-again" data-name="${prodNameEsc}" data-price="${parseFloat(it.price).toFixed(2)}" data-size="${escapeHtml(it.product_size||'')}" data-qty="${it.quantity}" style="margin-right:8px;padding:6px 10px;background:#10b981;color:#fff;border:none;border-radius:4px;cursor:pointer">Buy Again</button>`;
+                            let rateBtn = '';
+                            if (reviewedSet.has(it.product_name)) {
+                                rateBtn = `<button class="rate-item-disabled" disabled style="padding:6px 10px;background:#9ca3af;color:#fff;border:none;border-radius:4px;cursor:not-allowed">Rated</button>`;
+                            } else {
+                                rateBtn = `<button class="rate-item" data-name="${prodNameEsc}" style="padding:6px 10px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer">Rate</button>`;
+                            }
+                            actionsWrap.innerHTML = buyBtn + rateBtn;
+                            itEl.appendChild(actionsWrap);
+                        }
                         itemsWrap.appendChild(itEl);
                     });
 
@@ -100,6 +135,165 @@
         function escapeHtml(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
         loadPurchases();
+    </script>
+    
+    <!-- Rating modal -->
+    <div id="rateModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);align-items:center;justify-content:center">
+        <div style="background:#fff;padding:20px;border-radius:8px;max-width:480px;margin:0 auto">
+            <h3 style="margin-top:0">Rate Product</h3>
+            <div id="rateProductName" style="font-weight:700;margin-bottom:8px"></div>
+            <div style="margin-bottom:8px">
+                <label>Rating: </label>
+                <div id="starRating" style="display:inline-block;margin-left:8px">
+                    <!-- stars populated by JS -->
+                </div>
+                <input type="hidden" id="rateValue" value="5">
+            </div>
+            <div style="margin-bottom:8px">
+                <label>Upload image (optional) - preview shown in B/W:</label>
+                <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+                    <input type="file" id="rateImage" accept="image/*">
+                    <div class="rating-image-preview" id="ratingImagePreview"></div>
+                </div>
+            </div>
+            <div style="margin-bottom:8px">
+                <label>Image rating: </label>
+                <div id="starImageRating" style="display:inline-block;margin-left:8px"></div>
+                <input type="hidden" id="imageRateValue" value="0">
+            </div>
+            <div style="margin-bottom:12px">
+                <textarea id="rateComment" placeholder="Write a short review (optional)" style="width:100%;height:80px"></textarea>
+            </div>
+            <div style="text-align:right">
+                <button id="rateCancel" style="margin-right:8px;padding:8px 12px">Cancel</button>
+                <button id="rateSubmit" style="padding:8px 12px;background:#10b981;color:#fff;border:none;border-radius:4px">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Attach handlers for Buy Again and Rate buttons after loading purchases
+        document.addEventListener('click', async function(e){
+            const btn = e.target;
+            if (btn.classList.contains('buy-again')) {
+                const name = btn.getAttribute('data-name');
+                const price = btn.getAttribute('data-price');
+                const size = btn.getAttribute('data-size');
+                const qty = parseInt(btn.getAttribute('data-qty')) || 1;
+                try {
+                    const res = await fetch('add_to_cart.php', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: name, price: price, img: '', size: size, qty: qty })
+                    });
+                    const j = await res.json();
+                    if (j.success) {
+                        alert('Added to cart');
+                    } else {
+                        alert('Could not add to cart');
+                    }
+                } catch(err) { console.error(err); alert('Error adding to cart'); }
+            }
+
+            if (btn.classList.contains('rate-item')) {
+                const name = btn.getAttribute('data-name');
+                document.getElementById('rateProductName').innerText = name;
+                document.getElementById('rateModal').style.display = 'flex';
+                document.getElementById('rateSubmit').dataset.product = name;
+            }
+        });
+
+        document.getElementById('rateCancel').addEventListener('click', function(){
+            document.getElementById('rateModal').style.display = 'none';
+        });
+
+        // render star UI for overall rating and image rating
+        function makeStars(containerId, hiddenInputId, maxStars = 5, allowZero = false) {
+            const cont = document.getElementById(containerId);
+            cont.innerHTML = '';
+            for (let i = 1; i <= maxStars; i++) {
+                const star = document.createElement('i');
+                star.className = 'fa-regular fa-star';
+                star.style.cursor = 'pointer';
+                star.style.color = '#f59e0b';
+                star.dataset.value = i;
+                star.addEventListener('click', function(){
+                    document.getElementById(hiddenInputId).value = this.dataset.value;
+                    updateStars(containerId, this.dataset.value);
+                });
+                cont.appendChild(star);
+            }
+            if (allowZero) {
+                // clicking background clears
+                cont.addEventListener('dblclick', function(){
+                    document.getElementById(hiddenInputId).value = 0;
+                    updateStars(containerId, 0);
+                });
+            }
+            updateStars(containerId, document.getElementById(hiddenInputId).value);
+        }
+
+        function updateStars(containerId, value) {
+            const cont = document.getElementById(containerId);
+            Array.from(cont.children).forEach(star => {
+                const v = parseInt(star.dataset.value);
+                if (v <= value) {
+                    star.className = 'fa-solid fa-star';
+                } else {
+                    star.className = 'fa-regular fa-star';
+                }
+            });
+        }
+
+        makeStars('starRating', 'rateValue', 5, false);
+        makeStars('starImageRating', 'imageRateValue', 5, true);
+
+        // preview uploaded image in grayscale
+        document.getElementById('rateImage').addEventListener('change', function(e){
+            const preview = document.getElementById('ratingImagePreview');
+            preview.innerHTML = '';
+            const f = this.files && this.files[0];
+            if (!f) return;
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(f);
+            img.onload = () => URL.revokeObjectURL(img.src);
+            preview.appendChild(img);
+        });
+
+        document.getElementById('rateSubmit').addEventListener('click', async function(){
+            const name = this.dataset.product;
+            const rating = parseInt(document.getElementById('rateValue').value) || 0;
+            const comment = document.getElementById('rateComment').value || '';
+            const imageRating = parseInt(document.getElementById('imageRateValue').value) || 0;
+            const fileInput = document.getElementById('rateImage');
+
+            try {
+                const form = new FormData();
+                form.append('product_name', name);
+                form.append('rating', rating);
+                form.append('comment', comment);
+                form.append('image_rating', imageRating);
+                if (fileInput.files && fileInput.files[0]) {
+                    form.append('image', fileInput.files[0]);
+                }
+
+                const res = await fetch('rate_product.php', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: form
+                });
+                const j = await res.json();
+                if (j.success) {
+                    alert('Thanks for your review');
+                } else {
+                    alert('Could not submit review: ' + (j.message || ''));
+                }
+            } catch(err) { console.error(err); alert('Error submitting review'); }
+            document.getElementById('rateModal').style.display = 'none';
+            // refresh purchases to reflect any changes
+            loadPurchases();
+        });
     </script>
 </body>
 </html>
