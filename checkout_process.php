@@ -76,10 +76,15 @@ if ($stmt->execute()) {
             $item_stmt->bind_param("isids", $order_id, $name, $price, $qty, $size);
             $item_stmt->execute();
 
-            // Remove item from cart if it has an ID
+            // Remove item from cart if it has an ID (use prepared statement)
             if (isset($item['id'])) {
                 $cart_id = intval($item['id']);
-                $conn->query("DELETE FROM cart WHERE id = $cart_id");
+                $del_stmt = $conn->prepare("DELETE FROM cart WHERE id = ?");
+                if ($del_stmt) {
+                    $del_stmt->bind_param('i', $cart_id);
+                    $del_stmt->execute();
+                    $del_stmt->close();
+                }
             }
         }
         $item_stmt->close();
